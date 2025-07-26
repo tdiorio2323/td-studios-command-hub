@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TD Studios Login</title>
+    <link rel="stylesheet" href="login-style.css">
+</head>
+<body class="login-page">
+    <div class="palm-decoration palm-left"></div>
+    <div class="palm-decoration palm-right"></div>
+    
+    <div class="login-container">
+        <div class="glass-card">
+            <div class="logo-container">
+                <img src="td-logo.png" alt="TD Studios" class="td-logo">
+            </div>
+            <h2 class="login-heading">LOGIN</h2>
+            
+            <form class="login-form" action="#" method="POST">
+                <div class="form-group">
+                    <input type="email" id="email" name="email" placeholder="Email" required>
+                </div>
+                
+                <div class="form-group">
+                    <input type="password" id="password" name="password" placeholder="Password" required>
+                </div>
+                
+                <a href="#" class="forgot-password">Forgot Password ?</a>
+                
+                <button type="submit" class="login-button">Login</button>
+            </form>
+        </div>
+    </div>
+    
+    
+    <script>
+        document.querySelector('.login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Check credentials
+            if (email === 'td' && password === 'tdstudios') {
+                alert('Login successful!');
+                // Redirect to dashboard or protected area
+                window.location.href = '/dashboard';
+            } else {
+                alert('Invalid credentials. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

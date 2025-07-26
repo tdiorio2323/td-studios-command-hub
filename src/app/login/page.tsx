@@ -30,12 +30,19 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 flex items-center justify-center p-4">
-      {/* Background Effects */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-green-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-purple-500/5 rounded-full blur-3xl"></div>
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: 'url(/palm-bg.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        {/* Dark overlay for better contrast */}
+        <div className="absolute inset-0 bg-black/60"></div>
       </div>
 
       <motion.div
@@ -44,40 +51,28 @@ export default function LoginPage() {
         transition={{ duration: 0.8 }}
         className="relative w-full max-w-md"
       >
-        {/* Neural Orb */}
-        <div className="flex justify-center mb-8">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="relative w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 to-green-500 p-1"
-          >
-            <div className="w-full h-full rounded-full bg-gray-900 flex items-center justify-center">
-              <Brain className="w-8 h-8 text-green-400" />
-            </div>
-          </motion.div>
-        </div>
 
         {/* Login Card */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-gray-800/80 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-8 shadow-2xl"
+          className="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-3xl p-10 shadow-2xl"
         >
           <div className="text-center mb-8">
-            <motion.h1
+            <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent mb-2"
+              className="mb-4"
             >
-              TD STUDIOS
-            </motion.h1>
+              <img src="/td-logo.png" alt="TD Studios" className="h-16 mx-auto" />
+            </motion.div>
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className="text-gray-400 text-sm uppercase tracking-wider"
+              className="text-gray-300/60 text-2xl font-light tracking-[0.3em]"
             >
               Command Hub Portal
             </motion.p>
@@ -90,15 +85,15 @@ export default function LoginPage() {
               transition={{ duration: 0.5, delay: 0.5 }}
             >
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                Access Code
+                Email
               </label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3 bg-gray-900/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                  placeholder="Enter your access code"
+                  className="w-full px-4 py-4 bg-gray-500/30 backdrop-blur-md border-0 rounded-xl text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-white/30 focus:bg-gray-500/40 transition-all text-lg"
+                  placeholder="Email"
                   required
                 />
                 <button
@@ -127,7 +122,7 @@ export default function LoginPage() {
               transition={{ duration: 0.5, delay: 0.6 }}
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              className="w-full bg-gray-600/60 hover:bg-gray-600/80 text-white font-medium py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-lg backdrop-blur-md"
             >
               {isLoading ? (
                 <motion.div

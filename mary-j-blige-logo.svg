@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="200" viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="200" fill="#f0f0f0"/>
+  
+  <!-- Top black bar -->
+  <rect x="0" y="0" width="800" height="20" fill="#000000"/>
+  
+  <!-- Bottom black bar -->
+  <rect x="0" y="180" width="800" height="20" fill="#000000"/>
+  
+  <!-- MARY J. BLIGE text -->
+  <text x="400" y="85" 
+        font-family="Impact, 'Franklin Gothic Extra Condensed', 'Arial Narrow', sans-serif" 
+        font-size="52" 
+        font-weight="900" 
+        text-anchor="middle" 
+        fill="#000000"
+        letter-spacing="1px"
+        style="font-stretch: ultra-condensed;">MARY J. BLIGE</text>
+  
+  <!-- WHAT'S THE 411? text -->
+  <text x="400" y="145" 
+        font-family="Impact, 'Franklin Gothic Extra Condensed', 'Arial Narrow', sans-serif" 
+        font-size="38" 
+        font-weight="900" 
+        text-anchor="middle" 
+        fill="#000000"
+        letter-spacing="3px"
+        style="font-stretch: ultra-condensed;">WHAT'S THE 411?</text>
+</svg> 
