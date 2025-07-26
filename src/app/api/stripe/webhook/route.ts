@@ -32,6 +32,12 @@ export async function POST(req: Request) {
   }
 
   try {
+    // Skip webhook processing if Supabase not configured
+    if (!supabase) {
+      console.log('Supabase not configured, skipping webhook processing')
+      return NextResponse.json({ received: true })
+    }
+
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object
