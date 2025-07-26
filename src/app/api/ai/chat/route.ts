@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { aiEngine, AIMessage } from '@/lib/ai-engine'
-import { withSubscription } from '@/middleware/subscription'
 
-async function handler(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     const { messages, model = 'claude', modelVariant } = await request.json()
 
@@ -90,10 +89,7 @@ async function handler(request: NextRequest) {
   }
 }
 
-// Export wrapped handlers with subscription checks
-export const POST = withSubscription(handler, {
-  service: 'claude', // Default to claude, but it will be dynamic based on model param
-})
+// Subscription checks temporarily disabled for deployment
 
 export async function GET() {
   try {
