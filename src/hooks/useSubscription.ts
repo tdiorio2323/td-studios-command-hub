@@ -67,7 +67,7 @@ export function useSubscription() {
 
       const { data, error } = await supabase
         .from('usage_logs')
-        .select('service, COUNT(*)')
+        .select('service')
         .eq('user_id', userId)
         .gte('created_at', startOfMonth.toISOString())
 
@@ -75,9 +75,9 @@ export function useSubscription() {
 
       // Process usage data
       const usageMap = data.reduce((acc, item) => {
-        acc[item.service] = item.count
+        acc[item.service] = (acc[item.service] || 0) + 1
         return acc
-      }, {} as any)
+      }, {} as Record<string, number>)
 
       setUsage({
         claudeRequests: usageMap.claude || 0,
