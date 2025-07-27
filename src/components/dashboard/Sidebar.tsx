@@ -243,7 +243,7 @@ export function Sidebar() {
       <div className="p-4 border-t" style={{ borderColor: 'var(--border-color)' }}>
         <Link
           href="/dashboard/settings"
-          className="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200"
+          className="glass-button-sm flex items-center space-x-3 px-4 py-3 text-gray-300 hover:text-white"
         >
           <Settings className="w-5 h-5" />
           <span className="font-medium">Settings</span>

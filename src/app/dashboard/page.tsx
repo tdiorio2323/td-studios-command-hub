@@ -153,15 +153,15 @@ export default function DashboardPage() {
 
             {/* Actions */}
             <div className="flex items-center space-x-4">
-              <button className="p-2 text-gray-400 hover:text-white transition-colors">
+              <button className="p-2 glass-button-sm text-gray-300 hover:text-white">
                 <Bell className="w-5 h-5" />
               </button>
-              <button className="p-2 text-gray-400 hover:text-white transition-colors">
+              <button className="p-2 glass-button-sm text-gray-300 hover:text-white">
                 <Settings className="w-5 h-5" />
               </button>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg transition-colors"
+                className="px-4 py-2 glass-button text-white text-sm font-medium"
               >
                 Logout
               </button>
@@ -265,7 +265,7 @@ export default function DashboardPage() {
             <div className="bg-gray-800/50 backdrop-blur-xl border border-gray-700/50 rounded-xl p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-semibold text-white">Quick Actions</h3>
-                <button className="p-2 text-gray-400 hover:text-white transition-colors">
+                <button className="p-2 glass-button-sm text-gray-300 hover:text-white">
                   <Plus className="w-5 h-5" />
                 </button>
               </div>
@@ -278,9 +278,9 @@ export default function DashboardPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     onClick={() => router.push(action.href)}
-                    className="group relative p-6 bg-gray-900/50 hover:bg-gray-900/80 border border-gray-700/50 rounded-xl transition-all duration-200 hover:scale-105"
+                    className="group glass-action relative p-6 transition-all duration-200"
                   >
-                    <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 glass-icon rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                       {action.icon}
                     </div>
                     <p className="text-white font-medium text-left">{action.label}</p>

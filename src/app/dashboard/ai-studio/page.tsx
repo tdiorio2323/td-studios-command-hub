@@ -180,7 +180,7 @@ export default function AIStudioPage() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 bg-gray-700/50 border border-gray-600 text-gray-300 rounded-xl font-semibold flex items-center space-x-2 hover:bg-gray-700/70 transition-all"
+              className="px-4 py-2 glass-button text-gray-300 font-semibold flex items-center space-x-2"
             >
               <Settings className="w-5 h-5" />
               <span>Model Settings</span>
@@ -371,7 +371,7 @@ export default function AIStudioPage() {
                     whileTap={{ scale: 0.95 }}
                     onClick={sendMessage}
                     disabled={!currentMessage.trim() || isLoading}
-                    className="px-6 py-3 bg-gray-700 text-white rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:bg-gray-600"
+                    className="px-6 py-3 glass-button text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Send className="w-5 h-5" />
                   </motion.button>
@@ -391,7 +391,7 @@ export default function AIStudioPage() {
                     ].map((action) => (
                       <button
                         key={action.label}
-                        className="w-full flex items-center space-x-3 p-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-colors"
+                        className="w-full glass-button-sm flex items-center space-x-3 p-3"
                       >
                         <action.icon className="w-5 h-5 text-gray-300" />
                         <span className="text-white">{action.label}</span>
@@ -485,13 +485,13 @@ export default function AIStudioPage() {
                         <p className="text-xs text-gray-400">Last trained: {model.lastTrained}</p>
                         
                         <div className="flex space-x-2 pt-3">
-                          <button className="flex-1 px-3 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors text-sm">
+                          <button className="flex-1 px-3 py-2 glass-button-sm text-gray-300 text-sm">
                             <Play className="w-4 h-4 mx-auto" />
                           </button>
-                          <button className="flex-1 px-3 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors text-sm">
+                          <button className="flex-1 px-3 py-2 glass-button-sm text-gray-300 text-sm">
                             <Download className="w-4 h-4 mx-auto" />
                           </button>
-                          <button className="flex-1 px-3 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors text-sm">
+                          <button className="flex-1 px-3 py-2 glass-button-sm text-gray-300 text-sm">
                             <Settings className="w-4 h-4 mx-auto" />
                           </button>
                         </div>
@@ -663,10 +663,10 @@ export default function AIStudioPage() {
                       </div>
                       
                       <div className="flex space-x-2 mt-4">
-                        <button className="flex-1 px-3 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors text-sm">
+                        <button className="flex-1 px-3 py-2 glass-button-sm text-gray-300 text-sm">
                           {automation.status === 'active' ? <Pause className="w-4 h-4 mx-auto" /> : <Play className="w-4 h-4 mx-auto" />}
                         </button>
-                        <button className="flex-1 px-3 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors text-sm">
+                        <button className="flex-1 px-3 py-2 glass-button-sm text-gray-300 text-sm">
                           <Settings className="w-4 h-4 mx-auto" />
                         </button>
                       </div>
@@ -688,7 +688,7 @@ export default function AIStudioPage() {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-6 py-3 bg-gray-700 text-white rounded-xl font-semibold hover:bg-gray-600"
+                    className="px-6 py-3 glass-button text-white font-semibold"
                   >
                     Launch Builder
                   </motion.button>
