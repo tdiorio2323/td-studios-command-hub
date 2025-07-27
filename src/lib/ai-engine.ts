@@ -37,8 +37,354 @@ export interface ContentGeneration {
   }
 }
 
+export interface PredictiveAnalytics {
+  prediction: any
+  confidence: number
+  factors: string[]
+  recommendation: string
+  timeframe: string
+  dataPoints: number
+}
+
+export interface TrendAnalysis {
+  trend: 'upward' | 'downward' | 'stable' | 'volatile'
+  strength: number
+  factors: string[]
+  prediction: string
+  recommendations: string[]
+  dataRange: {
+    start: string
+    end: string
+    points: number
+  }
+}
+
+export interface BusinessIntelligence {
+  insights: string[]
+  metrics: Record<string, number>
+  recommendations: string[]
+  risks: string[]
+  opportunities: string[]
+  nextActions: string[]
+}
+
+export interface AutomationWorkflow {
+  id: string
+  name: string
+  trigger: string
+  actions: Array<{
+    type: string
+    config: any
+    order: number
+  }>
+  status: 'active' | 'paused' | 'error'
+  lastRun?: string
+  successRate: number
+}
+
 export class AIEngine {
-  
+  private modelSelector: Map<string, string> = new Map([
+    ['analysis', 'claude-3-5-sonnet-20241022'],
+    ['creative', 'gpt-4'],
+    ['code', 'claude-3-5-sonnet-20241022'],
+    ['quick', 'gpt-3.5-turbo'],
+    ['vision', 'gpt-4-vision-preview'],
+    ['prediction', 'claude-3-5-sonnet-20241022']
+  ])
+
+  // AI Model Orchestration
+  async selectOptimalModel(taskType: string, complexity: 'low' | 'medium' | 'high'): Promise<{model: string, provider: 'claude' | 'openai'}> {
+    const baseModel = this.modelSelector.get(taskType) || 'claude-3-5-sonnet-20241022'
+    
+    // Complexity-based model selection
+    if (complexity === 'high' && taskType === 'analysis') {
+      return { model: 'claude-3-5-sonnet-20241022', provider: 'claude' }
+    }
+    
+    if (complexity === 'low' && taskType === 'creative') {
+      return { model: 'gpt-3.5-turbo', provider: 'openai' }
+    }
+    
+    return baseModel.includes('claude') 
+      ? { model: baseModel, provider: 'claude' }
+      : { model: baseModel, provider: 'openai' }
+  }
+
+  async processWithOptimalAI(prompt: string, taskType: string, complexity: 'low' | 'medium' | 'high' = 'medium'): Promise<{
+    response: string,
+    model: string,
+    provider: string,
+    processingTime: number
+  }> {
+    const startTime = Date.now()
+    const { model, provider } = await this.selectOptimalModel(taskType, complexity)
+    
+    try {
+      let response: string
+      if (provider === 'claude') {
+        response = await this.chatWithClaude([{ role: 'user', content: prompt }], model)
+      } else {
+        response = await this.chatWithGPT([{ role: 'user', content: prompt }], model)
+      }
+      
+      return {
+        response,
+        model,
+        provider,
+        processingTime: Date.now() - startTime
+      }
+    } catch (error) {
+      // Fallback to alternative provider
+      const fallbackProvider = provider === 'claude' ? 'openai' : 'claude'
+      const fallbackResponse = fallbackProvider === 'claude' 
+        ? await this.chatWithClaude([{ role: 'user', content: prompt }])
+        : await this.chatWithGPT([{ role: 'user', content: prompt }])
+      
+      return {
+        response: fallbackResponse,
+        model: `fallback-${fallbackProvider}`,
+        provider: fallbackProvider,
+        processingTime: Date.now() - startTime
+      }
+    }
+  }
+
+  // Predictive Analytics Engine
+  async generatePredictiveAnalytics(data: any[], metricType: string): Promise<PredictiveAnalytics> {
+    const prompt = `Analyze this ${metricType} data and provide predictive insights:
+    
+Data Points: ${JSON.stringify(data.slice(-20))} // Last 20 points
+
+Provide analysis in this JSON format:
+{
+  "prediction": "predicted_value_or_trend",
+  "confidence": 0.85,
+  "factors": ["factor1", "factor2"],
+  "recommendation": "specific recommendation",
+  "timeframe": "next 30 days",
+  "dataPoints": ${data.length}
+}`
+
+    try {
+      const result = await this.processWithOptimalAI(prompt, 'prediction', 'high')
+      const analysis = JSON.parse(result.response.match(/\{[\s\S]*\}/)?.[0] || '{}')
+      
+      return {
+        prediction: analysis.prediction || 'Insufficient data',
+        confidence: analysis.confidence || 0.5,
+        factors: analysis.factors || ['Data quality', 'Historical trends'],
+        recommendation: analysis.recommendation || 'Continue monitoring',
+        timeframe: analysis.timeframe || 'next 30 days',
+        dataPoints: data.length
+      }
+    } catch (error) {
+      console.error('Predictive analytics error:', error)
+      return {
+        prediction: 'Analysis unavailable',
+        confidence: 0,
+        factors: ['System error'],
+        recommendation: 'Retry analysis',
+        timeframe: 'unknown',
+        dataPoints: data.length
+      }
+    }
+  }
+
+  // Trend Analysis AI
+  async analyzeTrends(data: number[], timeLabels: string[]): Promise<TrendAnalysis> {
+    const prompt = `Analyze these time-series data points for trends:
+    
+Data: ${JSON.stringify(data)}
+Time Labels: ${JSON.stringify(timeLabels)}
+
+Determine:
+1. Overall trend direction (upward/downward/stable/volatile)
+2. Trend strength (0-1)
+3. Key influencing factors
+4. Future prediction
+5. Actionable recommendations
+
+Return JSON format:
+{
+  "trend": "upward",
+  "strength": 0.8,
+  "factors": ["seasonal growth", "market expansion"],
+  "prediction": "continued growth expected",
+  "recommendations": ["invest in scaling", "monitor capacity"]
+}`
+
+    try {
+      const result = await this.processWithOptimalAI(prompt, 'analysis', 'high')
+      const analysis = JSON.parse(result.response.match(/\{[\s\S]*\}/)?.[0] || '{}')
+      
+      return {
+        trend: analysis.trend || 'stable',
+        strength: analysis.strength || 0.5,
+        factors: analysis.factors || ['Insufficient data'],
+        prediction: analysis.prediction || 'Trend unclear',
+        recommendations: analysis.recommendations || ['Collect more data'],
+        dataRange: {
+          start: timeLabels[0] || 'unknown',
+          end: timeLabels[timeLabels.length - 1] || 'unknown',
+          points: data.length
+        }
+      }
+    } catch (error) {
+      console.error('Trend analysis error:', error)
+      return {
+        trend: 'stable',
+        strength: 0,
+        factors: ['Analysis error'],
+        prediction: 'Unable to determine trend',
+        recommendations: ['Check data quality'],
+        dataRange: {
+          start: 'unknown',
+          end: 'unknown',
+          points: data.length
+        }
+      }
+    }
+  }
+
+  // Business Intelligence Engine
+  async generateBusinessIntelligence(businessData: {
+    revenue: number[]
+    customers: number[]
+    engagement: number[]
+    costs: number[]
+    timeframe: string[]
+  }): Promise<BusinessIntelligence> {
+    const prompt = `Analyze this business data and provide strategic insights:
+
+Revenue: ${businessData.revenue.slice(-10)}
+Customers: ${businessData.customers.slice(-10)}
+Engagement: ${businessData.engagement.slice(-10)}
+Costs: ${businessData.costs.slice(-10)}
+Timeframe: ${businessData.timeframe.slice(-10)}
+
+Provide comprehensive business intelligence in JSON:
+{
+  "insights": ["key insight 1", "key insight 2"],
+  "metrics": {"growth_rate": 0.15, "customer_acquisition_cost": 45},
+  "recommendations": ["recommendation 1", "recommendation 2"],
+  "risks": ["risk 1", "risk 2"],
+  "opportunities": ["opportunity 1", "opportunity 2"],
+  "nextActions": ["action 1", "action 2"]
+}`
+
+    try {
+      const result = await this.processWithOptimalAI(prompt, 'analysis', 'high')
+      const intelligence = JSON.parse(result.response.match(/\{[\s\S]*\}/)?.[0] || '{}')
+      
+      return {
+        insights: intelligence.insights || ['Business analysis in progress'],
+        metrics: intelligence.metrics || {},
+        recommendations: intelligence.recommendations || ['Continue monitoring performance'],
+        risks: intelligence.risks || ['Market volatility'],
+        opportunities: intelligence.opportunities || ['Market expansion potential'],
+        nextActions: intelligence.nextActions || ['Review quarterly performance']
+      }
+    } catch (error) {
+      console.error('Business intelligence error:', error)
+      return {
+        insights: ['Analysis system temporarily unavailable'],
+        metrics: {},
+        recommendations: ['Retry analysis when system is available'],
+        risks: ['Data analysis limitations'],
+        opportunities: ['Improve data collection'],
+        nextActions: ['Check system status']
+      }
+    }
+  }
+
+  // Advanced Document Processing
+  async processDocument(content: string, processingType: 'summarize' | 'extract' | 'analyze' | 'categorize'): Promise<{
+    result: any
+    confidence: number
+    processingTime: number
+    metadata: any
+  }> {
+    const startTime = Date.now()
+    
+    const prompts = {
+      summarize: `Summarize this document in 3-5 key points:\n\n${content}`,
+      extract: `Extract key entities, dates, and important information from:\n\n${content}`,
+      analyze: `Analyze the sentiment, topics, and key themes in:\n\n${content}`,
+      categorize: `Categorize this document and assign relevant tags:\n\n${content}`
+    }
+
+    try {
+      const result = await this.processWithOptimalAI(prompts[processingType], 'analysis', 'medium')
+      
+      return {
+        result: result.response,
+        confidence: 0.85,
+        processingTime: Date.now() - startTime,
+        metadata: {
+          wordCount: content.split(' ').length,
+          model: result.model,
+          provider: result.provider
+        }
+      }
+    } catch (error) {
+      console.error('Document processing error:', error)
+      throw new Error('Failed to process document')
+    }
+  }
+
+  // Smart Email Campaign Generation
+  async generateEmailCampaign(campaignData: {
+    audience: string
+    goal: string
+    tone: string
+    brandVoice: string
+  }): Promise<{
+    subject: string
+    content: string
+    cta: string
+    metadata: any
+  }> {
+    const prompt = `Generate a high-converting email campaign:
+
+Audience: ${campaignData.audience}
+Goal: ${campaignData.goal}
+Tone: ${campaignData.tone}
+Brand Voice: ${campaignData.brandVoice}
+
+Create:
+1. Compelling subject line
+2. Email content with personalization
+3. Strong call-to-action
+4. A/B test variations
+
+Format as JSON:
+{
+  "subject": "subject line",
+  "content": "email body",
+  "cta": "call to action",
+  "variations": ["alt subject 1", "alt subject 2"]
+}`
+
+    try {
+      const result = await this.processWithOptimalAI(prompt, 'creative', 'high')
+      const campaign = JSON.parse(result.response.match(/\{[\s\S]*\}/)?.[0] || '{}')
+      
+      return {
+        subject: campaign.subject || 'Your Subject Here',
+        content: campaign.content || 'Email content unavailable',
+        cta: campaign.cta || 'Take Action',
+        metadata: {
+          variations: campaign.variations || [],
+          model: result.model,
+          generatedAt: new Date().toISOString()
+        }
+      }
+    } catch (error) {
+      console.error('Email campaign generation error:', error)
+      throw new Error('Failed to generate email campaign')
+    }
+  }
+
   // Claude API Methods
   async chatWithClaude(messages: AIMessage[], model: string = 'claude-3-5-sonnet-20241022'): Promise<string> {
     try {
