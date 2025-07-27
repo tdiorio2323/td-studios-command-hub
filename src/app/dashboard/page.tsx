@@ -19,7 +19,9 @@ import {
   Settings,
   Bell,
   Search,
-  Plus
+  Plus,
+  Sparkles,
+  Command
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
@@ -35,7 +37,7 @@ interface QuickAction {
   icon: React.ReactNode
   label: string
   href: string
-  color: string
+  gradient: string
 }
 
 export default function DashboardPage() {
@@ -43,8 +45,8 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats>({
     activeProjects: 8,
     completedTasks: 47,
-    aiInteractions: 234,
-    storageUsed: '2.4 GB',
+    aiInteractions: 235,
+    storageUsed: '2.40 GB',
     uptime: '99.9%'
   })
 
@@ -61,37 +63,37 @@ export default function DashboardPage() {
       icon: <Brain className="w-6 h-6" />, 
       label: 'AI Studio', 
       href: '/dashboard/ai-studio',
-      color: 'bw-icon'
+      gradient: 'from-white/20 to-chrome-silver/10'
     },
     { 
       icon: <Files className="w-6 h-6" />, 
       label: 'File Vault', 
       href: '/dashboard/file-vault',
-      color: 'bw-icon'
+      gradient: 'from-chrome-silver/20 to-white/10'
     },
     { 
       icon: <CheckSquare className="w-6 h-6" />, 
       label: 'Task Manager', 
       href: '/dashboard/tasks',
-      color: 'bw-icon'
+      gradient: 'from-white/15 to-chrome-silver/15'
     },
     { 
       icon: <BarChart3 className="w-6 h-6" />, 
       label: 'Analytics', 
       href: '/dashboard/analytics',
-      color: 'bw-icon'
+      gradient: 'from-chrome-silver/20 to-white/5'
     },
     { 
       icon: <Zap className="w-6 h-6" />, 
       label: 'Workflows', 
       href: '/dashboard/workflows',
-      color: 'bw-icon'
+      gradient: 'from-white/20 to-chrome-silver/20'
     },
     { 
       icon: <MessageSquare className="w-6 h-6" />, 
       label: 'Messages', 
       href: '/dashboard/messages',
-      color: 'bw-icon'
+      gradient: 'from-chrome-silver/15 to-white/15'
     }
   ]
 
@@ -119,53 +121,96 @@ export default function DashboardPage() {
     router.push('/login')
   }
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: [0.23, 1, 0.32, 1]
+      }
+    }
+  }
+
   return (
-    <div className="min-h-screen" style={{ background: 'var(--primary-bg)' }}>
+    <div className="min-h-screen bg-luxury-gradient perspective-1000">
       {/* Header */}
-      <header className="bg-gray-800/50 backdrop-blur-xl border-b border-gray-700/50 sticky top-0 z-50">
+      <header className="glass-card sticky top-0 z-50 border-b border-white/10 rounded-none">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <div className="flex items-center space-x-3">
+            <motion.div 
+              className="flex items-center space-x-3"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+            >
               <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="w-8 h-8 rounded-full bw-icon flex items-center justify-center"
+                animate={{ rotateY: 360 }}
+                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                className="w-10 h-10 rounded-xl glass-card chrome-pulse flex items-center justify-center transform-3d"
               >
-                <Brain className="w-5 h-5 text-white" />
+                <Command className="w-5 h-5 text-white" />
               </motion.div>
-              <h1 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>
-                TD Studios
-              </h1>
-            </div>
+              <div>
+                <h1 className="text-xl font-luxury chrome-text animate-chrome-shine">
+                  TD Studios
+                </h1>
+                <p className="luxury-subtitle">Command Hub</p>
+              </div>
+            </motion.div>
 
             {/* Search */}
-            <div className="flex-1 max-w-2xl mx-8">
+            <motion.div 
+              className="flex-1 max-w-2xl mx-8"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4" />
                 <input
                   type="text"
                   placeholder="Search files, tasks, or ask AI..."
-                  className="w-full pl-10 pr-4 py-2 rounded-lg dark-input"
+                  className="w-full pl-12 pr-4 py-3 glass-card border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-white/30 transition-all duration-300 hover:shadow-chrome"
                 />
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <kbd className="px-2 py-1 text-xs text-white/60 bg-white/10 rounded border border-white/20">⌘K</kbd>
+                </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Actions */}
-            <div className="flex items-center space-x-4">
-              <button className="p-2 glass-button-sm text-gray-300 hover:text-white">
-                <Bell className="w-5 h-5" />
+            <motion.div 
+              className="flex items-center space-x-3"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <button className="btn-glass-icon">
+                <Bell className="w-5 h-5 text-white" />
               </button>
-              <button className="p-2 glass-button-sm text-gray-300 hover:text-white">
-                <Settings className="w-5 h-5" />
+              <button className="btn-glass-icon">
+                <Settings className="w-5 h-5 text-white" />
               </button>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 glass-button text-white text-sm font-medium"
+                className="btn-chrome"
               >
                 Logout
               </button>
-            </div>
+            </motion.div>
           </div>
         </div>
       </header>
@@ -173,117 +218,130 @@ export default function DashboardPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
           className="mb-8"
         >
-          <h2 className="text-3xl font-bold text-white mb-2">
-            Welcome back, Tyler
-          </h2>
-          <p className="text-gray-400">
-            Your digital command center is ready. What would you like to accomplish today?
-          </p>
+          <div className="glass-card p-8 chrome-reflection floating-3d">
+            <motion.h2 
+              className="text-4xl font-luxury chrome-text mb-3"
+              animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+              transition={{ duration: 4, repeat: Infinity, ease: 'ease-in-out' }}
+            >
+              Welcome back, Tyler
+            </motion.h2>
+            <p className="text-white/70 text-lg font-light">
+              Your digital command center is ready. What would you like to accomplish today?
+            </p>
+            <div className="mt-4 flex items-center space-x-2">
+              <Sparkles className="w-4 h-4 text-chrome-silver animate-pulse" />
+              <span className="luxury-subtitle">All systems operational</span>
+            </div>
+          </div>
         </motion.div>
 
         {/* Stats Grid */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8"
         >
-          <div className="bg-gray-800/50 backdrop-blur-xl border border-gray-700/50 rounded-xl p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Active Projects</p>
-                <p className="text-2xl font-bold text-white">{stats.activeProjects}</p>
+          {[
+            { label: 'Active Projects', value: stats.activeProjects, icon: Activity, color: 'blue' },
+            { label: 'Completed Tasks', value: stats.completedTasks, icon: CheckSquare, color: 'green' },
+            { label: 'AI Interactions', value: stats.aiInteractions, icon: Brain, color: 'purple' },
+            { label: 'Storage Used', value: stats.storageUsed, icon: Database, color: 'orange' },
+            { label: 'Uptime', value: stats.uptime, icon: TrendingUp, color: 'cyan' }
+          ].map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              variants={itemVariants}
+              className="glass-card p-6 hover:shadow-chrome transition-all duration-500 chrome-pulse animate-float-3d group"
+              style={{ animationDelay: `${index * 0.5}s` }}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="luxury-subtitle text-white/60">{stat.label}</p>
+                  <motion.p 
+                    className="text-3xl font-bold text-white mt-1"
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
+                    {stat.value}
+                  </motion.p>
+                </div>
+                <motion.div 
+                  className="w-14 h-14 glass-card flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                  whileHover={{ rotateY: 180 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <stat.icon className="w-7 h-7 text-white" />
+                </motion.div>
               </div>
-              <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center">
-                <Activity className="w-6 h-6 text-gray-300" />
+              <div className="mt-4 h-1 bg-white/10 rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full bg-chrome-gradient"
+                  initial={{ width: 0 }}
+                  animate={{ width: '75%' }}
+                  transition={{ duration: 1, delay: index * 0.2 }}
+                />
               </div>
-            </div>
-          </div>
-
-          <div className="bg-gray-800/50 backdrop-blur-xl border border-gray-700/50 rounded-xl p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Completed Tasks</p>
-                <p className="text-2xl font-bold text-white">{stats.completedTasks}</p>
-              </div>
-              <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center">
-                <CheckSquare className="w-6 h-6 text-gray-300" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gray-800/50 backdrop-blur-xl border border-gray-700/50 rounded-xl p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">AI Interactions</p>
-                <p className="text-2xl font-bold text-white">{stats.aiInteractions}</p>
-              </div>
-              <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center">
-                <Brain className="w-6 h-6 text-gray-300" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gray-800/50 backdrop-blur-xl border border-gray-700/50 rounded-xl p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Storage Used</p>
-                <p className="text-2xl font-bold text-white">{stats.storageUsed}</p>
-              </div>
-              <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center">
-                <Database className="w-6 h-6 text-gray-300" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gray-800/50 backdrop-blur-xl border border-gray-700/50 rounded-xl p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Uptime</p>
-                <p className="text-2xl font-bold text-white">{stats.uptime}</p>
-              </div>
-              <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-gray-300" />
-              </div>
-            </div>
-          </div>
+            </motion.div>
+          ))}
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Quick Actions */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
             className="lg:col-span-2"
           >
-            <div className="bg-gray-800/50 backdrop-blur-xl border border-gray-700/50 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold text-white">Quick Actions</h3>
-                <button className="p-2 glass-button-sm text-gray-300 hover:text-white">
-                  <Plus className="w-5 h-5" />
-                </button>
+            <div className="glass-card p-8 chrome-reflection">
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="text-2xl font-luxury text-white">Quick Actions</h3>
+                <motion.button 
+                  className="btn-glass-icon"
+                  whileHover={{ scale: 1.1, rotateZ: 90 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Plus className="w-5 h-5 text-white" />
+                </motion.button>
               </div>
               
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                 {quickActions.map((action, index) => (
                   <motion.button
                     key={action.label}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    initial={{ opacity: 0, y: 30, rotateX: -15 }}
+                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                    transition={{ 
+                      duration: 0.6, 
+                      delay: index * 0.1,
+                      ease: [0.23, 1, 0.32, 1]
+                    }}
+                    whileHover={{ 
+                      y: -8, 
+                      rotateX: 5,
+                      transition: { duration: 0.2 } 
+                    }}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => router.push(action.href)}
-                    className="group glass-action relative p-6 transition-all duration-200"
+                    className="group relative p-8 glass-card hover:shadow-chrome transition-all duration-500 transform-3d chrome-reflection overflow-hidden"
                   >
-                    <div className="w-12 h-12 glass-icon rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <div className={`w-16 h-16 bg-gradient-to-br ${action.gradient} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
                       {action.icon}
                     </div>
-                    <p className="text-white font-medium text-left">{action.label}</p>
+                    <p className="text-white font-semibold text-lg text-left group-hover:chrome-text transition-all duration-300">
+                      {action.label}
+                    </p>
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                    </div>
                   </motion.button>
                 ))}
               </div>
@@ -292,26 +350,36 @@ export default function DashboardPage() {
 
           {/* Recent Activity */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <div className="bg-gray-800/50 backdrop-blur-xl border border-gray-700/50 rounded-xl p-6">
-              <h3 className="text-xl font-semibold text-white mb-6">Recent Activity</h3>
+            <div className="glass-card p-8 animate-glass-morph">
+              <h3 className="text-2xl font-luxury text-white mb-8">Recent Activity</h3>
               
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {recentActivity.map((activity, index) => (
                   <motion.div
                     key={activity.id}
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, x: 30 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="flex items-start space-x-3"
+                    className="flex items-start space-x-4 group hover:bg-white/5 p-3 rounded-lg transition-all duration-300"
                   >
-                    <div className="w-2 h-2 rounded-full mt-2 bg-gray-400" />
+                    <motion.div 
+                      className={`w-3 h-3 rounded-full mt-2 ${
+                        activity.type === 'success' ? 'bg-green-400' :
+                        activity.type === 'warning' ? 'bg-yellow-400' :
+                        'bg-blue-400'
+                      } shadow-lg`}
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
                     <div className="flex-1 min-w-0">
-                      <p className="text-white text-sm">{activity.action}</p>
-                      <p className="text-gray-400 text-xs">{activity.time}</p>
+                      <p className="text-white font-medium group-hover:text-chrome-silver transition-colors">
+                        {activity.action}
+                      </p>
+                      <p className="text-white/50 text-sm mt-1">{activity.time}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -322,25 +390,33 @@ export default function DashboardPage() {
 
         {/* AI Status */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
           className="mt-8"
         >
-          <div className="bg-gray-800/50 backdrop-blur-xl border border-gray-700/50 rounded-xl p-6">
+          <div className="glass-card p-8 chrome-pulse holographic-glass">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center">
-                  <Brain className="w-6 h-6 text-white" />
-                </div>
+              <div className="flex items-center space-x-6">
+                <motion.div 
+                  className="w-16 h-16 bg-chrome-gradient rounded-xl flex items-center justify-center chrome-reflection"
+                  animate={{ rotateY: [0, 360] }}
+                  transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                >
+                  <Brain className="w-8 h-8 text-white" />
+                </motion.div>
                 <div>
-                  <h3 className="text-white font-semibold">AI Neural Network</h3>
-                  <p className="text-gray-400 text-sm">All systems operational • Processing at 94% efficiency</p>
+                  <h3 className="text-xl font-luxury text-white mb-1">AI Neural Network</h3>
+                  <p className="text-white/60">All systems operational • Processing at 94% efficiency</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-gray-300 rounded-full animate-pulse" />
-                <span className="text-gray-300 text-sm">Online</span>
+              <div className="flex items-center space-x-3">
+                <motion.div 
+                  className="w-3 h-3 bg-green-400 rounded-full"
+                  animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+                <span className="chrome-text font-semibold">Online</span>
               </div>
             </div>
           </div>
