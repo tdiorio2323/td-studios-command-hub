@@ -424,6 +424,7 @@ export default function DashboardPage() {
           </div>
         </motion.div>
       </div>
+      </div>
     </DashboardLayout>
   )
 }
