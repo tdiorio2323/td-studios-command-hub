@@ -7,21 +7,21 @@
    Black, White, Light Grey with 3D Glass Effects
    ======================= */
 
-/* CSS Variables for Premium Dark Color Palette */
+/* CSS Variables for Black & White Design */
 :root {
-  --primary-bg: #0a0a0a;
-  --secondary-bg: #111111;
-  --card-bg: #1a1a1a;
-  --border-color: #2a2a2a;
+  --primary-bg: #000000;
+  --secondary-bg: #0a0a0a;
+  --card-bg: #111111;
+  --border-color: #333333;
   --text-primary: #ffffff;
-  --text-secondary: #b0b0b0;
-  --text-muted: #6b6b6b;
-  --accent-blue: #3b82f6;
-  --accent-purple: #8b5cf6;
+  --text-secondary: #cccccc;
+  --text-muted: #888888;
+  --accent-primary: #ffffff;
+  --accent-secondary: #666666;
   --glass-overlay: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.1);
-  --shadow-dark: 0 25px 50px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 30px rgba(59, 130, 246, 0.1);
+  --shadow-dark: 0 25px 50px rgba(0, 0, 0, 0.8);
+  --shadow-light: 0 0 30px rgba(255, 255, 255, 0.1);
 }
 
 /* Base Styling */
@@ -79,9 +79,9 @@ body {
 }
 
 .dark-button {
-  background: var(--accent-blue);
-  color: white;
-  border: none;
+  background: var(--accent-primary);
+  color: var(--primary-bg);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 0.75rem 1.5rem;
   font-weight: 500;
@@ -89,8 +89,25 @@ body {
 }
 
 .dark-button:hover {
-  background: #2563eb;
+  background: var(--accent-secondary);
+  color: var(--text-primary);
   transform: translateY(-1px);
+}
+
+/* Black & White Override Classes */
+.bw-icon {
+  color: var(--text-primary) !important;
+  background: var(--card-bg) !important;
+}
+
+.bw-card {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.bw-accent {
+  background: var(--accent-primary) !important;
+  color: var(--primary-bg) !important;
 }
 
 @keyframes chromeShine {

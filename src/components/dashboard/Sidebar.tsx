@@ -135,12 +135,12 @@ export function Sidebar() {
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-green-500 flex items-center justify-center"
+            className="w-10 h-10 rounded-full bg-gray-700/50 flex items-center justify-center"
           >
             <Brain className="w-6 h-6 text-white" />
           </motion.div>
           <div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold text-white">
               TD Studios
             </h1>
             <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Command Hub</p>
@@ -162,7 +162,7 @@ export function Sidebar() {
                   href={item.href}
                   className={`flex items-center justify-between w-full px-4 py-3 rounded-xl transition-all duration-200 group ${
                     isActive(item.href)
-                      ? 'bg-gradient-to-r from-blue-500/20 to-green-500/20 border border-blue-500/30 text-white'
+                      ? 'bg-gray-700/50 border border-gray-600 text-white'
                       : 'hover:bg-white/5 text-gray-300 hover:text-white'
                   }`}
                   onClick={(e) => {
@@ -173,7 +173,7 @@ export function Sidebar() {
                   }}
                 >
                   <div className="flex items-center space-x-3">
-                    <div className={`transition-colors ${isActive(item.href) ? 'text-blue-400' : 'text-gray-400 group-hover:text-white'}`}>
+                    <div className={`transition-colors ${isActive(item.href) ? 'text-white' : 'text-gray-400 group-hover:text-white'}`}>
                       {item.icon}
                     </div>
                     <span className="font-medium">{item.label}</span>
@@ -183,8 +183,8 @@ export function Sidebar() {
                     {item.badge && (
                       <span className={`px-2 py-1 text-xs rounded-full ${
                         item.badge === 'AI' 
-                          ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-                          : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                          ? 'bg-gray-700/50 text-gray-300 border border-gray-600'
+                          : 'bg-gray-700/50 text-gray-300 border border-gray-600'
                       }`}>
                         {item.badge}
                       </span>
@@ -222,7 +222,7 @@ export function Sidebar() {
                           href={child.href}
                           className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-200 ${
                             isActive(child.href)
-                              ? 'bg-blue-500/20 text-blue-300'
+                              ? 'bg-gray-700/50 text-gray-300'
                               : 'text-gray-400 hover:text-white hover:bg-white/5'
                           }`}
                         >
@@ -253,7 +253,7 @@ export function Sidebar() {
       {/* Status Indicator */}
       <div className="absolute bottom-4 right-4">
         <div className="flex items-center space-x-2">
-          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+          <div className="w-2 h-2 bg-gray-300 rounded-full animate-pulse" />
           <span className="text-xs text-gray-400">Online</span>
         </div>
       </div>

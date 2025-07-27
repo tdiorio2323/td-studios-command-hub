@@ -180,7 +180,7 @@ export default function AIStudioPage() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 bg-purple-600/20 border border-purple-500/30 text-purple-300 rounded-xl font-semibold flex items-center space-x-2 hover:bg-purple-600/30 transition-all"
+              className="px-4 py-2 bg-gray-700/50 border border-gray-600 text-gray-300 rounded-xl font-semibold flex items-center space-x-2 hover:bg-gray-700/70 transition-all"
             >
               <Settings className="w-5 h-5" />
               <span>Model Settings</span>
@@ -196,8 +196,8 @@ export default function AIStudioPage() {
                 <p className="text-gray-400 text-sm">Active Models</p>
                 <p className="text-2xl font-bold text-white">3</p>
               </div>
-              <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                <Brain className="w-6 h-6 text-blue-400" />
+              <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center">
+                <Brain className="w-6 h-6 text-gray-300" />
               </div>
             </div>
           </div>
@@ -208,8 +208,8 @@ export default function AIStudioPage() {
                 <p className="text-gray-400 text-sm">API Calls</p>
                 <p className="text-2xl font-bold text-white">12.4K</p>
               </div>
-              <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                <Activity className="w-6 h-6 text-green-400" />
+              <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center">
+                <Activity className="w-6 h-6 text-gray-300" />
               </div>
             </div>
           </div>
@@ -220,8 +220,8 @@ export default function AIStudioPage() {
                 <p className="text-gray-400 text-sm">Avg Accuracy</p>
                 <p className="text-2xl font-bold text-white">91.2%</p>
               </div>
-              <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                <BarChart3 className="w-6 h-6 text-purple-400" />
+              <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center">
+                <BarChart3 className="w-6 h-6 text-gray-300" />
               </div>
             </div>
           </div>
@@ -232,8 +232,8 @@ export default function AIStudioPage() {
                 <p className="text-gray-400 text-sm">Training Hours</p>
                 <p className="text-2xl font-bold text-white">146h</p>
               </div>
-              <div className="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center">
-                <Clock className="w-6 h-6 text-orange-400" />
+              <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center">
+                <Clock className="w-6 h-6 text-gray-300" />
               </div>
             </div>
           </div>
@@ -252,7 +252,7 @@ export default function AIStudioPage() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all ${
                   activeTab === tab.id
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
+                    ? 'bg-gray-700 text-white'
                     : 'text-gray-400 hover:text-white hover:bg-white/5'
                 }`}
               >
@@ -309,8 +309,8 @@ export default function AIStudioPage() {
                       }`}>
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
                           message.role === 'user' 
-                            ? 'bg-blue-500' 
-                            : 'bg-gradient-to-r from-purple-500 to-blue-500'
+                            ? 'bg-gray-600' 
+                            : 'bg-gray-700'
                         }`}>
                           {message.role === 'user' ? (
                             <User className="w-4 h-4 text-white" />
@@ -321,7 +321,7 @@ export default function AIStudioPage() {
                         
                         <div className={`p-4 rounded-2xl ${
                           message.role === 'user'
-                            ? 'bg-blue-500/20 border border-blue-500/30'
+                            ? 'bg-gray-700/50 border border-gray-600'
                             : 'bg-white/5 border border-white/10'
                         }`}>
                           <p className="text-white">{message.content}</p>
@@ -371,7 +371,7 @@ export default function AIStudioPage() {
                     whileTap={{ scale: 0.95 }}
                     onClick={sendMessage}
                     disabled={!currentMessage.trim() || isLoading}
-                    className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    className="px-6 py-3 bg-gray-700 text-white rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:bg-gray-600"
                   >
                     <Send className="w-5 h-5" />
                   </motion.button>
@@ -393,7 +393,7 @@ export default function AIStudioPage() {
                         key={action.label}
                         className="w-full flex items-center space-x-3 p-3 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-colors"
                       >
-                        <action.icon className={`w-5 h-5 text-${action.color}-400`} />
+                        <action.icon className="w-5 h-5 text-gray-300" />
                         <span className="text-white">{action.label}</span>
                       </button>
                     ))}
@@ -409,7 +409,7 @@ export default function AIStudioPage() {
                         <span className="text-white">1.2s</span>
                       </div>
                       <div className="bg-white/10 rounded-full h-2">
-                        <div className="bg-gradient-to-r from-green-500 to-blue-500 h-2 rounded-full" style={{ width: '85%' }} />
+                        <div className="bg-gray-600 h-2 rounded-full" style={{ width: '85%' }} />
                       </div>
                     </div>
                     
@@ -419,7 +419,7 @@ export default function AIStudioPage() {
                         <span className="text-white">94.2%</span>
                       </div>
                       <div className="bg-white/10 rounded-full h-2">
-                        <div className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full" style={{ width: '94%' }} />
+                        <div className="bg-gray-600 h-2 rounded-full" style={{ width: '94%' }} />
                       </div>
                     </div>
                   </div>
@@ -444,7 +444,7 @@ export default function AIStudioPage() {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-semibold flex items-center space-x-2"
+                    className="px-4 py-2 bg-gray-700 text-white rounded-xl font-semibold flex items-center space-x-2 hover:bg-gray-600"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Train New Model</span>
@@ -476,7 +476,7 @@ export default function AIStudioPage() {
                           </div>
                           <div className="bg-white/10 rounded-full h-2">
                             <div 
-                              className="bg-gradient-to-r from-green-500 to-blue-500 h-2 rounded-full" 
+                              className="bg-gray-600 h-2 rounded-full" 
                               style={{ width: `${model.accuracy}%` }} 
                             />
                           </div>
@@ -485,13 +485,13 @@ export default function AIStudioPage() {
                         <p className="text-xs text-gray-400">Last trained: {model.lastTrained}</p>
                         
                         <div className="flex space-x-2 pt-3">
-                          <button className="flex-1 px-3 py-2 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-colors text-sm">
+                          <button className="flex-1 px-3 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors text-sm">
                             <Play className="w-4 h-4 mx-auto" />
                           </button>
-                          <button className="flex-1 px-3 py-2 bg-green-500/20 text-green-300 rounded-lg hover:bg-green-500/30 transition-colors text-sm">
+                          <button className="flex-1 px-3 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors text-sm">
                             <Download className="w-4 h-4 mx-auto" />
                           </button>
-                          <button className="flex-1 px-3 py-2 bg-purple-500/20 text-purple-300 rounded-lg hover:bg-purple-500/30 transition-colors text-sm">
+                          <button className="flex-1 px-3 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors text-sm">
                             <Settings className="w-4 h-4 mx-auto" />
                           </button>
                         </div>
@@ -519,12 +519,12 @@ export default function AIStudioPage() {
                       </div>
                       <div className="bg-white/10 rounded-full h-3 relative overflow-hidden">
                         <motion.div 
-                          className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full"
+                          className="bg-gray-600 h-3 rounded-full"
                           initial={{ width: 0 }}
                           animate={{ width: '67%' }}
                           transition={{ duration: 2, ease: "easeOut" }}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-400/20 to-transparent animate-pulse" />
                       </div>
                     </div>
                     
@@ -558,7 +558,7 @@ export default function AIStudioPage() {
                           <span className="text-white">89%</span>
                         </div>
                         <div className="bg-white/10 rounded-full h-2">
-                          <div className="bg-gradient-to-r from-red-500 to-orange-500 h-2 rounded-full" style={{ width: '89%' }} />
+                          <div className="bg-gray-600 h-2 rounded-full" style={{ width: '89%' }} />
                         </div>
                       </div>
                       
@@ -568,7 +568,7 @@ export default function AIStudioPage() {
                           <span className="text-white">67%</span>
                         </div>
                         <div className="bg-white/10 rounded-full h-2">
-                          <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full" style={{ width: '67%' }} />
+                          <div className="bg-gray-600 h-2 rounded-full" style={{ width: '67%' }} />
                         </div>
                       </div>
                       
@@ -578,7 +578,7 @@ export default function AIStudioPage() {
                           <span className="text-white">34%</span>
                         </div>
                         <div className="bg-white/10 rounded-full h-2">
-                          <div className="bg-gradient-to-r from-green-500 to-blue-500 h-2 rounded-full" style={{ width: '34%' }} />
+                          <div className="bg-gray-600 h-2 rounded-full" style={{ width: '34%' }} />
                         </div>
                       </div>
                     </div>
@@ -604,7 +604,7 @@ export default function AIStudioPage() {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold flex items-center space-x-2"
+                    className="px-4 py-2 bg-gray-700 text-white rounded-xl font-semibold flex items-center space-x-2 hover:bg-gray-600"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Create Workflow</span>
@@ -645,7 +645,7 @@ export default function AIStudioPage() {
                       <div className="flex items-center justify-between mb-4">
                         <h4 className="text-lg font-semibold text-white">{automation.name}</h4>
                         <div className={`w-3 h-3 rounded-full ${
-                          automation.status === 'active' ? 'bg-green-400 animate-pulse' : 'bg-gray-400'
+                          automation.status === 'active' ? 'bg-gray-300 animate-pulse' : 'bg-gray-500'
                         }`} />
                       </div>
                       
@@ -663,10 +663,10 @@ export default function AIStudioPage() {
                       </div>
                       
                       <div className="flex space-x-2 mt-4">
-                        <button className="flex-1 px-3 py-2 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-colors text-sm">
+                        <button className="flex-1 px-3 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors text-sm">
                           {automation.status === 'active' ? <Pause className="w-4 h-4 mx-auto" /> : <Play className="w-4 h-4 mx-auto" />}
                         </button>
-                        <button className="flex-1 px-3 py-2 bg-purple-500/20 text-purple-300 rounded-lg hover:bg-purple-500/30 transition-colors text-sm">
+                        <button className="flex-1 px-3 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors text-sm">
                           <Settings className="w-4 h-4 mx-auto" />
                         </button>
                       </div>
@@ -680,7 +680,7 @@ export default function AIStudioPage() {
                 <h3 className="text-xl font-bold text-white mb-6">Workflow Builder</h3>
                 
                 <div className="bg-white/5 border border-white/10 rounded-xl p-8 text-center">
-                  <Sparkles className="w-16 h-16 text-purple-400 mx-auto mb-4" />
+                  <Sparkles className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                   <h4 className="text-lg font-semibold text-white mb-2">Visual Workflow Designer</h4>
                   <p className="text-gray-400 mb-6">
                     Drag and drop interface for creating complex AI-powered automations
@@ -688,7 +688,7 @@ export default function AIStudioPage() {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold"
+                    className="px-6 py-3 bg-gray-700 text-white rounded-xl font-semibold hover:bg-gray-600"
                   >
                     Launch Builder
                   </motion.button>

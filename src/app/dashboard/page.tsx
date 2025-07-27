@@ -61,37 +61,37 @@ export default function DashboardPage() {
       icon: <Brain className="w-6 h-6" />, 
       label: 'AI Studio', 
       href: '/dashboard/ai-studio',
-      color: 'from-purple-500 to-pink-500'
+      color: 'bw-icon'
     },
     { 
       icon: <Files className="w-6 h-6" />, 
       label: 'File Vault', 
       href: '/dashboard/file-vault',
-      color: 'from-blue-500 to-cyan-500'
+      color: 'bw-icon'
     },
     { 
       icon: <CheckSquare className="w-6 h-6" />, 
       label: 'Task Manager', 
       href: '/dashboard/tasks',
-      color: 'from-green-500 to-emerald-500'
+      color: 'bw-icon'
     },
     { 
       icon: <BarChart3 className="w-6 h-6" />, 
       label: 'Analytics', 
       href: '/dashboard/analytics',
-      color: 'from-orange-500 to-red-500'
+      color: 'bw-icon'
     },
     { 
       icon: <Zap className="w-6 h-6" />, 
       label: 'Workflows', 
       href: '/dashboard/workflows',
-      color: 'from-yellow-500 to-orange-500'
+      color: 'bw-icon'
     },
     { 
       icon: <MessageSquare className="w-6 h-6" />, 
       label: 'Messages', 
       href: '/dashboard/messages',
-      color: 'from-indigo-500 to-purple-500'
+      color: 'bw-icon'
     }
   ]
 
@@ -120,7 +120,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
+    <div className="min-h-screen" style={{ background: 'var(--primary-bg)' }}>
       {/* Header */}
       <header className="bg-gray-800/50 backdrop-blur-xl border-b border-gray-700/50 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -130,11 +130,11 @@ export default function DashboardPage() {
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-green-500 flex items-center justify-center"
+                className="w-8 h-8 rounded-full bw-icon flex items-center justify-center"
               >
                 <Brain className="w-5 h-5 text-white" />
               </motion.div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">
+              <h1 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>
                 TD Studios
               </h1>
             </div>
@@ -146,7 +146,7 @@ export default function DashboardPage() {
                 <input
                   type="text"
                   placeholder="Search files, tasks, or ask AI..."
-                  className="w-full pl-10 pr-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 rounded-lg dark-input"
                 />
               </div>
             </div>
@@ -199,8 +199,8 @@ export default function DashboardPage() {
                 <p className="text-gray-400 text-sm">Active Projects</p>
                 <p className="text-2xl font-bold text-white">{stats.activeProjects}</p>
               </div>
-              <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                <Activity className="w-6 h-6 text-blue-400" />
+              <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center">
+                <Activity className="w-6 h-6 text-gray-300" />
               </div>
             </div>
           </div>
@@ -211,8 +211,8 @@ export default function DashboardPage() {
                 <p className="text-gray-400 text-sm">Completed Tasks</p>
                 <p className="text-2xl font-bold text-white">{stats.completedTasks}</p>
               </div>
-              <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                <CheckSquare className="w-6 h-6 text-green-400" />
+              <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center">
+                <CheckSquare className="w-6 h-6 text-gray-300" />
               </div>
             </div>
           </div>
@@ -223,8 +223,8 @@ export default function DashboardPage() {
                 <p className="text-gray-400 text-sm">AI Interactions</p>
                 <p className="text-2xl font-bold text-white">{stats.aiInteractions}</p>
               </div>
-              <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                <Brain className="w-6 h-6 text-purple-400" />
+              <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center">
+                <Brain className="w-6 h-6 text-gray-300" />
               </div>
             </div>
           </div>
@@ -235,8 +235,8 @@ export default function DashboardPage() {
                 <p className="text-gray-400 text-sm">Storage Used</p>
                 <p className="text-2xl font-bold text-white">{stats.storageUsed}</p>
               </div>
-              <div className="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center">
-                <Database className="w-6 h-6 text-orange-400" />
+              <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center">
+                <Database className="w-6 h-6 text-gray-300" />
               </div>
             </div>
           </div>
@@ -247,8 +247,8 @@ export default function DashboardPage() {
                 <p className="text-gray-400 text-sm">Uptime</p>
                 <p className="text-2xl font-bold text-white">{stats.uptime}</p>
               </div>
-              <div className="w-12 h-12 bg-cyan-500/20 rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-cyan-400" />
+              <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-gray-300" />
               </div>
             </div>
           </div>
@@ -280,7 +280,7 @@ export default function DashboardPage() {
                     onClick={() => router.push(action.href)}
                     className="group relative p-6 bg-gray-900/50 hover:bg-gray-900/80 border border-gray-700/50 rounded-xl transition-all duration-200 hover:scale-105"
                   >
-                    <div className={`w-12 h-12 bg-gradient-to-r ${action.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                    <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                       {action.icon}
                     </div>
                     <p className="text-white font-medium text-left">{action.label}</p>
@@ -308,11 +308,7 @@ export default function DashboardPage() {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     className="flex items-start space-x-3"
                   >
-                    <div className={`w-2 h-2 rounded-full mt-2 ${
-                      activity.type === 'success' ? 'bg-green-400' :
-                      activity.type === 'warning' ? 'bg-yellow-400' :
-                      'bg-blue-400'
-                    }`} />
+                    <div className="w-2 h-2 rounded-full mt-2 bg-gray-400" />
                     <div className="flex-1 min-w-0">
                       <p className="text-white text-sm">{activity.action}</p>
                       <p className="text-gray-400 text-xs">{activity.time}</p>
@@ -331,10 +327,10 @@ export default function DashboardPage() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-8"
         >
-          <div className="bg-gradient-to-r from-purple-900/20 to-blue-900/20 backdrop-blur-xl border border-purple-500/20 rounded-xl p-6">
+          <div className="bg-gray-800/50 backdrop-blur-xl border border-gray-700/50 rounded-xl p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 bg-gray-700/50 rounded-lg flex items-center justify-center">
                   <Brain className="w-6 h-6 text-white" />
                 </div>
                 <div>
@@ -343,8 +339,8 @@ export default function DashboardPage() {
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                <span className="text-green-400 text-sm">Online</span>
+                <div className="w-2 h-2 bg-gray-300 rounded-full animate-pulse" />
+                <span className="text-gray-300 text-sm">Online</span>
               </div>
             </div>
           </div>
