@@ -20,7 +20,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }, [router])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+    <div className="min-h-screen" style={{ background: 'var(--primary-bg)', color: 'var(--text-primary)' }}>
       <Sidebar />
       <main className="ml-64 min-h-screen">
         <div className="p-8">

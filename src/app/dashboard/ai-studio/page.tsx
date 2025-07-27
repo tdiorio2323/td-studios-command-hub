@@ -173,7 +173,7 @@ export default function AIStudioPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-white">AI Studio</h1>
-            <p className="text-gray-400 mt-1">Advanced AI development and interaction platform</p>
+            <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>Advanced AI development and interaction platform</p>
           </div>
           
           <div className="flex items-center space-x-3">

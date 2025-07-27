@@ -123,10 +123,14 @@ export function Sidebar() {
       initial={{ x: -300 }}
       animate={{ x: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="fixed left-0 top-0 h-screen w-64 glass-card border-r border-white/10 z-50"
+      className="fixed left-0 top-0 h-screen w-64 border-r z-50"
+      style={{ 
+        background: 'var(--secondary-bg)',
+        borderColor: 'var(--border-color)'
+      }}
     >
       {/* Logo */}
-      <div className="p-6 border-b border-white/10">
+      <div className="p-6 border-b" style={{ borderColor: 'var(--border-color)' }}>
         <div className="flex items-center space-x-3">
           <motion.div
             animate={{ rotate: 360 }}
@@ -139,7 +143,7 @@ export function Sidebar() {
             <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-green-400 bg-clip-text text-transparent">
               TD Studios
             </h1>
-            <p className="text-xs text-gray-400">Command Hub</p>
+            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Command Hub</p>
           </div>
         </div>
       </div>
@@ -236,7 +240,7 @@ export function Sidebar() {
       </nav>
 
       {/* Settings */}
-      <div className="p-4 border-t border-white/10">
+      <div className="p-4 border-t" style={{ borderColor: 'var(--border-color)' }}>
         <Link
           href="/dashboard/settings"
           className="flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200"
