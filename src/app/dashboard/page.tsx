@@ -24,6 +24,7 @@ import {
   Command
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
 
 interface DashboardStats {
   activeProjects: number
@@ -144,7 +145,8 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-luxury-gradient perspective-1000">
+    <DashboardLayout>
+      <div className="perspective-1000">
       {/* Header */}
       <header className="glass-card sticky top-0 z-50 border-b border-white/10 rounded-none">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -422,6 +424,6 @@ export default function DashboardPage() {
           </div>
         </motion.div>
       </div>
-    </div>
+    </DashboardLayout>
   )
 }

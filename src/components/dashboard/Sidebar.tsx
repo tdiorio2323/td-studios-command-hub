@@ -123,27 +123,23 @@ export function Sidebar() {
       initial={{ x: -300 }}
       animate={{ x: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="fixed left-0 top-0 h-screen w-64 border-r z-50"
-      style={{ 
-        background: 'var(--secondary-bg)',
-        borderColor: 'var(--border-color)'
-      }}
+      className="fixed left-0 top-0 h-screen w-64 glass-card border-r border-white/10 z-50 rounded-none"
     >
       {/* Logo */}
-      <div className="p-6 border-b" style={{ borderColor: 'var(--border-color)' }}>
+      <div className="p-6 border-b border-white/10">
         <div className="flex items-center space-x-3">
           <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="w-10 h-10 rounded-full bg-gray-700/50 flex items-center justify-center"
+            animate={{ rotateY: 360 }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+            className="w-10 h-10 rounded-xl glass-card chrome-pulse flex items-center justify-center transform-3d"
           >
             <Brain className="w-6 h-6 text-white" />
           </motion.div>
           <div>
-            <h1 className="text-xl font-bold text-white">
+            <h1 className="text-xl font-luxury chrome-text">
               TD Studios
             </h1>
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Command Hub</p>
+            <p className="luxury-subtitle">Command Hub</p>
           </div>
         </div>
       </div>
@@ -162,7 +158,7 @@ export function Sidebar() {
                   href={item.href}
                   className={`flex items-center justify-between w-full px-4 py-3 rounded-xl transition-all duration-200 group ${
                     isActive(item.href)
-                      ? 'bg-gray-700/50 border border-gray-600 text-white'
+                      ? 'glass-card chrome-pulse text-white'
                       : 'hover:bg-white/5 text-gray-300 hover:text-white'
                   }`}
                   onClick={(e) => {
@@ -183,8 +179,8 @@ export function Sidebar() {
                     {item.badge && (
                       <span className={`px-2 py-1 text-xs rounded-full ${
                         item.badge === 'AI' 
-                          ? 'bg-gray-700/50 text-gray-300 border border-gray-600'
-                          : 'bg-gray-700/50 text-gray-300 border border-gray-600'
+                          ? 'glass-card text-white border border-white/20'
+                          : 'glass-card text-white border border-white/20'
                       }`}>
                         {item.badge}
                       </span>
@@ -222,7 +218,7 @@ export function Sidebar() {
                           href={child.href}
                           className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-200 ${
                             isActive(child.href)
-                              ? 'bg-gray-700/50 text-gray-300'
+                              ? 'glass-card text-white'
                               : 'text-gray-400 hover:text-white hover:bg-white/5'
                           }`}
                         >
@@ -240,10 +236,10 @@ export function Sidebar() {
       </nav>
 
       {/* Settings */}
-      <div className="p-4 border-t" style={{ borderColor: 'var(--border-color)' }}>
+      <div className="p-4 border-t border-white/10">
         <Link
           href="/dashboard/settings"
-          className="glass-button-sm flex items-center space-x-3 px-4 py-3 text-gray-300 hover:text-white"
+          className="btn-glass-icon w-full flex items-center space-x-3 px-4 py-3 text-gray-300 hover:text-white"
         >
           <Settings className="w-5 h-5" />
           <span className="font-medium">Settings</span>
@@ -253,8 +249,8 @@ export function Sidebar() {
       {/* Status Indicator */}
       <div className="absolute bottom-4 right-4">
         <div className="flex items-center space-x-2">
-          <div className="w-2 h-2 bg-gray-300 rounded-full animate-pulse" />
-          <span className="text-xs text-gray-400">Online</span>
+          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+          <span className="text-xs chrome-text">Online</span>
         </div>
       </div>
     </motion.div>
