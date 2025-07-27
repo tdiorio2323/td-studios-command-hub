@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Removed 'output: export' for Vercel API routes compatibility
-  trailingSlash: true,
+  // trailingSlash: true, // This can break API routes on Vercel
   images: {
     unoptimized: true,
     domains: [
