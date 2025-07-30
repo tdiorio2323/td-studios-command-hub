@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  MessageSquare, 
+import {
+  MessageSquare,
   Send,
   Search,
   Filter,
@@ -58,6 +58,38 @@ export default function MessagesPage() {
   const [selectedConversation, setSelectedConversation] = useState<string>('1')
   const [messageInput, setMessageInput] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      content: 'Hello! I\'m your AI assistant. How can I help you today?',
+      sender: 'AI Assistant',
+      senderId: 'ai-1',
+      timestamp: new Date(Date.now() - 600000),
+      type: 'text',
+      status: 'read',
+      isBot: true
+    },
+    {
+      id: '2',
+      content: 'I need help optimizing the dashboard performance',
+      sender: 'Tyler DiOrio',
+      senderId: 'user-1',
+      timestamp: new Date(Date.now() - 300000),
+      type: 'text',
+      status: 'read'
+    },
+    {
+      id: '3',
+      content: 'I can help you with that! Here are some optimization strategies:\n\n1. Implement code splitting\n2. Optimize bundle size\n3. Use React.memo for expensive components\n4. Implement virtual scrolling for large lists\n\nWould you like me to help implement any of these?',
+      sender: 'AI Assistant',
+      senderId: 'ai-1',
+      timestamp: new Date(Date.now() - 120000),
+      type: 'text',
+      status: 'delivered',
+      isBot: true
+    }
+  ])
+  const [isLoading, setIsLoading] = useState(false)
 
   const [conversations] = useState<Conversation[]>([
     {
@@ -66,7 +98,7 @@ export default function MessagesPage() {
       type: 'ai',
       lastMessage: 'I can help you with your development tasks. What would you like to work on?',
       lastMessageTime: new Date(Date.now() - 300000),
-      unreadCount: 2,
+      unreadCount: 0,
       online: true,
       isActive: true
     },
@@ -108,52 +140,86 @@ export default function MessagesPage() {
     }
   ])
 
-  const [messages] = useState<Message[]>([
-    {
-      id: '1',
-      content: 'Hello! I\'m your AI assistant. How can I help you today?',
-      sender: 'AI Assistant',
-      senderId: 'ai-1',
-      timestamp: new Date(Date.now() - 600000),
-      type: 'text',
-      status: 'read',
-      isBot: true
-    },
-    {
-      id: '2',
-      content: 'I need help optimizing the dashboard performance',
+  const sendMessage = async () => {
+    if (!messageInput.trim()) return
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      content: messageInput,
       sender: 'Tyler DiOrio',
       senderId: 'user-1',
-      timestamp: new Date(Date.now() - 300000),
-      type: 'text',
-      status: 'read'
-    },
-    {
-      id: '3',
-      content: 'I can help you with that! Here are some optimization strategies:\n\n1. Implement code splitting\n2. Optimize bundle size\n3. Use React.memo for expensive components\n4. Implement virtual scrolling for large lists\n\nWould you like me to help implement any of these?',
-      sender: 'AI Assistant',
-      senderId: 'ai-1',
-      timestamp: new Date(Date.now() - 120000),
-      type: 'text',
-      status: 'delivered',
-      isBot: true
-    },
-    {
-      id: '4',
-      content: 'Yes, let\'s start with code splitting. Can you show me how?',
-      sender: 'Tyler DiOrio',
-      senderId: 'user-1',
-      timestamp: new Date(Date.now() - 60000),
+      timestamp: new Date(),
       type: 'text',
       status: 'sent'
     }
-  ])
 
-  const sendMessage = () => {
-    if (!messageInput.trim()) return
-    
-    // Add logic to send message
+    // Add user message immediately
+    setMessages(prev => [...prev, userMessage])
+    const currentInput = messageInput
     setMessageInput('')
+    setIsLoading(true)
+
+    // Only send to AI if AI conversation is selected
+    if (selectedConversation === '1') {
+      try {
+        // Prepare conversation history for AI
+        const conversationHistory = [...messages, userMessage].map(msg => ({
+          role: msg.isBot ? 'assistant' : 'user',
+          content: msg.content
+        }))
+
+        const response = await fetch('/api/ai/simple-chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            messages: conversationHistory
+          })
+        })
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`)
+        }
+
+        const data = await response.json()
+
+        if (data.success) {
+          const aiMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            content: data.response,
+            sender: 'AI Assistant',
+            senderId: 'ai-1',
+            timestamp: new Date(),
+            type: 'text',
+            status: 'delivered',
+            isBot: true
+          }
+
+          setMessages(prev => [...prev, aiMessage])
+        } else {
+          throw new Error(data.error || 'AI response failed')
+        }
+      } catch (error) {
+        console.error('AI chat error:', error)
+
+        // Add error message
+        const errorMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          content: 'Sorry, I\'m having trouble connecting right now. Please check that your AI integrations are properly configured in Settings.',
+          sender: 'AI Assistant',
+          senderId: 'ai-1',
+          timestamp: new Date(),
+          type: 'text',
+          status: 'delivered',
+          isBot: true
+        }
+
+        setMessages(prev => [...prev, errorMessage])
+      }
+    }
+
+    setIsLoading(false)
   }
 
   const getConversationIcon = (conversation: Conversation) => {
@@ -205,7 +271,7 @@ export default function MessagesPage() {
                 </button>
               </div>
             </div>
-            
+
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
@@ -239,18 +305,18 @@ export default function MessagesPage() {
                         <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-gray-900" />
                       )}
                     </div>
-                    
+
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
                         <h3 className="text-white font-medium truncate">{conversation.name}</h3>
                         <span className="text-xs text-gray-400">
-                          {conversation.lastMessageTime.toLocaleTimeString('en-US', { 
-                            hour: '2-digit', 
-                            minute: '2-digit' 
+                          {conversation.lastMessageTime.toLocaleTimeString('en-US', {
+                            hour: '2-digit',
+                            minute: '2-digit'
                           })}
                         </span>
                       </div>
-                      
+
                       <div className="flex items-center justify-between">
                         <p className="text-gray-400 text-sm truncate">{conversation.lastMessage}</p>
                         {conversation.unreadCount > 0 && (
@@ -291,7 +357,7 @@ export default function MessagesPage() {
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-2">
                     <button className="p-2 text-gray-400 hover:text-white transition-colors">
                       <Phone className="w-5 h-5" />
@@ -322,8 +388,8 @@ export default function MessagesPage() {
                       message.isBot ? '' : 'flex-row-reverse space-x-reverse'
                     }`}>
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        message.isBot 
-                          ? 'bg-gradient-to-r from-purple-500 to-blue-500' 
+                        message.isBot
+                          ? 'bg-gradient-to-r from-purple-500 to-blue-500'
                           : 'bg-blue-500'
                       }`}>
                         {message.isBot ? (
@@ -332,7 +398,7 @@ export default function MessagesPage() {
                           <User className="w-4 h-4 text-white" />
                         )}
                       </div>
-                      
+
                       <div className={`p-4 rounded-2xl ${
                         message.isBot
                           ? 'bg-white/5 border border-white/10'
@@ -343,9 +409,9 @@ export default function MessagesPage() {
                           message.isBot ? 'text-gray-400' : 'text-blue-100'
                         }`}>
                           <span className="text-xs">
-                            {message.timestamp.toLocaleTimeString('en-US', { 
-                              hour: '2-digit', 
-                              minute: '2-digit' 
+                            {message.timestamp.toLocaleTimeString('en-US', {
+                              hour: '2-digit',
+                              minute: '2-digit'
                             })}
                           </span>
                           {!message.isBot && getMessageStatusIcon(message.status)}
@@ -354,6 +420,20 @@ export default function MessagesPage() {
                     </div>
                   </motion.div>
                 ))}
+                {isLoading && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex justify-start items-end space-x-2 max-w-[70%] flex-row-reverse space-x-reverse"
+                  >
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-blue-500">
+                      <Bot className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
+                      <p className="whitespace-pre-wrap">Thinking...</p>
+                    </div>
+                  </motion.div>
+                )}
               </div>
 
               {/* Message Input */}
@@ -362,31 +442,43 @@ export default function MessagesPage() {
                   <button className="p-2 text-gray-400 hover:text-white transition-colors">
                     <Paperclip className="w-5 h-5" />
                   </button>
-                  
+
                   <div className="flex-1 relative">
                     <input
                       type="text"
                       value={messageInput}
                       onChange={(e) => setMessageInput(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                      placeholder="Type a message..."
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
+                      placeholder={isLoading ? "AI is thinking..." : "Type a message..."}
+                      disabled={isLoading}
+                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
                     />
                     <button className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-white transition-colors">
                       <Smile className="w-5 h-5" />
                     </button>
                   </div>
-                  
+
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={sendMessage}
-                    disabled={!messageInput.trim()}
+                    disabled={!messageInput.trim() || isLoading}
                     className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   >
-                    <Send className="w-5 h-5" />
+                    {isLoading ? (
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <Send className="w-5 h-5" />
+                    )}
                   </motion.button>
                 </div>
+
+                {isLoading && selectedConversation === '1' && (
+                  <div className="mt-3 flex items-center space-x-2 text-gray-400 text-sm">
+                    <div className="w-4 h-4 border-2 border-purple-400/30 border-t-purple-400 rounded-full animate-spin" />
+                    <span>AI is generating response...</span>
+                  </div>
+                )}
               </div>
             </>
           ) : (

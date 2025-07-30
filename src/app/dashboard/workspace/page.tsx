@@ -1,276 +1,130 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Terminal, 
-  Key, 
-  Shield, 
-  GitBranch,
+import { motion } from 'framer-motion'
+import {
+  Folder,
+  File,
   Plus,
   Search,
   Filter,
-  Eye,
-  EyeOff,
-  Copy,
+  MoreHorizontal,
+  Download,
+  Share,
   Edit,
   Trash2,
-  Download,
+  Star,
+  Grid3X3,
+  List,
   Upload,
-  Settings,
-  Lock,
-  Unlock,
-  Code,
-  Server,
-  Database,
-  Cloud,
-  Folder,
-  AlertTriangle,
-  Check,
-  X,
-  MoreHorizontal
+  FolderOpen,
+  Clock,
+  User
 } from 'lucide-react'
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
 
-interface EnvironmentVariable {
-  id: string
-  key: string
-  value: string
-  environment: 'development' | 'staging' | 'production' | 'all'
-  category: 'api' | 'database' | 'auth' | 'service' | 'config'
-  encrypted: boolean
-  lastModified: string
-  description?: string
-}
-
-interface APIKey {
+interface WorkspaceItem {
   id: string
   name: string
-  key: string
-  service: string
-  permissions: string[]
-  expiresAt?: string
-  lastUsed: string
-  active: boolean
-  environment: string
-}
-
-interface Credential {
-  id: string
-  name: string
-  username: string
-  password: string
-  url?: string
-  category: 'database' | 'service' | 'ssh' | 'ftp' | 'email' | 'other'
-  notes?: string
-  encrypted: boolean
-  lastModified: string
-}
-
-interface Repository {
-  id: string
-  name: string
-  url: string
-  branch: string
-  status: 'connected' | 'syncing' | 'error' | 'disconnected'
-  lastSync: string
-  type: 'git' | 'svn' | 'mercurial'
-  private: boolean
+  type: 'folder' | 'file'
+  size?: string
+  modified: string
+  owner: string
+  starred: boolean
+  shared: boolean
 }
 
 export default function WorkspacePage() {
-  const [activeTab, setActiveTab] = useState<'env' | 'keys' | 'credentials' | 'repos'>('env')
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [searchQuery, setSearchQuery] = useState('')
-  const [showValues, setShowValues] = useState<{[key: string]: boolean}>({})
+  const [selectedItems, setSelectedItems] = useState<string[]>([])
 
-  const [envVars] = useState<EnvironmentVariable[]>([
+  // Sample workspace data - replace with real data from your backend
+  const [workspaceItems] = useState<WorkspaceItem[]>([
     {
       id: '1',
-      key: 'DATABASE_URL',
-      value: 'postgresql://user:pass@localhost:5432/db',
-      environment: 'development',
-      category: 'database',
-      encrypted: true,
-      lastModified: '2024-01-15',
-      description: 'Primary database connection string'
+      name: 'TD Studios Brand Assets',
+      type: 'folder',
+      modified: '2 hours ago',
+      owner: 'Tyler DiOrio',
+      starred: true,
+      shared: false
     },
     {
       id: '2',
-      key: 'API_SECRET_KEY',
-      value: 'sk_live_51H...',
-      environment: 'production',
-      category: 'api',
-      encrypted: true,
-      lastModified: '2024-01-14'
+      name: 'Project Documentation',
+      type: 'folder',
+      modified: '1 day ago',
+      owner: 'Tyler DiOrio',
+      starred: false,
+      shared: true
     },
     {
       id: '3',
-      key: 'NEXTAUTH_SECRET',
-      value: 'your-secret-here',
-      environment: 'all',
-      category: 'auth',
-      encrypted: true,
-      lastModified: '2024-01-12'
+      name: 'Command Hub Designs.fig',
+      type: 'file',
+      size: '2.4 MB',
+      modified: '3 hours ago',
+      owner: 'Tyler DiOrio',
+      starred: true,
+      shared: false
     },
     {
       id: '4',
-      key: 'NODE_ENV',
-      value: 'development',
-      environment: 'development',
-      category: 'config',
-      encrypted: false,
-      lastModified: '2024-01-10'
+      name: 'AI Integration Guide.pdf',
+      type: 'file',
+      size: '1.2 MB',
+      modified: '5 hours ago',
+      owner: 'Tyler DiOrio',
+      starred: false,
+      shared: true
+    },
+    {
+      id: '5',
+      name: 'Client Presentations',
+      type: 'folder',
+      modified: '2 days ago',
+      owner: 'Tyler DiOrio',
+      starred: false,
+      shared: false
+    },
+    {
+      id: '6',
+      name: 'Meeting Notes.md',
+      type: 'file',
+      size: '45 KB',
+      modified: '1 day ago',
+      owner: 'Tyler DiOrio',
+      starred: false,
+      shared: false
     }
   ])
 
-  const [apiKeys] = useState<APIKey[]>([
-    {
-      id: '1',
-      name: 'OpenAI API Key',
-      key: 'sk-proj-...',
-      service: 'OpenAI',
-      permissions: ['read', 'write'],
-      expiresAt: '2024-12-31',
-      lastUsed: '2 hours ago',
-      active: true,
-      environment: 'production'
-    },
-    {
-      id: '2',
-      name: 'Stripe API Key',
-      key: 'sk_live_...',
-      service: 'Stripe',
-      permissions: ['read', 'write', 'delete'],
-      lastUsed: '1 day ago',
-      active: true,
-      environment: 'production'
-    },
-    {
-      id: '3',
-      name: 'GitHub Token',
-      key: 'ghp_...',
-      service: 'GitHub',
-      permissions: ['repo', 'user'],
-      expiresAt: '2024-06-15',
-      lastUsed: '3 hours ago',
-      active: true,
-      environment: 'development'
-    }
-  ])
+  const filteredItems = workspaceItems.filter(item =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
-  const [credentials] = useState<Credential[]>([
-    {
-      id: '1',
-      name: 'Production Database',
-      username: 'admin',
-      password: 'secure_password_123',
-      url: 'db.example.com:5432',
-      category: 'database',
-      notes: 'Primary production database credentials',
-      encrypted: true,
-      lastModified: '2024-01-15'
-    },
-    {
-      id: '2',
-      name: 'AWS Console',
-      username: 'tyler@tdstudios.com',
-      password: 'aws_password_456',
-      url: 'console.aws.amazon.com',
-      category: 'service',
-      encrypted: true,
-      lastModified: '2024-01-12'
-    },
-    {
-      id: '3',
-      name: 'Server SSH',
-      username: 'root',
-      password: 'ssh_key_789',
-      url: '192.168.1.100',
-      category: 'ssh',
-      notes: 'Main application server',
-      encrypted: true,
-      lastModified: '2024-01-10'
-    }
-  ])
-
-  const [repositories] = useState<Repository[]>([
-    {
-      id: '1',
-      name: 'td-studios',
-      url: 'https://github.com/tylerdiorio/td-studios.git',
-      branch: 'main',
-      status: 'connected',
-      lastSync: '5 minutes ago',
-      type: 'git',
-      private: true
-    },
-    {
-      id: '2',
-      name: 'ai-models',
-      url: 'https://github.com/tylerdiorio/ai-models.git',
-      branch: 'develop',
-      status: 'syncing',
-      lastSync: '2 hours ago',
-      type: 'git',
-      private: true
-    },
-    {
-      id: '3',
-      name: 'client-project',
-      url: 'https://github.com/company/client-project.git',
-      branch: 'feature/new-ui',
-      status: 'error',
-      lastSync: '1 day ago',
-      type: 'git',
-      private: false
-    }
-  ])
-
-  const toggleValueVisibility = (id: string) => {
-    setShowValues(prev => ({
-      ...prev,
-      [id]: !prev[id]
-    }))
+  const toggleItemSelection = (itemId: string) => {
+    setSelectedItems(prev =>
+      prev.includes(itemId)
+        ? prev.filter(id => id !== itemId)
+        : [...prev, itemId]
+    )
   }
 
-  const getEnvironmentColor = (env: string) => {
-    switch (env) {
-      case 'production': return 'text-red-400 bg-red-500/20 border-red-500/30'
-      case 'staging': return 'text-yellow-400 bg-yellow-500/20 border-yellow-500/30'
-      case 'development': return 'text-green-400 bg-green-500/20 border-green-500/30'
-      case 'all': return 'text-blue-400 bg-blue-500/20 border-blue-500/30'
-      default: return 'text-gray-400 bg-gray-500/20 border-gray-500/30'
-    }
+  const toggleStar = async (itemId: string) => {
+    // TODO: Implement API call to toggle starred status
+    console.log('Toggle star for item:', itemId)
   }
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'api': return 'text-purple-400'
-      case 'database': return 'text-blue-400'
-      case 'auth': return 'text-green-400'
-      case 'service': return 'text-orange-400'
-      case 'config': return 'text-gray-400'
-      default: return 'text-gray-400'
-    }
+  const shareItem = async (itemId: string) => {
+    // TODO: Implement sharing functionality
+    console.log('Share item:', itemId)
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'connected': return 'text-green-400 bg-green-500/20'
-      case 'syncing': return 'text-blue-400 bg-blue-500/20'
-      case 'error': return 'text-red-400 bg-red-500/20'
-      case 'disconnected': return 'text-gray-400 bg-gray-500/20'
-      default: return 'text-gray-400 bg-gray-500/20'
-    }
-  }
-
-  const workspaceStats = {
-    envVars: envVars.length,
-    apiKeys: apiKeys.length,
-    credentials: credentials.length,
-    repositories: repositories.length,
-    activeKeys: apiKeys.filter(k => k.active).length,
-    connectedRepos: repositories.filter(r => r.status === 'connected').length
+  const deleteItem = async (itemId: string) => {
+    // TODO: Implement delete functionality
+    console.log('Delete item:', itemId)
   }
 
   return (
@@ -280,131 +134,29 @@ export default function WorkspacePage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-white">Workspace</h1>
-            <p className="text-gray-400 mt-1">Manage environment variables, API keys, and credentials</p>
+            <p className="text-gray-400 mt-1">Organize and manage your files and projects</p>
           </div>
-          
           <div className="flex items-center space-x-3">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 bg-purple-600/20 border border-purple-500/30 text-purple-300 rounded-xl font-semibold flex items-center space-x-2 hover:bg-purple-600/30 transition-all"
-            >
-              <Download className="w-5 h-5" />
-              <span>Export</span>
-            </motion.button>
-            
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-6 py-3 bg-gradient-to-r from-blue-600 to-green-600 text-white rounded-xl font-semibold flex items-center space-x-2 hover:from-blue-700 hover:to-green-700 transition-all"
             >
+              <Upload className="w-5 h-5" />
+              <span>Upload Files</span>
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-4 py-3 glass-button text-gray-300 font-semibold flex items-center space-x-2"
+            >
               <Plus className="w-5 h-5" />
-              <span>Add New</span>
+              <span>New Folder</span>
             </motion.button>
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-6">
-          <div className="glass-card p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Environment Variables</p>
-                <p className="text-2xl font-bold text-white">{workspaceStats.envVars}</p>
-              </div>
-              <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                <Terminal className="w-6 h-6 text-blue-400" />
-              </div>
-            </div>
-          </div>
-
-          <div className="glass-card p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">API Keys</p>
-                <p className="text-2xl font-bold text-white">{workspaceStats.apiKeys}</p>
-              </div>
-              <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
-                <Key className="w-6 h-6 text-purple-400" />
-              </div>
-            </div>
-          </div>
-
-          <div className="glass-card p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Credentials</p>
-                <p className="text-2xl font-bold text-white">{workspaceStats.credentials}</p>
-              </div>
-              <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                <Shield className="w-6 h-6 text-green-400" />
-              </div>
-            </div>
-          </div>
-
-          <div className="glass-card p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Repositories</p>
-                <p className="text-2xl font-bold text-white">{workspaceStats.repositories}</p>
-              </div>
-              <div className="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center">
-                <GitBranch className="w-6 h-6 text-orange-400" />
-              </div>
-            </div>
-          </div>
-
-          <div className="glass-card p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Active Keys</p>
-                <p className="text-2xl font-bold text-white">{workspaceStats.activeKeys}</p>
-              </div>
-              <div className="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
-                <Check className="w-6 h-6 text-yellow-400" />
-              </div>
-            </div>
-          </div>
-
-          <div className="glass-card p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Connected</p>
-                <p className="text-2xl font-bold text-white">{workspaceStats.connectedRepos}</p>
-              </div>
-              <div className="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center">
-                <Server className="w-6 h-6 text-red-400" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Tab Navigation */}
-        <div className="glass-card p-6">
-          <div className="flex space-x-1 bg-white/5 rounded-lg p-1">
-            {[
-              { id: 'env', label: 'Environment Variables', icon: Terminal },
-              { id: 'keys', label: 'API Keys', icon: Key },
-              { id: 'credentials', label: 'Credentials', icon: Shield },
-              { id: 'repos', label: 'Repositories', icon: GitBranch }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all ${
-                  activeTab === tab.id
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
-                }`}
-              >
-                <tab.icon className="w-4 h-4" />
-                <span>{tab.label}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Controls */}
+        {/* Search and Controls */}
         <div className="glass-card p-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4 flex-1 max-w-2xl">
@@ -412,302 +164,208 @@ export default function WorkspacePage() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
-                  placeholder="Search workspace items..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search files and folders..."
                   className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
-              
               <button className="p-3 bg-white/5 border border-white/10 rounded-xl text-gray-400 hover:text-white transition-colors">
                 <Filter className="w-5 h-5" />
               </button>
             </div>
+            <div className="flex items-center space-x-2">
+              <div className="flex bg-white/5 rounded-lg p-1">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`p-2 rounded transition-colors ${
+                    viewMode === 'grid' ? 'bg-blue-500 text-white' : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  <Grid3X3 className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`p-2 rounded transition-colors ${
+                    viewMode === 'list' ? 'bg-blue-500 text-white' : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  <List className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Tab Content */}
-        <AnimatePresence mode="wait">
-          {activeTab === 'env' && (
-            <motion.div
-              key="env"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="glass-card p-6"
-            >
-              <div className="space-y-4">
-                {envVars.map((envVar) => (
-                  <motion.div
-                    key={envVar.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/8 transition-all"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-2">
-                          <h4 className="text-white font-semibold">{envVar.key}</h4>
-                          <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getEnvironmentColor(envVar.environment)}`}>
-                            {envVar.environment}
-                          </span>
-                          <div className={`w-4 h-4 ${getCategoryColor(envVar.category)}`}>
-                            {envVar.category === 'database' && <Database className="w-4 h-4" />}
-                            {envVar.category === 'api' && <Code className="w-4 h-4" />}
-                            {envVar.category === 'auth' && <Shield className="w-4 h-4" />}
-                            {envVar.category === 'service' && <Server className="w-4 h-4" />}
-                            {envVar.category === 'config' && <Settings className="w-4 h-4" />}
-                          </div>
-                          {envVar.encrypted && (
-                            <Lock className="w-4 h-4 text-yellow-400" />
-                          )}
-                        </div>
-                        
-                        <div className="flex items-center space-x-3 mb-2">
-                          <code className="bg-gray-800/50 px-3 py-1 rounded text-sm font-mono text-gray-300 flex-1">
-                            {showValues[envVar.id] ? envVar.value : '••••••••••••••••'}
-                          </code>
-                          <button
-                            onClick={() => toggleValueVisibility(envVar.id)}
-                            className="p-1 text-gray-400 hover:text-white transition-colors"
-                          >
-                            {showValues[envVar.id] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                          </button>
-                          <button className="p-1 text-gray-400 hover:text-white transition-colors">
-                            <Copy className="w-4 h-4" />
-                          </button>
-                        </div>
-                        
-                        {envVar.description && (
-                          <p className="text-gray-400 text-sm">{envVar.description}</p>
-                        )}
-                        
-                        <p className="text-xs text-gray-500 mt-2">Last modified: {envVar.lastModified}</p>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <button className="p-2 text-gray-400 hover:text-blue-400 transition-colors">
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button className="p-2 text-gray-400 hover:text-red-400 transition-colors">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
+        {/* Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="glass-card p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-400 text-sm">Total Files</p>
+                <p className="text-2xl font-bold text-white">1,247</p>
               </div>
-            </motion.div>
-          )}
+              <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                <File className="w-6 h-6 text-blue-400" />
+              </div>
+            </div>
+          </div>
+          <div className="glass-card p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-400 text-sm">Folders</p>
+                <p className="text-2xl font-bold text-white">23</p>
+              </div>
+              <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                <Folder className="w-6 h-6 text-green-400" />
+              </div>
+            </div>
+          </div>
+          <div className="glass-card p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-400 text-sm">Shared</p>
+                <p className="text-2xl font-bold text-white">89</p>
+              </div>
+              <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                <Share className="w-6 h-6 text-purple-400" />
+              </div>
+            </div>
+          </div>
+          <div className="glass-card p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-400 text-sm">Storage Used</p>
+                <p className="text-2xl font-bold text-white">2.4 GB</p>
+              </div>
+              <div className="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center">
+                <Download className="w-6 h-6 text-orange-400" />
+              </div>
+            </div>
+          </div>
+        </div>
 
-          {activeTab === 'keys' && (
-            <motion.div
-              key="keys"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="glass-card p-6"
-            >
-              <div className="space-y-4">
-                {apiKeys.map((apiKey) => (
-                  <motion.div
-                    key={apiKey.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/8 transition-all"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-2">
-                          <h4 className="text-white font-semibold">{apiKey.name}</h4>
-                          <span className="px-2 py-1 text-xs bg-purple-500/20 text-purple-300 rounded-full">
-                            {apiKey.service}
-                          </span>
-                          <div className={`w-2 h-2 rounded-full ${apiKey.active ? 'bg-green-400' : 'bg-gray-400'}`} />
+        {/* File/Folder Grid */}
+        <div className="glass-card p-6">
+          {viewMode === 'grid' ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+              {filteredItems.map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                  className={`relative p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all cursor-pointer group ${
+                    selectedItems.includes(item.id) ? 'ring-2 ring-blue-500' : ''
+                  }`}
+                  onClick={() => toggleItemSelection(item.id)}
+                >
+                  <div className="flex flex-col items-center space-y-3">
+                    <div className="relative">
+                      {item.type === 'folder' ? (
+                        <FolderOpen className="w-8 h-8 text-blue-400" />
+                      ) : (
+                        <File className="w-8 h-8 text-gray-400" />
+                      )}
+                      {item.starred && (
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-500 rounded-full flex items-center justify-center">
+                          <Star className="w-2 h-2 text-white" fill="currentColor" />
                         </div>
-                        
-                        <div className="flex items-center space-x-3 mb-2">
-                          <code className="bg-gray-800/50 px-3 py-1 rounded text-sm font-mono text-gray-300">
-                            {showValues[apiKey.id] ? apiKey.key : '••••••••••••••••'}
-                          </code>
-                          <button
-                            onClick={() => toggleValueVisibility(apiKey.id)}
-                            className="p-1 text-gray-400 hover:text-white transition-colors"
-                          >
-                            {showValues[apiKey.id] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                          </button>
-                          <button className="p-1 text-gray-400 hover:text-white transition-colors">
-                            <Copy className="w-4 h-4" />
-                          </button>
+                      )}
+                      {item.shared && (
+                        <div className="absolute -top-1 -left-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                          <Share className="w-2 h-2 text-white" />
                         </div>
-                        
-                        <div className="flex items-center space-x-6 text-sm text-gray-400">
-                          <span>Permissions: {apiKey.permissions.join(', ')}</span>
-                          <span>Last used: {apiKey.lastUsed}</span>
-                          {apiKey.expiresAt && (
-                            <span>Expires: {apiKey.expiresAt}</span>
-                          )}
-                        </div>
+                      )}
+                    </div>
+                    <div className="text-center w-full">
+                      <p className="text-white text-sm font-medium truncate">{item.name}</p>
+                      <div className="flex items-center justify-center space-x-2 mt-1 text-xs text-gray-400">
+                        <Clock className="w-3 h-3" />
+                        <span>{item.modified}</span>
                       </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <button className="p-2 text-gray-400 hover:text-blue-400 transition-colors">
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button className="p-2 text-gray-400 hover:text-red-400 transition-colors">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                      {item.size && (
+                        <p className="text-gray-500 text-xs">{item.size}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        // Show context menu
+                      }}
+                      className="p-1 bg-white/10 rounded hover:bg-white/20 transition-colors"
+                    >
+                      <MoreHorizontal className="w-4 h-4 text-white" />
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {filteredItems.map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className={`flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all cursor-pointer ${
+                    selectedItems.includes(item.id) ? 'ring-2 ring-blue-500' : ''
+                  }`}
+                  onClick={() => toggleItemSelection(item.id)}
+                >
+                  <div className="flex items-center space-x-4">
+                    <div className="relative">
+                      {item.type === 'folder' ? (
+                        <FolderOpen className="w-6 h-6 text-blue-400" />
+                      ) : (
+                        <File className="w-6 h-6 text-gray-400" />
+                      )}
+                      {item.starred && (
+                        <Star className="absolute -top-1 -right-1 w-3 h-3 text-yellow-500" fill="currentColor" />
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-white font-medium">{item.name}</p>
+                      <div className="flex items-center space-x-4 text-sm text-gray-400">
+                        <span>Modified {item.modified}</span>
+                        <span>by {item.owner}</span>
+                        {item.size && <span>{item.size}</span>}
                       </div>
                     </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    {item.shared && (
+                      <div className="px-2 py-1 bg-green-500/20 border border-green-500/30 rounded text-xs text-green-300">
+                        Shared
+                      </div>
+                    )}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        toggleStar(item.id)
+                      }}
+                      className="p-2 text-gray-400 hover:text-yellow-500 transition-colors"
+                    >
+                      <Star className="w-4 h-4" fill={item.starred ? 'currentColor' : 'none'} />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        // Show context menu
+                      }}
+                      className="p-2 text-gray-400 hover:text-white transition-colors"
+                    >
+                      <MoreHorizontal className="w-4 h-4" />
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           )}
-
-          {activeTab === 'credentials' && (
-            <motion.div
-              key="credentials"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="glass-card p-6"
-            >
-              <div className="space-y-4">
-                {credentials.map((credential) => (
-                  <motion.div
-                    key={credential.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/8 transition-all"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-2">
-                          <h4 className="text-white font-semibold">{credential.name}</h4>
-                          <span className={`px-2 py-1 text-xs rounded-full ${getCategoryColor(credential.category)} bg-current bg-opacity-20`}>
-                            {credential.category}
-                          </span>
-                          {credential.encrypted && (
-                            <Lock className="w-4 h-4 text-yellow-400" />
-                          )}
-                        </div>
-                        
-                        <div className="space-y-2 mb-2">
-                          <div className="flex items-center space-x-3">
-                            <span className="text-gray-400 text-sm w-20">Username:</span>
-                            <span className="text-white">{credential.username}</span>
-                          </div>
-                          <div className="flex items-center space-x-3">
-                            <span className="text-gray-400 text-sm w-20">Password:</span>
-                            <code className="bg-gray-800/50 px-2 py-1 rounded text-sm font-mono text-gray-300">
-                              {showValues[credential.id] ? credential.password : '••••••••••••'}
-                            </code>
-                            <button
-                              onClick={() => toggleValueVisibility(credential.id)}
-                              className="p-1 text-gray-400 hover:text-white transition-colors"
-                            >
-                              {showValues[credential.id] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                            </button>
-                            <button className="p-1 text-gray-400 hover:text-white transition-colors">
-                              <Copy className="w-4 h-4" />
-                            </button>
-                          </div>
-                          {credential.url && (
-                            <div className="flex items-center space-x-3">
-                              <span className="text-gray-400 text-sm w-20">URL:</span>
-                              <span className="text-blue-400">{credential.url}</span>
-                            </div>
-                          )}
-                        </div>
-                        
-                        {credential.notes && (
-                          <p className="text-gray-400 text-sm mb-2">{credential.notes}</p>
-                        )}
-                        
-                        <p className="text-xs text-gray-500">Last modified: {credential.lastModified}</p>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <button className="p-2 text-gray-400 hover:text-blue-400 transition-colors">
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button className="p-2 text-gray-400 hover:text-red-400 transition-colors">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-
-          {activeTab === 'repos' && (
-            <motion.div
-              key="repos"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="glass-card p-6"
-            >
-              <div className="space-y-4">
-                {repositories.map((repo) => (
-                  <motion.div
-                    key={repo.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/8 transition-all"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-2">
-                          <GitBranch className="w-5 h-5 text-orange-400" />
-                          <h4 className="text-white font-semibold">{repo.name}</h4>
-                          <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(repo.status)}`}>
-                            {repo.status}
-                          </span>
-                          {repo.private && (
-                            <Lock className="w-4 h-4 text-yellow-400" />
-                          )}
-                        </div>
-                        
-                        <div className="space-y-1 mb-2 text-sm">
-                          <div className="flex items-center space-x-4 text-gray-400">
-                            <span>URL: <span className="text-blue-400">{repo.url}</span></span>
-                            <span>Branch: <span className="text-green-400">{repo.branch}</span></span>
-                            <span>Type: <span className="text-purple-400">{repo.type}</span></span>
-                          </div>
-                        </div>
-                        
-                        <p className="text-xs text-gray-500">Last sync: {repo.lastSync}</p>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        {repo.status === 'error' && (
-                          <AlertTriangle className="w-5 h-5 text-red-400" />
-                        )}
-                        <button className="p-2 text-gray-400 hover:text-blue-400 transition-colors">
-                          <Settings className="w-4 h-4" />
-                        </button>
-                        <button className="p-2 text-gray-400 hover:text-green-400 transition-colors">
-                          <Download className="w-4 h-4" />
-                        </button>
-                        <button className="p-2 text-gray-400 hover:text-red-400 transition-colors">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        </div>
       </div>
     </DashboardLayout>
   )

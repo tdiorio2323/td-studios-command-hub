@@ -1,258 +1,265 @@
 'use client'
 
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Brain, 
-  Files, 
-  CheckSquare, 
-  BarChart3, 
-  Zap, 
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import {
+  LayoutDashboard,
+  Brain,
+  FileText,
+  CheckSquare,
+  BarChart3,
+  Workflow,
   MessageSquare,
   Settings,
-  Key,
-  Folder,
-  Camera,
-  Code,
-  Shield,
-  Database,
-  GitBranch,
-  Terminal,
-  Globe,
-  ChevronDown,
-  ChevronRight
+  LogOut,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  Menu,
+  Users
 } from 'lucide-react'
-import { usePathname, useRouter } from 'next/navigation'
-import Link from 'next/link'
 
-interface NavItem {
-  label: string
-  href: string
-  icon: React.ReactNode
-  badge?: string
-  children?: NavItem[]
-}
+const navigationItems = [
+  { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
+  { icon: Brain, label: 'AI Studio', href: '/dashboard/ai-studio' },
+  { icon: FileText, label: 'File Vault', href: '/dashboard/file-vault' },
+  { icon: CheckSquare, label: 'Task Manager', href: '/dashboard/tasks' },
+  { icon: BarChart3, label: 'Analytics', href: '/dashboard/analytics' },
+  { icon: Workflow, label: 'Workspace', href: '/dashboard/workspace' },
+  { icon: MessageSquare, label: 'Messages', href: '/dashboard/messages' },
+  { icon: Settings, label: 'Settings', href: '/dashboard/settings' }
+]
 
 export function Sidebar() {
+  const [collapsed, setCollapsed] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const pathname = usePathname()
-  const router = useRouter()
-  const [expandedItems, setExpandedItems] = useState<string[]>(['workspace'])
 
-  const navItems: NavItem[] = [
-    {
-      label: 'Dashboard',
-      href: '/dashboard',
-      icon: <BarChart3 className="w-5 h-5" />
-    },
-    {
-      label: 'AI Studio',
-      href: '/dashboard/ai-studio',
-      icon: <Brain className="w-5 h-5" />,
-      badge: 'AI',
-      children: [
-        { label: 'Chat Interface', href: '/dashboard/ai-studio/chat', icon: <MessageSquare className="w-4 h-4" /> },
-        { label: 'Model Training', href: '/dashboard/ai-studio/training', icon: <Database className="w-4 h-4" /> },
-        { label: 'Automation', href: '/dashboard/ai-studio/automation', icon: <Zap className="w-4 h-4" /> }
-      ]
-    },
-    {
-      label: 'File Vault',
-      href: '/dashboard/file-vault',
-      icon: <Files className="w-5 h-5" />,
-      children: [
-        { label: 'Documents', href: '/dashboard/file-vault/documents', icon: <Files className="w-4 h-4" /> },
-        { label: 'Media', href: '/dashboard/file-vault/media', icon: <Camera className="w-4 h-4" /> },
-        { label: 'Code', href: '/dashboard/file-vault/code', icon: <Code className="w-4 h-4" /> },
-        { label: 'Archives', href: '/dashboard/file-vault/archives', icon: <Folder className="w-4 h-4" /> }
-      ]
-    },
-    {
-      label: 'Task Manager',
-      href: '/dashboard/tasks',
-      icon: <CheckSquare className="w-5 h-5" />,
-      badge: '12'
-    },
-    {
-      label: 'Workspace',
-      href: '/dashboard/workspace',
-      icon: <Folder className="w-5 h-5" />,
-      children: [
-        { label: 'Environment Vars', href: '/dashboard/workspace/env', icon: <Terminal className="w-4 h-4" /> },
-        { label: 'API Keys', href: '/dashboard/workspace/keys', icon: <Key className="w-4 h-4" /> },
-        { label: 'Credentials', href: '/dashboard/workspace/credentials', icon: <Shield className="w-4 h-4" /> },
-        { label: 'Repositories', href: '/dashboard/workspace/repos', icon: <GitBranch className="w-4 h-4" /> }
-      ]
-    },
-    {
-      label: 'CMS',
-      href: '/dashboard/cms',
-      icon: <Globe className="w-5 h-5" />,
-      children: [
-        { label: 'Content', href: '/dashboard/cms/content', icon: <Files className="w-4 h-4" /> },
-        { label: 'Pages', href: '/dashboard/cms/pages', icon: <Globe className="w-4 h-4" /> },
-        { label: 'Templates', href: '/dashboard/cms/templates', icon: <Code className="w-4 h-4" /> }
-      ]
-    },
-    {
-      label: 'Messages',
-      href: '/dashboard/messages',
-      icon: <MessageSquare className="w-5 h-5" />,
-      badge: '3'
-    },
-    {
-      label: 'Analytics',
-      href: '/dashboard/analytics',
-      icon: <BarChart3 className="w-5 h-5" />
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+      if (window.innerWidth < 768) {
+        setCollapsed(false) // Always expanded on mobile when open
+        setMobileOpen(false) // Close by default on mobile
+      }
     }
-  ]
 
-  const toggleExpanded = (label: string) => {
-    setExpandedItems(prev => 
-      prev.includes(label) 
-        ? prev.filter(item => item !== label)
-        : [...prev, label]
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/login', { method: 'DELETE' })
+      localStorage.removeItem('td-user')
+      window.location.href = '/login'
+    } catch (error) {
+      console.error('Logout failed:', error)
+    }
+  }
+
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setMobileOpen(false)
+    }
+  }
+
+  // Mobile menu toggle button
+  if (isMobile) {
+    return (
+      <>
+        {/* Mobile menu button */}
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="fixed top-4 left-4 z-[60] md:hidden p-3 bg-black/80 backdrop-blur-md border border-white/10 rounded-xl text-white hover:bg-white/10 transition-colors"
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+
+        {/* Mobile overlay */}
+        {mobileOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
+            onClick={() => setMobileOpen(false)}
+          />
+        )}
+
+        {/* Mobile sidebar */}
+        <div className={`fixed left-0 top-0 h-screen w-80 glass-card border-r border-white/10 z-50 rounded-none transform transition-transform duration-300 md:hidden ${
+          mobileOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}>
+          <div className="flex flex-col h-full">
+            {/* Header */}
+            <div className="p-6 border-b border-white/10">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-xl font-bold chrome-text">TD Studios</h1>
+                  <p className="text-xs text-gray-400">Command Hub</p>
+                </div>
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5 text-gray-400" />
+                </button>
+              </div>
+            </div>
+
+            {/* Navigation */}
+            <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+              {navigationItems.map((item) => {
+                const isActive = pathname === item.href
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={handleLinkClick}
+                    className={`flex items-center space-x-3 px-4 py-4 rounded-xl transition-all duration-200 ${
+                      isActive
+                        ? 'bg-gradient-to-r from-blue-600/20 to-green-600/20 text-white border border-blue-500/30'
+                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    <item.icon className={`w-6 h-6 ${isActive ? 'text-blue-400' : ''}`} />
+                    <span className="font-medium text-base">{item.label}</span>
+                  </Link>
+                )
+              })}
+
+              {/* Additional Menu Items */}
+              <Link
+                href="/dashboard/library"
+                onClick={handleLinkClick}
+                className={`flex items-center space-x-3 px-4 py-4 rounded-xl transition-all duration-200 ${
+                  pathname === '/dashboard/library'
+                    ? 'bg-gradient-to-r from-blue-600/20 to-green-600/20 text-white border border-blue-500/30'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`w-6 h-6 ${pathname === '/dashboard/library' ? 'text-blue-400' : ''}`}>
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+                <span className="font-medium text-base">Library</span>
+              </Link>
+
+              <Link
+                href="/dashboard/affiliates"
+                onClick={handleLinkClick}
+                className={`flex items-center space-x-3 px-4 py-4 rounded-xl transition-all duration-200 ${
+                  pathname === '/dashboard/affiliates'
+                    ? 'bg-gradient-to-r from-blue-600/20 to-green-600/20 text-white border border-blue-500/30'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <Users className={`w-6 h-6 ${pathname === '/dashboard/affiliates' ? 'text-blue-400' : ''}`} />
+                <span className="font-medium text-base">Affiliates</span>
+              </Link>
+            </nav>
+
+            {/* Footer */}
+            <div className="p-4 border-t border-white/10">
+              <button
+                onClick={handleLogout}
+                className="flex items-center space-x-3 px-4 py-4 rounded-xl text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200 w-full"
+              >
+                <LogOut className="w-6 h-6" />
+                <span className="font-medium text-base">Logout</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </>
     )
   }
 
-  const isActive = (href: string) => {
-    return pathname === href || pathname.startsWith(href + '/')
-  }
-
+  // Desktop sidebar
   return (
-    <motion.div
-      initial={{ x: -300 }}
-      animate={{ x: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="fixed left-0 top-0 h-screen w-64 glass-card border-r border-white/10 z-50 rounded-none"
-    >
-      {/* Logo */}
-      <div className="p-6 border-b border-white/10">
-        <div className="flex items-center space-x-3">
-          <motion.div
-            animate={{ rotateY: 360 }}
-            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-            className="w-10 h-10 rounded-xl glass-card chrome-pulse flex items-center justify-center transform-3d"
-          >
-            <Brain className="w-6 h-6 text-white" />
-          </motion.div>
-          <div>
-            <h1 className="text-xl font-luxury chrome-text">
-              TD Studios
-            </h1>
-            <p className="luxury-subtitle">Command Hub</p>
+    <div className={`fixed left-0 top-0 h-screen ${collapsed ? 'w-16' : 'w-64'} glass-sidebar border-r border-white/10 z-50 rounded-none transition-all duration-300 hidden md:block`}>
+      <div className="flex flex-col h-full">
+        {/* Header */}
+        <div className="p-6 border-b border-white/10">
+          <div className="flex items-center justify-between">
+            {!collapsed && (
+              <div>
+                <h1 className="text-xl font-bold chrome-text">TD Studios</h1>
+                <p className="text-xs text-gray-400">Command Hub</p>
+              </div>
+            )}
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+            >
+              {collapsed ? <ChevronRight className="w-4 h-4 text-gray-400" /> : <ChevronLeft className="w-4 h-4 text-gray-400" />}
+            </button>
           </div>
         </div>
-      </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 p-4 overflow-y-auto">
-        <div className="space-y-2">
-          {navItems.map((item) => (
-            <div key={item.label}>
-              <motion.div
-                whileHover={{ x: 5 }}
-                whileTap={{ scale: 0.98 }}
-                className="relative"
+        {/* Navigation */}
+        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+          {navigationItems.map((item) => {
+            const isActive = pathname === item.href
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center space-x-3 px-3 py-3 rounded-xl transition-all duration-200 group ${
+                  isActive
+                    ? 'bg-gradient-to-r from-blue-600/20 to-green-600/20 text-white border border-blue-500/30'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
               >
-                <Link
-                  href={item.href}
-                  className={`flex items-center justify-between w-full px-4 py-3 rounded-xl transition-all duration-200 group ${
-                    isActive(item.href)
-                      ? 'glass-card chrome-pulse text-white'
-                      : 'hover:bg-white/5 text-gray-300 hover:text-white'
-                  }`}
-                  onClick={(e) => {
-                    if (item.children) {
-                      e.preventDefault()
-                      toggleExpanded(item.label)
-                    }
-                  }}
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className={`transition-colors ${isActive(item.href) ? 'text-white' : 'text-gray-400 group-hover:text-white'}`}>
-                      {item.icon}
-                    </div>
-                    <span className="font-medium">{item.label}</span>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    {item.badge && (
-                      <span className={`px-2 py-1 text-xs rounded-full ${
-                        item.badge === 'AI' 
-                          ? 'glass-card text-white border border-white/20'
-                          : 'glass-card text-white border border-white/20'
-                      }`}>
-                        {item.badge}
-                      </span>
-                    )}
-                    {item.children && (
-                      <motion.div
-                        animate={{ rotate: expandedItems.includes(item.label) ? 90 : 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <ChevronRight className="w-4 h-4" />
-                      </motion.div>
-                    )}
-                  </div>
-                </Link>
-              </motion.div>
-
-              {/* Submenu */}
-              <AnimatePresence>
-                {item.children && expandedItems.includes(item.label) && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="ml-6 mt-2 space-y-1 border-l border-white/10 pl-4"
-                  >
-                    {item.children.map((child) => (
-                      <motion.div
-                        key={child.label}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <Link
-                          href={child.href}
-                          className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-all duration-200 ${
-                            isActive(child.href)
-                              ? 'glass-card text-white'
-                              : 'text-gray-400 hover:text-white hover:bg-white/5'
-                          }`}
-                        >
-                          {child.icon}
-                          <span className="text-sm">{child.label}</span>
-                        </Link>
-                      </motion.div>
-                    ))}
-                  </motion.div>
+                <item.icon className={`w-5 h-5 ${isActive ? 'text-blue-400' : ''}`} />
+                {!collapsed && (
+                  <span className="font-medium">{item.label}</span>
                 )}
-              </AnimatePresence>
-            </div>
-          ))}
-        </div>
-      </nav>
+              </Link>
+            )
+          })}
 
-      {/* Settings */}
-      <div className="p-4 border-t border-white/10">
-        <Link
-          href="/dashboard/settings"
-          className="btn-glass-icon w-full flex items-center space-x-3 px-4 py-3 text-gray-300 hover:text-white"
-        >
-          <Settings className="w-5 h-5" />
-          <span className="font-medium">Settings</span>
-        </Link>
-      </div>
+          {/* Additional Menu Items */}
+          <Link
+            href="/dashboard/library"
+            className={`flex items-center space-x-3 px-3 py-3 rounded-xl transition-all duration-200 group ${
+              pathname === '/dashboard/library'
+                ? 'bg-gradient-to-r from-blue-600/20 to-green-600/20 text-white border border-blue-500/30'
+                : 'text-gray-400 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`w-5 h-5 ${pathname === '/dashboard/library' ? 'text-blue-400' : ''}`}>
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+            {!collapsed && <span className="font-medium">Library</span>}
+          </Link>
 
-      {/* Status Indicator */}
-      <div className="absolute bottom-4 right-4">
-        <div className="flex items-center space-x-2">
-          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-          <span className="text-xs chrome-text">Online</span>
+          <Link
+            href="/dashboard/affiliates"
+            className={`flex items-center space-x-3 px-3 py-3 rounded-xl transition-all duration-200 group ${
+              pathname === '/dashboard/affiliates'
+                ? 'bg-gradient-to-r from-blue-600/20 to-green-600/20 text-white border border-blue-500/30'
+                : 'text-gray-400 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Users className={`w-5 h-5 ${pathname === '/dashboard/affiliates' ? 'text-blue-400' : ''}`} />
+            {!collapsed && <span className="font-medium">Affiliates</span>}
+          </Link>
+        </nav>
+
+        {/* Footer */}
+        <div className="p-4 border-t border-white/10">
+          <button
+            onClick={handleLogout}
+            className="flex items-center space-x-3 px-3 py-3 rounded-xl text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200 w-full"
+          >
+            <LogOut className="w-5 h-5" />
+            {!collapsed && <span className="font-medium">Logout</span>}
+          </button>
         </div>
       </div>
-    </motion.div>
+    </div>
   )
 }

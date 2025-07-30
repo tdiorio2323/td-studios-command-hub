@@ -2,10 +2,10 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Brain, 
-  MessageSquare, 
-  Database, 
+import {
+  Brain,
+  MessageSquare,
+  Database,
   Zap,
   Send,
   Plus,
@@ -115,10 +115,14 @@ export default function AIStudioPage() {
         },
         body: JSON.stringify({
           messages: allMessages,
-          model: 'claude',
-          modelVariant: 'claude-3-5-sonnet-20241022'
+          model: selectedModel,
+          modelVariant: selectedModel === 'claude' ? 'claude-3-5-sonnet-20241022' : 'gpt-4'
         })
       })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
 
       const data = await response.json()
 
@@ -128,14 +132,14 @@ export default function AIStudioPage() {
           content: data.data.message,
           role: 'assistant',
           timestamp: new Date(),
-          model: 'Claude-3.5-Sonnet'
+          model: data.data.model || selectedModel
         }
         setChatMessages(prev => [...prev, aiResponse])
       } else {
-        // Handle error
+        // Handle API error
         const errorResponse: ChatMessage = {
           id: (Date.now() + 1).toString(),
-          content: `Sorry, I encountered an error: ${data.error}. Please try again.`,
+          content: data.fallback || `Sorry, I encountered an error: ${data.error}. Please try again.`,
           role: 'assistant',
           timestamp: new Date(),
           model: 'Error'
@@ -152,9 +156,9 @@ export default function AIStudioPage() {
         model: 'Error'
       }
       setChatMessages(prev => [...prev, errorResponse])
-    } finally {
-      setIsLoading(false)
     }
+
+    setIsLoading(false)
   }
 
   const getModelStatusColor = (status: string) => {
@@ -175,7 +179,7 @@ export default function AIStudioPage() {
             <h1 className="text-3xl font-bold text-white">AI Studio</h1>
             <p className="mt-1" style={{ color: 'var(--text-secondary)' }}>Advanced AI development and interaction platform</p>
           </div>
-          
+
           <div className="flex items-center space-x-3">
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -281,7 +285,7 @@ export default function AIStudioPage() {
                   <div className="flex items-center space-x-2">
                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
                     <span className="text-sm text-gray-400">Claude-3.5-Sonnet</span>
-                    <select 
+                    <select
                       onChange={(e) => {
                         // Model switching functionality
                         console.log('Model switched to:', e.target.value)
@@ -308,8 +312,8 @@ export default function AIStudioPage() {
                         message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''
                       }`}>
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                          message.role === 'user' 
-                            ? 'bg-gray-600' 
+                          message.role === 'user'
+                            ? 'bg-gray-600'
                             : 'bg-gray-700'
                         }`}>
                           {message.role === 'user' ? (
@@ -318,7 +322,7 @@ export default function AIStudioPage() {
                             <Bot className="w-4 h-4 text-white" />
                           )}
                         </div>
-                        
+
                         <div className={`p-4 rounded-2xl ${
                           message.role === 'user'
                             ? 'bg-gray-700/50 border border-gray-600'
@@ -333,7 +337,7 @@ export default function AIStudioPage() {
                       </div>
                     </motion.div>
                   ))}
-                  
+
                   {isLoading && (
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -412,7 +416,7 @@ export default function AIStudioPage() {
                         <div className="bg-gray-600 h-2 rounded-full" style={{ width: '85%' }} />
                       </div>
                     </div>
-                    
+
                     <div>
                       <div className="flex justify-between text-sm mb-2">
                         <span className="text-gray-400">Accuracy</span>
@@ -465,9 +469,9 @@ export default function AIStudioPage() {
                           {model.status}
                         </span>
                       </div>
-                      
+
                       <p className="text-gray-400 text-sm mb-4">{model.type}</p>
-                      
+
                       <div className="space-y-3">
                         <div>
                           <div className="flex justify-between text-sm mb-1">
@@ -475,15 +479,15 @@ export default function AIStudioPage() {
                             <span className="text-white">{model.accuracy}%</span>
                           </div>
                           <div className="bg-white/10 rounded-full h-2">
-                            <div 
-                              className="bg-gray-600 h-2 rounded-full" 
-                              style={{ width: `${model.accuracy}%` }} 
+                            <div
+                              className="bg-gray-600 h-2 rounded-full"
+                              style={{ width: `${model.accuracy}%` }}
                             />
                           </div>
                         </div>
-                        
+
                         <p className="text-xs text-gray-400">Last trained: {model.lastTrained}</p>
-                        
+
                         <div className="flex space-x-2 pt-3">
                           <button className="flex-1 px-3 py-2 glass-button-sm text-gray-300 text-sm">
                             <Play className="w-4 h-4 mx-auto" />
@@ -504,21 +508,21 @@ export default function AIStudioPage() {
               {/* Training Progress */}
               <div className="glass-card p-6">
                 <h3 className="text-xl font-bold text-white mb-6">Current Training Session</h3>
-                
+
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <span className="text-gray-400">Image Classifier v2.0</span>
                       <span className="text-blue-400 font-semibold">Training...</span>
                     </div>
-                    
+
                     <div>
                       <div className="flex justify-between text-sm mb-2">
                         <span className="text-gray-400">Progress</span>
                         <span className="text-white">67%</span>
                       </div>
                       <div className="bg-white/10 rounded-full h-3 relative overflow-hidden">
-                        <motion.div 
+                        <motion.div
                           className="bg-gray-600 h-3 rounded-full"
                           initial={{ width: 0 }}
                           animate={{ width: '67%' }}
@@ -527,7 +531,7 @@ export default function AIStudioPage() {
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-400/20 to-transparent animate-pulse" />
                       </div>
                     </div>
-                    
+
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
                         <p className="text-gray-400">Epoch</p>
@@ -547,10 +551,10 @@ export default function AIStudioPage() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-4">
                     <h4 className="text-lg font-semibold text-white">System Resources</h4>
-                    
+
                     <div className="space-y-3">
                       <div>
                         <div className="flex justify-between text-sm mb-1">
@@ -561,7 +565,7 @@ export default function AIStudioPage() {
                           <div className="bg-gray-600 h-2 rounded-full" style={{ width: '89%' }} />
                         </div>
                       </div>
-                      
+
                       <div>
                         <div className="flex justify-between text-sm mb-1">
                           <span className="text-gray-400">Memory</span>
@@ -571,7 +575,7 @@ export default function AIStudioPage() {
                           <div className="bg-gray-600 h-2 rounded-full" style={{ width: '67%' }} />
                         </div>
                       </div>
-                      
+
                       <div>
                         <div className="flex justify-between text-sm mb-1">
                           <span className="text-gray-400">CPU</span>
@@ -648,9 +652,9 @@ export default function AIStudioPage() {
                           automation.status === 'active' ? 'bg-gray-300 animate-pulse' : 'bg-gray-500'
                         }`} />
                       </div>
-                      
+
                       <p className="text-gray-400 text-sm mb-4">{automation.description}</p>
-                      
+
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
                           <span className="text-gray-400">Runs</span>
@@ -661,7 +665,7 @@ export default function AIStudioPage() {
                           <span className="text-white">{automation.lastRun}</span>
                         </div>
                       </div>
-                      
+
                       <div className="flex space-x-2 mt-4">
                         <button className="flex-1 px-3 py-2 glass-button-sm text-gray-300 text-sm">
                           {automation.status === 'active' ? <Pause className="w-4 h-4 mx-auto" /> : <Play className="w-4 h-4 mx-auto" />}
@@ -678,7 +682,7 @@ export default function AIStudioPage() {
               {/* Workflow Builder Preview */}
               <div className="glass-card p-6">
                 <h3 className="text-xl font-bold text-white mb-6">Workflow Builder</h3>
-                
+
                 <div className="bg-white/5 border border-white/10 rounded-xl p-8 text-center">
                   <Sparkles className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                   <h4 className="text-lg font-semibold text-white mb-2">Visual Workflow Designer</h4>

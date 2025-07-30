@@ -1,7 +1,5 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { Sidebar } from './Sidebar'
 
 interface DashboardLayoutProps {
@@ -9,21 +7,11 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
-  const router = useRouter()
-
-  useEffect(() => {
-    // Check authentication
-    const auth = localStorage.getItem('td-auth')
-    if (!auth) {
-      router.push('/login')
-    }
-  }, [router])
-
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%)' }}>
+    <div className="min-h-screen flex" style={{ background: 'linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%)' }}>
       <Sidebar />
-      <main className="ml-64 min-h-screen">
-        <div className="p-8">
+      <main className="flex-1 min-h-screen overflow-x-hidden md:ml-64">
+        <div className="p-4 md:p-8 min-h-screen w-full max-w-none pt-16 md:pt-8">
           {children}
         </div>
       </main>

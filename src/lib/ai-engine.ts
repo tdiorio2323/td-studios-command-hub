@@ -1,14 +1,41 @@
 import { Anthropic } from '@anthropic-ai/sdk'
 import OpenAI from 'openai'
+import { logger } from './logger'
 
-// Initialize AI clients
-const claude = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY!
-})
+// AI clients initialized with environment variables
+let claude: Anthropic | null = null
+let openai: OpenAI | null = null
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || ''
-})
+// Initialize AI clients with environment variables
+async function initializeClients() {
+  try {
+    const anthropicKey = process.env.ANTHROPIC_API_KEY
+    const openaiKey = process.env.OPENAI_API_KEY
+
+    if (anthropicKey) {
+      claude = new Anthropic({
+        apiKey: anthropicKey
+      })
+      logger.ai.info('Claude client initialized')
+    } else {
+      logger.ai.warn('Anthropic API key not available')
+    }
+
+    if (openaiKey) {
+      openai = new OpenAI({
+        apiKey: openaiKey
+      })
+      logger.ai.info('OpenAI client initialized')
+    } else {
+      logger.ai.warn('OpenAI API key not available')
+    }
+  } catch (error) {
+    logger.ai.error('ai-engine', error as Error)
+  }
+}
+
+// Initialize clients on module load
+initializeClients()
 
 export interface AIMessage {
   role: 'user' | 'assistant'
@@ -95,17 +122,17 @@ export class AIEngine {
   // AI Model Orchestration
   async selectOptimalModel(taskType: string, complexity: 'low' | 'medium' | 'high'): Promise<{model: string, provider: 'claude' | 'openai'}> {
     const baseModel = this.modelSelector.get(taskType) || 'claude-3-5-sonnet-20241022'
-    
+
     // Complexity-based model selection
     if (complexity === 'high' && taskType === 'analysis') {
       return { model: 'claude-3-5-sonnet-20241022', provider: 'claude' }
     }
-    
+
     if (complexity === 'low' && taskType === 'creative') {
       return { model: 'gpt-3.5-turbo', provider: 'openai' }
     }
-    
-    return baseModel.includes('claude') 
+
+    return baseModel.includes('claude')
       ? { model: baseModel, provider: 'claude' }
       : { model: baseModel, provider: 'openai' }
   }
@@ -118,7 +145,7 @@ export class AIEngine {
   }> {
     const startTime = Date.now()
     const { model, provider } = await this.selectOptimalModel(taskType, complexity)
-    
+
     try {
       let response: string
       if (provider === 'claude') {
@@ -126,7 +153,7 @@ export class AIEngine {
       } else {
         response = await this.chatWithGPT([{ role: 'user', content: prompt }], model)
       }
-      
+
       return {
         response,
         model,
@@ -136,10 +163,10 @@ export class AIEngine {
     } catch (error) {
       // Fallback to alternative provider
       const fallbackProvider = provider === 'claude' ? 'openai' : 'claude'
-      const fallbackResponse = fallbackProvider === 'claude' 
+      const fallbackResponse = fallbackProvider === 'claude'
         ? await this.chatWithClaude([{ role: 'user', content: prompt }])
         : await this.chatWithGPT([{ role: 'user', content: prompt }])
-      
+
       return {
         response: fallbackResponse,
         model: `fallback-${fallbackProvider}`,
@@ -152,7 +179,7 @@ export class AIEngine {
   // Predictive Analytics Engine
   async generatePredictiveAnalytics(data: any[], metricType: string): Promise<PredictiveAnalytics> {
     const prompt = `Analyze this ${metricType} data and provide predictive insights:
-    
+
 Data Points: ${JSON.stringify(data.slice(-20))} // Last 20 points
 
 Provide analysis in this JSON format:
@@ -168,7 +195,7 @@ Provide analysis in this JSON format:
     try {
       const result = await this.processWithOptimalAI(prompt, 'prediction', 'high')
       const analysis = JSON.parse(result.response.match(/\{[\s\S]*\}/)?.[0] || '{}')
-      
+
       return {
         prediction: analysis.prediction || 'Insufficient data',
         confidence: analysis.confidence || 0.5,
@@ -178,7 +205,7 @@ Provide analysis in this JSON format:
         dataPoints: data.length
       }
     } catch (error) {
-      console.error('Predictive analytics error:', error)
+      logger.ai.error('claude', error as Error)
       return {
         prediction: 'Analysis unavailable',
         confidence: 0,
@@ -193,7 +220,7 @@ Provide analysis in this JSON format:
   // Trend Analysis AI
   async analyzeTrends(data: number[], timeLabels: string[]): Promise<TrendAnalysis> {
     const prompt = `Analyze these time-series data points for trends:
-    
+
 Data: ${JSON.stringify(data)}
 Time Labels: ${JSON.stringify(timeLabels)}
 
@@ -216,7 +243,7 @@ Return JSON format:
     try {
       const result = await this.processWithOptimalAI(prompt, 'analysis', 'high')
       const analysis = JSON.parse(result.response.match(/\{[\s\S]*\}/)?.[0] || '{}')
-      
+
       return {
         trend: analysis.trend || 'stable',
         strength: analysis.strength || 0.5,
@@ -230,7 +257,7 @@ Return JSON format:
         }
       }
     } catch (error) {
-      console.error('Trend analysis error:', error)
+      logger.ai.error('claude', error as Error)
       return {
         trend: 'stable',
         strength: 0,
@@ -275,7 +302,7 @@ Provide comprehensive business intelligence in JSON:
     try {
       const result = await this.processWithOptimalAI(prompt, 'analysis', 'high')
       const intelligence = JSON.parse(result.response.match(/\{[\s\S]*\}/)?.[0] || '{}')
-      
+
       return {
         insights: intelligence.insights || ['Business analysis in progress'],
         metrics: intelligence.metrics || {},
@@ -285,7 +312,7 @@ Provide comprehensive business intelligence in JSON:
         nextActions: intelligence.nextActions || ['Review quarterly performance']
       }
     } catch (error) {
-      console.error('Business intelligence error:', error)
+      logger.ai.error('claude', error as Error)
       return {
         insights: ['Analysis system temporarily unavailable'],
         metrics: {},
@@ -305,7 +332,7 @@ Provide comprehensive business intelligence in JSON:
     metadata: any
   }> {
     const startTime = Date.now()
-    
+
     const prompts = {
       summarize: `Summarize this document in 3-5 key points:\n\n${content}`,
       extract: `Extract key entities, dates, and important information from:\n\n${content}`,
@@ -315,7 +342,7 @@ Provide comprehensive business intelligence in JSON:
 
     try {
       const result = await this.processWithOptimalAI(prompts[processingType], 'analysis', 'medium')
-      
+
       return {
         result: result.response,
         confidence: 0.85,
@@ -327,7 +354,7 @@ Provide comprehensive business intelligence in JSON:
         }
       }
     } catch (error) {
-      console.error('Document processing error:', error)
+      logger.ai.error('claude', error as Error)
       throw new Error('Failed to process document')
     }
   }
@@ -368,7 +395,7 @@ Format as JSON:
     try {
       const result = await this.processWithOptimalAI(prompt, 'creative', 'high')
       const campaign = JSON.parse(result.response.match(/\{[\s\S]*\}/)?.[0] || '{}')
-      
+
       return {
         subject: campaign.subject || 'Your Subject Here',
         content: campaign.content || 'Email content unavailable',
@@ -380,13 +407,20 @@ Format as JSON:
         }
       }
     } catch (error) {
-      console.error('Email campaign generation error:', error)
+      logger.ai.error('claude', error as Error)
       throw new Error('Failed to generate email campaign')
     }
   }
 
   // Claude API Methods
   async chatWithClaude(messages: AIMessage[], model: string = 'claude-3-5-sonnet-20241022'): Promise<string> {
+    if (!claude) {
+      await initializeClients()
+      if (!claude) {
+        throw new Error('Claude client not initialized - API key not available')
+      }
+    }
+
     try {
       const response = await claude.messages.create({
         model,
@@ -400,12 +434,19 @@ Format as JSON:
       const content = response.content[0]
       return content.type === 'text' ? content.text : 'Unable to generate response'
     } catch (error) {
-      console.error('Claude API Error:', error)
+      logger.ai.error('claude', error as Error)
       throw new Error('Failed to communicate with Claude')
     }
   }
 
   async prioritizeTasksWithClaude(tasks: string[]): Promise<TaskPriority[]> {
+    if (!claude) {
+      await initializeClients()
+      if (!claude) {
+        throw new Error('Claude client not initialized - API key not available')
+      }
+    }
+
     try {
       const prompt = `Analyze and prioritize these tasks. Return a JSON array with priority scores (1-10), urgency levels, and reasoning:
 
@@ -439,12 +480,12 @@ Return format:
           return JSON.parse(jsonMatch[0])
         }
       }
-      
+
       throw new Error('Invalid response format')
     } catch (error) {
       console.error('Task prioritization error:', error)
       // Fallback: basic prioritization
-      return tasks.map((task, index) => ({
+      return tasks.map((task) => ({
         task,
         priority: Math.floor(Math.random() * 10) + 1,
         reasoning: 'AI prioritization unavailable - using fallback',
@@ -454,6 +495,13 @@ Return format:
   }
 
   async generateContentWithClaude(type: ContentGeneration['type'], prompt: string): Promise<ContentGeneration> {
+    if (!claude) {
+      await initializeClients()
+      if (!claude) {
+        throw new Error('Claude client not initialized - API key not available')
+      }
+    }
+
     try {
       const systemPrompts = {
         blog: 'You are an expert blog writer. Create engaging, SEO-optimized blog content.',
@@ -490,6 +538,13 @@ Return format:
   }
 
   async analyzeImageWithClaude(imageData: string, prompt: string = 'Describe this image in detail'): Promise<string> {
+    if (!claude) {
+      await initializeClients()
+      if (!claude) {
+        throw new Error('Claude client not initialized - API key not available')
+      }
+    }
+
     try {
       const response = await claude.messages.create({
         model: 'claude-3-5-sonnet-20241022',
@@ -522,8 +577,11 @@ Return format:
   }
 
   async analyzeImageWithGPT(imageData: string, prompt: string = 'Describe this image in detail'): Promise<string> {
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error('OpenAI API key not configured')
+    if (!openai) {
+      await initializeClients()
+      if (!openai) {
+        throw new Error('OpenAI client not initialized - API key not available')
+      }
     }
 
     try {
@@ -556,8 +614,11 @@ Return format:
 
   // OpenAI GPT Methods
   async chatWithGPT(messages: AIMessage[], model: string = 'gpt-4'): Promise<string> {
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error('OpenAI API key not configured')
+    if (!openai) {
+      await initializeClients()
+      if (!openai) {
+        throw new Error('OpenAI client not initialized - API key not available')
+      }
     }
 
     try {
@@ -579,8 +640,11 @@ Return format:
   }
 
   async generateImageWithDALLE(prompt: string, size: '1024x1024' | '1792x1024' | '1024x1792' = '1024x1024'): Promise<string> {
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error('OpenAI API key not configured')
+    if (!openai) {
+      await initializeClients()
+      if (!openai) {
+        throw new Error('OpenAI client not initialized - API key not available')
+      }
     }
 
     try {
@@ -600,8 +664,11 @@ Return format:
   }
 
   async transcribeAudioWithWhisper(audioBuffer: Buffer): Promise<string> {
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error('OpenAI API key not configured')
+    if (!openai) {
+      await initializeClients()
+      if (!openai) {
+        throw new Error('OpenAI client not initialized - API key not available')
+      }
     }
 
     try {
@@ -636,7 +703,7 @@ Return format:
   }
 
   async generateCreativeContent(prompt: string, variations: number = 3): Promise<string[]> {
-    const variations_prompts = Array(variations).fill(null).map((_, i) => 
+    const variations_prompts = Array(variations).fill(null).map((_, i) =>
       `${prompt} (Style variation ${i + 1}: ${['professional', 'creative', 'casual'][i % 3]})`
     )
 
@@ -661,8 +728,8 @@ Return format:
       'AI', 'productivity', 'automation', 'technology', 'business',
       'development', 'design', 'marketing', 'content', 'strategy'
     ]
-    
-    return commonTags.filter(tag => 
+
+    return commonTags.filter(tag =>
       content.toLowerCase().includes(tag.toLowerCase())
     ).slice(0, 5)
   }
@@ -712,11 +779,11 @@ Return format:
     timestamp: string
   }> {
     const timestamp = new Date().toISOString()
-    
+
     try {
       const [claudeTest, openaiTest] = await Promise.allSettled([
-        this.chatWithClaude([{ role: 'user', content: 'Hello' }]),
-        process.env.OPENAI_API_KEY ? this.chatWithGPT([{ role: 'user', content: 'Hello' }]) : Promise.reject('No API key')
+        claude ? this.chatWithClaude([{ role: 'user', content: 'Hello' }]) : Promise.reject('Claude not initialized'),
+        openai ? this.chatWithGPT([{ role: 'user', content: 'Hello' }]) : Promise.reject('OpenAI not initialized')
       ])
 
       return {

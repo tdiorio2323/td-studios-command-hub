@@ -2,11 +2,11 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Settings, 
-  User, 
-  Bell, 
-  Shield, 
+import {
+  Settings,
+  User,
+  Bell,
+  Shield,
   Palette,
   Database,
   Key,
@@ -52,15 +52,15 @@ export default function SettingsPage() {
     email: true,
     push: true,
     desktop: false,
-    marketing: false
+    security: true
   })
   const [profile, setProfile] = useState({
     name: 'Tyler DiOrio',
     email: 'tyler@tdstudios.com',
-    phone: '+1 (555) 123-4567',
-    location: 'San Francisco, CA',
+    phone: '3474859935',
+    location: 'New York City',
     bio: 'Full-stack developer and AI enthusiast building the future of digital experiences.',
-    avatar: ''
+    avatar: null as string | null
   })
 
   const settingSections: SettingSection[] = [
@@ -109,11 +109,23 @@ export default function SettingsPage() {
     }))
   }
 
-  const handleProfileChange = (key: string, value: string) => {
-    setProfile(prev => ({
-      ...prev,
-      [key]: value
-    }))
+  const handleProfileChange = (field: string, value: string) => {
+    setProfile(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleAvatarUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setProfile(prev => ({ ...prev, avatar: e.target?.result as string }))
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleAvatarRemove = () => {
+    setProfile(prev => ({ ...prev, avatar: null }))
   }
 
   return (
@@ -125,7 +137,7 @@ export default function SettingsPage() {
             <h2 className="text-xl font-bold text-white">Settings</h2>
             <p className="text-gray-400 text-sm mt-1">Customize your TD Studios experience</p>
           </div>
-          
+
           <nav className="p-4">
             <div className="space-y-2">
               {settingSections.map((section) => (
@@ -174,10 +186,28 @@ export default function SettingsPage() {
                 {/* Avatar Section */}
                 <div className="flex items-center space-x-6">
                   <div className="relative">
-                    <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                      <User className="w-10 h-10 text-white" />
-                    </div>
-                    <button className="absolute -bottom-1 -right-1 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors">
+                    {profile.avatar ? (
+                      <img
+                        src={profile.avatar}
+                        alt="Profile"
+                        className="w-20 h-20 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                        <User className="w-10 h-10 text-white" />
+                      </div>
+                    )}
+                    <input
+                      type="file"
+                      id="avatar-upload"
+                      accept="image/*"
+                      onChange={handleAvatarUpload}
+                      className="hidden"
+                    />
+                    <button
+                      onClick={() => document.getElementById('avatar-upload')?.click()}
+                      className="absolute -bottom-1 -right-1 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
+                    >
                       <Camera className="w-4 h-4 text-white" />
                     </button>
                   </div>
@@ -185,10 +215,16 @@ export default function SettingsPage() {
                     <h4 className="text-white font-semibold mb-1">{profile.name}</h4>
                     <p className="text-gray-400 text-sm mb-3">{profile.email}</p>
                     <div className="flex space-x-3">
-                      <button className="px-4 py-2 bg-blue-500/20 border border-blue-500/30 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-colors text-sm">
+                      <button
+                        onClick={() => document.getElementById('avatar-upload')?.click()}
+                        className="px-4 py-2 bg-blue-500/20 border border-blue-500/30 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-colors text-sm"
+                      >
                         Upload Photo
                       </button>
-                      <button className="px-4 py-2 bg-red-500/20 border border-red-500/30 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors text-sm">
+                      <button
+                        onClick={handleAvatarRemove}
+                        className="px-4 py-2 bg-red-500/20 border border-red-500/30 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors text-sm"
+                      >
                         Remove
                       </button>
                     </div>
@@ -206,7 +242,7 @@ export default function SettingsPage() {
                       className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
                     <div className="relative">
@@ -219,7 +255,7 @@ export default function SettingsPage() {
                       />
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">Phone Number</label>
                     <div className="relative">
@@ -232,7 +268,7 @@ export default function SettingsPage() {
                       />
                     </div>
                   </div>
-                  
+
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">Location</label>
                     <div className="relative">
@@ -325,7 +361,7 @@ export default function SettingsPage() {
                           <p className="text-gray-400 text-sm">{setting.description}</p>
                         </div>
                       </div>
-                      
+
                       <button
                         onClick={() => handleNotificationChange(setting.key, !notifications[setting.key as keyof typeof notifications])}
                         className={`relative w-12 h-6 rounded-full transition-colors ${
@@ -422,7 +458,7 @@ export default function SettingsPage() {
                         Sign Out All
                       </button>
                     </div>
-                    
+
                     <div className="space-y-3 mt-4">
                       {[
                         { device: 'MacBook Pro', location: 'San Francisco, CA', current: true },
@@ -617,9 +653,9 @@ export default function SettingsPage() {
                             <span className="text-white">{item.used} / {item.total}</span>
                           </div>
                           <div className="bg-white/10 rounded-full h-2">
-                            <div 
-                              className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full" 
-                              style={{ width: `${item.percentage}%` }} 
+                            <div
+                              className="bg-gradient-to-r from-blue-500 to-green-500 h-2 rounded-full"
+                              style={{ width: `${item.percentage}%` }}
                             />
                           </div>
                         </div>
@@ -695,82 +731,564 @@ export default function SettingsPage() {
                 className="p-6 space-y-6"
               >
                 <div className="border-b border-white/10 pb-6">
-                  <h3 className="text-xl font-bold text-white mb-2">Integrations</h3>
-                  <p className="text-gray-400">Connect your favorite apps and services.</p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-xl font-bold text-white mb-2">Integrations</h3>
+                      <p className="text-gray-400">Connect your favorite apps and services for seamless workflow.</p>
+                    </div>
+                    <button
+                      onClick={async () => {
+                        try {
+                          const response = await fetch('/api/integrations/test')
+                          const data = await response.json()
+                          console.log('Integration test results:', data)
+                          alert(`Integration Test Complete!\n\nConnected: ${data.summary.connected}/${data.summary.total}\nCheck console for details.`)
+                        } catch (error) {
+                          console.error('Test failed:', error)
+                          alert('Integration test failed. Check console for details.')
+                        }
+                      }}
+                      className="px-4 py-2 bg-blue-500/20 border border-blue-500/30 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-colors text-sm"
+                    >
+                      Test All Integrations
+                    </button>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {[
-                    {
-                      name: 'GitHub',
-                      description: 'Connect your repositories and track commits',
-                      connected: true,
-                      icon: '🐙'
-                    },
-                    {
-                      name: 'OpenAI',
-                      description: 'AI model integration and API access',
-                      connected: true,
-                      icon: '🤖'
-                    },
-                    {
-                      name: 'Stripe',
-                      description: 'Payment processing and subscription management',
-                      connected: false,
-                      icon: '💳'
-                    },
-                    {
-                      name: 'Discord',
-                      description: 'Team communication and notifications',
-                      connected: false,
-                      icon: '🎮'
-                    },
-                    {
-                      name: 'Slack',
-                      description: 'Workspace collaboration and alerts',
-                      connected: false,
-                      icon: '💬'
-                    },
-                    {
-                      name: 'AWS',
-                      description: 'Cloud infrastructure and services',
-                      connected: true,
-                      icon: '☁️'
-                    }
-                  ].map((integration) => (
-                    <div key={integration.name} className="p-4 bg-white/5 border border-white/10 rounded-xl">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center space-x-3">
-                          <span className="text-2xl">{integration.icon}</span>
-                          <div>
-                            <h4 className="text-white font-medium">{integration.name}</h4>
-                            <p className="text-gray-400 text-sm">{integration.description}</p>
+                <div className="space-y-8">
+                  {/* AI Services */}
+                  <div className="space-y-4">
+                    <h4 className="text-lg font-semibold text-blue-300 flex items-center">
+                      🤖 AI Services <span className="ml-2 text-sm text-gray-400">(6 integrations)</span>
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {/* OpenAI */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
+                              <span className="text-green-400 font-bold text-xs">AI</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">OpenAI</h5>
+                              <p className="text-gray-400 text-xs">GPT models and API</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                            <span className="text-green-400 text-xs">Connected</span>
                           </div>
                         </div>
-                        <div className={`w-2 h-2 rounded-full ${
-                          integration.connected ? 'bg-green-400' : 'bg-gray-400'
-                        }`} />
                       </div>
-                      
-                      <div className="flex justify-between items-center">
-                        <span className={`text-xs px-2 py-1 rounded-full ${
-                          integration.connected
-                            ? 'bg-green-500/20 text-green-300'
-                            : 'bg-gray-500/20 text-gray-300'
-                        }`}>
-                          {integration.connected ? 'Connected' : 'Not Connected'}
-                        </span>
-                        
-                        <button className={`px-3 py-1 text-xs rounded-lg transition-colors ${
-                          integration.connected
-                            ? 'bg-red-500/20 border border-red-500/30 text-red-300 hover:bg-red-500/30'
-                            : 'bg-blue-500/20 border border-blue-500/30 text-blue-300 hover:bg-blue-500/30'
-                        }`}>
-                          {integration.connected ? 'Disconnect' : 'Connect'}
-                        </button>
+
+                      {/* Anthropic */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                              <span className="text-purple-400 font-bold text-xs">C</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Anthropic</h5>
+                              <p className="text-gray-400 text-xs">Claude AI models</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                            <span className="text-green-400 text-xs">Connected</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Google AI */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                              <span className="text-blue-400 font-bold text-xs">G</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Google AI</h5>
+                              <p className="text-gray-400 text-xs">Gemini and Bard</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Cohere */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-orange-500/20 rounded-lg flex items-center justify-center">
+                              <span className="text-orange-400 font-bold text-xs">CO</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Cohere</h5>
+                              <p className="text-gray-400 text-xs">NLP and embeddings</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Hugging Face */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-yellow-500/20 rounded-lg flex items-center justify-center">
+                              <span className="text-yellow-400 font-bold text-xs">HF</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Hugging Face</h5>
+                              <p className="text-gray-400 text-xs">Open source AI</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Replicate */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-pink-500/20 rounded-lg flex items-center justify-center">
+                              <span className="text-pink-400 font-bold text-xs">R</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Replicate</h5>
+                              <p className="text-gray-400 text-xs">AI model hosting</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  ))}
+                  </div>
+
+                  {/* Database & Backend */}
+                  <div className="space-y-4">
+                    <h4 className="text-lg font-semibold text-green-300 flex items-center">
+                      💾 Database & Backend <span className="ml-2 text-sm text-gray-400">(7 integrations)</span>
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {/* Supabase */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
+                              <span className="text-green-400 font-bold text-xs">SB</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Supabase</h5>
+                              <p className="text-gray-400 text-xs">Database & auth</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Redis */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
+                              <span className="text-red-400 font-bold text-xs">R</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Redis</h5>
+                              <p className="text-gray-400 text-xs">Caching & sessions</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* MongoDB */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-green-600/20 rounded-lg flex items-center justify-center">
+                              <span className="text-green-500 font-bold text-xs">M</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">MongoDB</h5>
+                              <p className="text-gray-400 text-xs">NoSQL database</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* PlanetScale */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-purple-600/20 rounded-lg flex items-center justify-center">
+                              <span className="text-purple-500 font-bold text-xs">PS</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">PlanetScale</h5>
+                              <p className="text-gray-400 text-xs">MySQL platform</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Upstash */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-teal-500/20 rounded-lg flex items-center justify-center">
+                              <span className="text-teal-400 font-bold text-xs">UP</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Upstash</h5>
+                              <p className="text-gray-400 text-xs">Serverless Redis</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Payment Processing */}
+                  <div className="space-y-4">
+                    <h4 className="text-lg font-semibold text-indigo-300 flex items-center">
+                      💳 Payment Processing <span className="ml-2 text-sm text-gray-400">(5 integrations)</span>
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {/* Stripe */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-indigo-500/20 rounded-lg flex items-center justify-center">
+                              <span className="text-indigo-400 font-bold text-xs">$</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Stripe</h5>
+                              <p className="text-gray-400 text-xs">Payment processing</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* PayPal */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-blue-600/20 rounded-lg flex items-center justify-center">
+                              <span className="text-blue-500 font-bold text-xs">PP</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">PayPal</h5>
+                              <p className="text-gray-400 text-xs">Online payments</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Productivity & Workspace */}
+                  <div className="space-y-4">
+                    <h4 className="text-lg font-semibold text-orange-300 flex items-center">
+                      🏢 Productivity & Workspace <span className="ml-2 text-sm text-gray-400">(4 integrations)</span>
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {/* Notion */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                              <span className="text-blue-400 font-bold text-xs">N</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Notion</h5>
+                              <p className="text-gray-400 text-xs">Workspace & docs</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Airtable */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-yellow-500/20 rounded-lg flex items-center justify-center">
+                              <span className="text-yellow-400 font-bold text-xs">AT</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Airtable</h5>
+                              <p className="text-gray-400 text-xs">Database platform</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Slack */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                              <span className="text-purple-400 font-bold text-xs">SL</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Slack</h5>
+                              <p className="text-gray-400 text-xs">Team communication</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Discord */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-indigo-600/20 rounded-lg flex items-center justify-center">
+                              <span className="text-indigo-400 font-bold text-xs">DC</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Discord</h5>
+                              <p className="text-gray-400 text-xs">Community chat</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Development & Code */}
+                  <div className="space-y-4">
+                    <h4 className="text-lg font-semibold text-gray-300 flex items-center">
+                      💻 Development & Code <span className="ml-2 text-sm text-gray-400">(4 integrations)</span>
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {/* GitHub */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-gray-500/20 rounded-lg flex items-center justify-center">
+                              <span className="text-gray-400 font-bold text-xs">GH</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">GitHub</h5>
+                              <p className="text-gray-400 text-xs">Code repositories</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* GitLab */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-orange-600/20 rounded-lg flex items-center justify-center">
+                              <span className="text-orange-500 font-bold text-xs">GL</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">GitLab</h5>
+                              <p className="text-gray-400 text-xs">DevOps platform</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Vercel */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-black/40 border border-white/20 rounded-lg flex items-center justify-center">
+                              <span className="text-white font-bold text-xs">▲</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Vercel</h5>
+                              <p className="text-gray-400 text-xs">Deployment platform</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Netlify */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-teal-600/20 rounded-lg flex items-center justify-center">
+                              <span className="text-teal-400 font-bold text-xs">N</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Netlify</h5>
+                              <p className="text-gray-400 text-xs">Web hosting</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Communication & Messaging - Show More Categories */}
+                  <div className="space-y-4">
+                    <h4 className="text-lg font-semibold text-cyan-300 flex items-center">
+                      📧 Communication & Messaging <span className="ml-2 text-sm text-gray-400">(6 integrations)</span>
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {/* Gmail */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center">
+                              <span className="text-red-400 font-bold text-xs">GM</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Gmail</h5>
+                              <p className="text-gray-400 text-xs">Email management</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Telegram */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-blue-400/20 rounded-lg flex items-center justify-center">
+                              <span className="text-blue-400 font-bold text-xs">TG</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Telegram</h5>
+                              <p className="text-gray-400 text-xs">Bot messaging</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Twilio */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-red-600/20 rounded-lg flex items-center justify-center">
+                              <span className="text-red-500 font-bold text-xs">TW</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Twilio</h5>
+                              <p className="text-gray-400 text-xs">SMS & voice</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* SendGrid */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-blue-700/20 rounded-lg flex items-center justify-center">
+                              <span className="text-blue-500 font-bold text-xs">SG</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">SendGrid</h5>
+                              <p className="text-gray-400 text-xs">Email delivery</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Resend */}
+                      <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-black/40 border border-white/20 rounded-lg flex items-center justify-center">
+                              <span className="text-white font-bold text-xs">RS</span>
+                            </div>
+                            <div>
+                              <h5 className="text-white font-medium text-sm">Resend</h5>
+                              <p className="text-gray-400 text-xs">Developer email</p>
+                            </div>
+                          </div>
+                          <button className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded text-xs hover:bg-blue-500/30">
+                            Connect
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Show Total Count */}
+                  <div className="mt-8 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-blue-300 font-medium mb-1">🚀 Complete Integration Suite</h4>
+                        <p className="text-blue-200 text-sm">
+                          56 total integrations available across 12 categories. More integrations include Social Media, Analytics, File Storage, Business & CRM, Design Tools, and Project Management.
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-blue-300">56</div>
+                        <div className="text-xs text-blue-400">Integrations</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             )}
