@@ -13,8 +13,8 @@ const allIntegrations = [
   {
     category: '🤖 AI Services',
     integrations: [
-      { name: 'OpenAI', env: 'OPENAI_API_KEY', value: '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' },
-      { name: 'Anthropic (Claude)', env: 'ANTHROPIC_API_KEY', value: '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' },
+      { name: 'OpenAI', env: 'OPENAI_API_KEY', value: 'your_openai_api_key' },
+      { name: 'Anthropic (Claude)', env: 'ANTHROPIC_API_KEY', value: 'your_anthropic_api_key' },
       { name: 'Google AI', env: 'GOOGLE_AI_API_KEY', value: 'your_google_ai_api_key' },
       { name: 'Cohere', env: 'COHERE_API_KEY', value: 'your_cohere_api_key' },
       { name: 'Hugging Face', env: 'HUGGINGFACE_API_KEY', value: 'your_huggingface_api_key' },
