@@ -151,7 +151,7 @@ export default function DashboardPage() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-8 w-full">
+      <div className="space-y-8 w-full opacity-100">
         {/* Header with Logo */}
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center space-x-4">
@@ -166,13 +166,9 @@ export default function DashboardPage() {
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-xl pointer-events-none"></div>
               </div>
               <div>
-                <motion.h1
-                  className="text-4xl font-luxury chrome-text mb-1"
-                  animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                >
+                <h1 className="text-4xl font-luxury chrome-text mb-1">
                   Welcome back, Tyler
-                </motion.h1>
+                </h1>
                 <p className="text-gray-400 text-lg">Your digital command center is ready. What would you like to accomplish today?</p>
               </div>
             </div>
@@ -185,12 +181,7 @@ export default function DashboardPage() {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6 w-full">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="glass-card-gradient p-4 md:p-6 hover:bg-white/10 transition-all duration-300"
-          >
+          <div className="glass-card-gradient p-4 md:p-6 hover:bg-white/10 transition-all duration-300">
             <div className="flex items-center justify-between mb-3 md:mb-4">
               <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
                 <Activity className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
