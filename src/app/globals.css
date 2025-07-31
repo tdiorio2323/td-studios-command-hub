@@ -396,3 +396,9 @@ body {
     0 15px 40px rgba(79, 172, 254, 0.4),
     0 6px 20px rgba(0, 0, 0, 0.3);
 }
+
+/* Fix for min-h-screen width issue */
+.min-h-screen {
+  width: 100% !important;
+  min-height: 100vh;
+}
