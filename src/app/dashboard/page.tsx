@@ -52,13 +52,15 @@ export default function DashboardPage() {
     uptime: '99.9%'
   })
 
-  const [recentActivity] = useState([
+  const [recentActivity, setRecentActivity] = useState([
     { id: 1, action: 'AI Analysis completed', time: '2m ago', type: 'success' },
     { id: 2, action: 'New file uploaded to vault', time: '5m ago', type: 'info' },
     { id: 3, action: 'Task "Project Review" completed', time: '12m ago', type: 'success' },
     { id: 4, action: 'Workflow automation triggered', time: '18m ago', type: 'warning' },
     { id: 5, action: 'AI Assistant trained on new data', time: '1h ago', type: 'info' }
   ])
+
+  const [notifications, setNotifications] = useState([])
 
   const quickActions: QuickAction[] = [
     {
