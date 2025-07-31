@@ -10,7 +10,7 @@ export default function DashboardPage() {
         {/* Simple Header */}
         <div className="text-center">
           <h1 className="text-4xl font-bold text-white mb-2">Welcome back, Tyler</h1>
-          <p className="text-gray-400 text-lg">Your digital command center is ready.</p>
+          <p className="text-gray-400 text-lg">Your digital command center is ready. What would you like to accomplish today?</p>
         </div>
 
         {/* Stats Grid */}
