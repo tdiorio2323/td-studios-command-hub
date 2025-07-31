@@ -28,7 +28,7 @@ https.get('https://td-studios.vercel.app/dashboard', (res) => {
 // Test 4: AI Chat API GET
 https.get('https://td-studios.vercel.app/api/ai/chat', (res) => {
   console.log(`4. AI Chat API (GET): ${res.statusCode} ${res.statusMessage}`);
-  
+
   let data = '';
   res.on('data', (chunk) => { data += chunk; });
   res.on('end', () => {
@@ -60,7 +60,7 @@ setTimeout(() => {
 
   const req = https.request(options, (res) => {
     console.log(`5. AI Chat API (POST): ${res.statusCode} ${res.statusMessage}`);
-    
+
     let data = '';
     res.on('data', (chunk) => { data += chunk; });
     res.on('end', () => {
