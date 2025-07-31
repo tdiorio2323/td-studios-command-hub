@@ -4,7 +4,10 @@ import { headers } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
 // This should be imported from your Stripe configuration
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+import Stripe from 'stripe'
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+  apiVersion: '2024-06-20',
+})
 
 export async function POST(request: NextRequest) {
   try {
