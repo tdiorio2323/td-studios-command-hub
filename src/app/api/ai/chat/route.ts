@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { logger } from '@/lib/logger'
 import { aiEngine, AIMessage } from '@/lib/ai-engine'
+import { logger } from '@/lib/logger'
+import { NextRequest, NextResponse } from 'next/server'
 
 interface ChatMessage {
   role: 'user' | 'assistant' | 'system'
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    // Filter and convert messages to AIMessage format (excludes system messages)
+    // Convert messages to AIMessage format (date context handled in ai-engine.ts)
     const aiMessages: AIMessage[] = messages
       .filter(m => m.role === 'user' || m.role === 'assistant')
       .map(m => ({

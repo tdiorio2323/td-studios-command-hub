@@ -130,7 +130,7 @@ export default function SettingsPage() {
 
   return (
     <DashboardLayout>
-      <div className="flex space-x-6 h-[calc(100vh-8rem)]">
+      <div className="flex space-x-6 min-h-[calc(100vh-8rem)] max-h-[calc(100vh-8rem)]">
         {/* Settings Navigation */}
         <div className="w-80 glass-card">
           <div className="p-6 border-b border-white/10">
@@ -167,7 +167,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Settings Content */}
-        <div className="flex-1 glass-card">
+        <div className="flex-1 glass-card overflow-hidden flex flex-col">
           <AnimatePresence mode="wait">
             {activeSection === 'profile' && (
               <motion.div
@@ -176,8 +176,9 @@ export default function SettingsPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="p-6 space-y-6"
+                className="flex-1 overflow-y-auto"
               >
+                <div className="p-6 space-y-6">
                 <div className="border-b border-white/10 pb-6">
                   <h3 className="text-xl font-bold text-white mb-2">Profile Information</h3>
                   <p className="text-gray-400">Update your personal details and profile settings.</p>
@@ -307,6 +308,7 @@ export default function SettingsPage() {
                     <span>Save Changes</span>
                   </motion.button>
                 </div>
+                </div>
               </motion.div>
             )}
 
@@ -317,8 +319,9 @@ export default function SettingsPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="p-6 space-y-6"
+                className="flex-1 overflow-y-auto"
               >
+                <div className="p-6 space-y-6">
                 <div className="border-b border-white/10 pb-6">
                   <h3 className="text-xl font-bold text-white mb-2">Notification Preferences</h3>
                   <p className="text-gray-400">Choose how you want to be notified about updates and activities.</p>
@@ -391,6 +394,7 @@ export default function SettingsPage() {
                     </div>
                   </div>
                 </div>
+                </div>
               </motion.div>
             )}
 
@@ -401,8 +405,9 @@ export default function SettingsPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="p-6 space-y-6"
+                className="flex-1 overflow-y-auto"
               >
+                <div className="p-6 space-y-6">
                 <div className="border-b border-white/10 pb-6">
                   <h3 className="text-xl font-bold text-white mb-2">Security Settings</h3>
                   <p className="text-gray-400">Manage your password and security preferences.</p>
@@ -496,7 +501,7 @@ export default function SettingsPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="p-6 space-y-6"
+                className="flex-1 overflow-y-auto"
               >
                 <div className="border-b border-white/10 pb-6">
                   <h3 className="text-xl font-bold text-white mb-2">Appearance</h3>
@@ -614,7 +619,7 @@ export default function SettingsPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="p-6 space-y-6"
+                className="flex-1 overflow-y-auto"
               >
                 <div className="border-b border-white/10 pb-6">
                   <h3 className="text-xl font-bold text-white mb-2">Data & Privacy</h3>
@@ -728,7 +733,7 @@ export default function SettingsPage() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="p-6 space-y-6"
+                className="flex-1 overflow-y-auto"
               >
                 <div className="border-b border-white/10 pb-6">
                   <div className="flex items-center justify-between">

@@ -421,11 +421,36 @@ Format as JSON:
       }
     }
 
-    try {
+        try {
+      // Add current date/time as context in the conversation
+      const currentDateTime = new Date()
+      const dateTimeInfo = `Today is ${currentDateTime.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })} at ${currentDateTime.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZoneName: 'short'
+      })}.`
+
+      // Always inject current date context for better responses
+      let modifiedMessages = messages
+      if (messages.length > 0) {
+        modifiedMessages = [
+          { role: 'user' as const, content: `[SYSTEM CONTEXT: ${dateTimeInfo}]\n\n${messages[0].content}` },
+          ...messages.slice(1)
+        ]
+      }
+
+      console.log('🧪 Modified message being sent to Claude:', modifiedMessages[0]?.content)
+
       const response = await claude.messages.create({
         model,
         max_tokens: 4000,
-        messages: messages.map(msg => ({
+        system: 'You are a helpful AI assistant. When provided with current date/time context, use that information to answer questions accurately.',
+        messages: modifiedMessages.map(msg => ({
           role: msg.role,
           content: msg.content
         }))
