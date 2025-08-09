@@ -64,7 +64,7 @@ export default function MessagesPage() {
       content: 'Hello! I\'m your AI assistant. How can I help you today?',
       sender: 'AI Assistant',
       senderId: 'ai-1',
-      timestamp: new Date(Date.now() - 600000),
+      timestamp: new Date('2024-01-01T12:00:00Z'),
       type: 'text',
       status: 'read',
       isBot: true
