@@ -34,42 +34,7 @@ const navigationItems = [
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
-  const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
-
-  useEffect(() => {
-    setMounted(true)
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-      if (window.innerWidth < 768) {
-        setCollapsed(false) // Always expanded on mobile when open
-        setMobileOpen(false) // Close by default on mobile
-      }
-    }
-
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
-
-  // Prevent hydration mismatch by not rendering until mounted
-  if (!mounted) {
-    return (
-      <div className="fixed left-0 top-0 h-screen w-64 glass-sidebar border-r border-white/10 z-50 rounded-none transition-all duration-300 hidden md:block">
-        <div className="flex flex-col h-full">
-          <div className="p-6 border-b border-white/10">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-xl font-bold chrome-text">TD Studios</h1>
-                <p className="text-xs text-gray-400">Command Hub</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
 
   const handleLogout = async () => {
     try {
