@@ -97,7 +97,7 @@ export default function MessagesPage() {
       name: 'AI Assistant',
       type: 'ai',
       lastMessage: 'I can help you with your development tasks. What would you like to work on?',
-      lastMessageTime: new Date(Date.now() - 300000),
+      lastMessageTime: new Date('2024-01-01T12:00:00Z'),
       unreadCount: 0,
       online: true,
       isActive: true
@@ -107,7 +107,7 @@ export default function MessagesPage() {
       name: 'Development Team',
       type: 'group',
       lastMessage: 'The new feature is ready for testing',
-      lastMessageTime: new Date(Date.now() - 600000),
+      lastMessageTime: new Date('2024-01-01T11:50:00Z'),
       unreadCount: 5,
       participants: 8
     },
@@ -116,7 +116,7 @@ export default function MessagesPage() {
       name: 'Client Updates',
       type: 'channel',
       lastMessage: 'Project milestone completed successfully',
-      lastMessageTime: new Date(Date.now() - 3600000),
+      lastMessageTime: new Date('2024-01-01T11:00:00Z'),
       unreadCount: 0,
       participants: 24
     },
@@ -125,7 +125,7 @@ export default function MessagesPage() {
       name: 'Sarah Johnson',
       type: 'direct',
       lastMessage: 'Thanks for the quick response!',
-      lastMessageTime: new Date(Date.now() - 7200000),
+      lastMessageTime: new Date('2024-01-01T10:00:00Z'),
       unreadCount: 0,
       online: true
     },
@@ -134,7 +134,7 @@ export default function MessagesPage() {
       name: 'Project Alpha',
       type: 'group',
       lastMessage: 'Meeting scheduled for tomorrow at 2 PM',
-      lastMessageTime: new Date(Date.now() - 86400000),
+      lastMessageTime: new Date('2023-12-31T12:00:00Z'),
       unreadCount: 1,
       participants: 6
     }
