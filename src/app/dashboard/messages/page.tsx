@@ -310,10 +310,7 @@ export default function MessagesPage() {
                       <div className="flex items-center justify-between mb-1">
                         <h3 className="text-white font-medium truncate">{conversation.name}</h3>
                         <span className="text-xs text-gray-400">
-                          {conversation.lastMessageTime.toLocaleTimeString('en-US', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
+                          {conversation.lastMessageTime.getHours().toString().padStart(2, '0')}:{conversation.lastMessageTime.getMinutes().toString().padStart(2, '0')}
                         </span>
                       </div>
 
@@ -409,10 +406,7 @@ export default function MessagesPage() {
                           message.isBot ? 'text-gray-400' : 'text-blue-100'
                         }`}>
                           <span className="text-xs">
-                            {message.timestamp.toLocaleTimeString('en-US', {
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
+                            {message.timestamp.getHours().toString().padStart(2, '0')}:{message.timestamp.getMinutes().toString().padStart(2, '0')}
                           </span>
                           {!message.isBot && getMessageStatusIcon(message.status)}
                         </div>
