@@ -83,7 +83,7 @@ export default function MessagesPage() {
       content: 'I can help you with that! Here are some optimization strategies:\n\n1. Implement code splitting\n2. Optimize bundle size\n3. Use React.memo for expensive components\n4. Implement virtual scrolling for large lists\n\nWould you like me to help implement any of these?',
       sender: 'AI Assistant',
       senderId: 'ai-1',
-      timestamp: new Date(Date.now() - 120000),
+      timestamp: new Date('2024-01-01T12:08:00Z'),
       type: 'text',
       status: 'delivered',
       isBot: true
