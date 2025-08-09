@@ -53,7 +53,7 @@ export default function AIStudioPage() {
       id: '1',
       content: 'Hello! I\'m your AI assistant. How can I help you today?',
       role: 'assistant',
-      timestamp: new Date(Date.now() - 300000),
+      timestamp: new Date('2024-01-01T12:00:00Z'),
       model: 'Claude-3.5-Sonnet'
     }
   ])
