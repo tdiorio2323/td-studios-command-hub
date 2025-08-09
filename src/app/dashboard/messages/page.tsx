@@ -74,7 +74,7 @@ export default function MessagesPage() {
       content: 'I need help optimizing the dashboard performance',
       sender: 'Tyler DiOrio',
       senderId: 'user-1',
-      timestamp: new Date(Date.now() - 300000),
+      timestamp: new Date('2024-01-01T12:05:00Z'),
       type: 'text',
       status: 'read'
     },
