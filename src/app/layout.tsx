@@ -1,8 +1,8 @@
-import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
+import type { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'TD Studios | Command Hub',
@@ -26,29 +26,29 @@ export const metadata: Metadata = {
     description: 'AI-powered portal for modern digital experiences',
     creator: '@tdstudios',
   },
-}
+};
 
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
   themeColor: '#000000',
-}
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang='en'>
       <head>
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel='icon' href='/favicon.ico' />
+        <link rel='apple-touch-icon' href='/apple-touch-icon.png' />
       </head>
       <body className={inter.className}>
-        <div className="matrix-bg" />
+        <div className='matrix-bg' />
         {children}
       </body>
     </html>
-  )
+  );
 }
