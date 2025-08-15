@@ -1,5 +1,7 @@
 'use client'
 
+import { logger } from '@/lib/logger';
+
 import { useState, useEffect } from 'react'
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout'
 import { CreateAffiliateInvite } from '@/components/admin/CreateAffiliateInvite'
@@ -43,7 +45,7 @@ export default function AffiliatesPage() {
         setError(data.error || 'Failed to fetch affiliates')
       }
     } catch (err) {
-      console.error('Error fetching affiliates:', err)
+      logger.error('Error fetching affiliates:', err)
       setError('Network error or failed to connect to API')
     } finally {
       setLoading(false)

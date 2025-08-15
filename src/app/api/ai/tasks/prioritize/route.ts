@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server'
 import { aiEngine } from '@/lib/ai-engine'
 
@@ -67,7 +68,7 @@ Context: ${context || 'General task management'}`
     })
 
   } catch (error) {
-    console.error('Task Prioritization API Error:', error)
+    logger.error('Task Prioritization API Error:', error)
     
     return NextResponse.json(
       { 

@@ -1,5 +1,7 @@
 'use client'
 
+import { logger } from '@/lib/logger';
+
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { UserPlus, Mail, User, Instagram, Copy, Check, AlertCircle, ExternalLink } from 'lucide-react'
@@ -65,7 +67,7 @@ export function CreateAffiliateInvite() {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
-      console.error('Failed to copy to clipboard:', err)
+      logger.error('Failed to copy to clipboard:', err)
     }
   }
 

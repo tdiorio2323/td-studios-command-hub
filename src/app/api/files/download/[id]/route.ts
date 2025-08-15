@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
@@ -17,7 +18,7 @@ export async function GET(
     }, { status: 501 })
 
   } catch (error) {
-    console.error('File download error:', error)
+    logger.error('File download error:', error)
     return NextResponse.json({
       success: false,
       error: 'Failed to download file'

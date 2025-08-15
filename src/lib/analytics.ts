@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 export interface AnalyticsEvent {
   id: string
   type: 'ai_query' | 'task_created' | 'workflow_executed' | 'image_analyzed' | 'content_generated'
@@ -32,9 +33,9 @@ export async function trackEvent(event: Omit<AnalyticsEvent, 'id' | 'timestamp'>
     })
 
     if (!response.ok) {
-      console.error('Failed to track analytics event')
+      logger.error('Failed to track analytics event')
     }
   } catch (error) {
-    console.error('Analytics tracking error:', error)
+    logger.error('Analytics tracking error:', error)
   }
 }

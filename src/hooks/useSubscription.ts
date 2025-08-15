@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { useState, useEffect } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import { PRICING_PLANS, PlanType } from '@/lib/stripe'
@@ -50,7 +51,7 @@ export function useSubscription() {
       if (error) throw error
       setSubscription(data)
     } catch (error) {
-      console.error('Error fetching subscription:', error)
+      logger.error('Error fetching subscription:', error)
     } finally {
       setLoading(false)
     }
@@ -85,7 +86,7 @@ export function useSubscription() {
         imageGeneration: usageMap.dalle || 0,
       })
     } catch (error) {
-      console.error('Error fetching usage:', error)
+      logger.error('Error fetching usage:', error)
     }
   }
 

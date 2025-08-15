@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function PATCH(
@@ -21,7 +22,7 @@ export async function PATCH(
     // 2. Possibly renaming the actual file in storage
     // 3. Validating the new name doesn't conflict with existing files
 
-    console.log(`Renaming file ${id} to: ${newName}`)
+    logger.info(`Renaming file ${id} to: ${newName}`)
 
     // For now, return success (the frontend handles the state update)
     return NextResponse.json({
@@ -34,7 +35,7 @@ export async function PATCH(
     })
 
   } catch (error) {
-    console.error('File rename error:', error)
+    logger.error('File rename error:', error)
     return NextResponse.json({
       success: false,
       error: 'Failed to rename file'

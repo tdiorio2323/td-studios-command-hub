@@ -1,5 +1,7 @@
 'use client'
 
+import { logger } from '@/lib/logger';
+
 import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -60,11 +62,11 @@ export default function FileVaultPage() {
         if (result.success) {
           setFiles(prev => [result.data, ...prev])
         } else {
-          console.error('Upload failed:', result.error)
+          logger.error('Upload failed:', result.error)
         }
       }
     } catch (error) {
-      console.error('Upload error:', error)
+      logger.error('Upload error:', error)
     }
 
     setIsUploading(false)
@@ -106,11 +108,11 @@ export default function FileVaultPage() {
         setEditingFile(null)
         setEditingName('')
       } else {
-        console.error('Rename failed:', result.error)
+        logger.error('Rename failed:', result.error)
         alert('Failed to rename file: ' + result.error)
       }
     } catch (error) {
-      console.error('Rename error:', error)
+      logger.error('Rename error:', error)
       alert('Failed to rename file. Please try again.')
     }
   }

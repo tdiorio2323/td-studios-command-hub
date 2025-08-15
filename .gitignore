@@ -81,3 +81,4 @@ jspm_packages/
 .netlify
 .env
 .env.local
+/_next/

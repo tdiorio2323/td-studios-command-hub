@@ -1,6 +1,5 @@
-import { redirect } from 'next/navigation'
+import GlassmorphismCapture from '@/components/landing/GlassmorphismCapture'
 
 export default function HomePage() {
-  // Redirect to login page
-  redirect('/login')
+  return <GlassmorphismCapture />
 }

@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server'
 
 interface IntegrationSetup {
@@ -153,7 +154,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Setup guide error:', error)
+    logger.error('Setup guide error:', error)
     return NextResponse.json({
       success: false,
       error: 'Failed to generate setup guide'

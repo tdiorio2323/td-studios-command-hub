@@ -1,8 +1,9 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('🗄️ Verifying TD Studios Supabase connection...')
+    logger.info('🗄️ Verifying TD Studios Supabase connection...')
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -97,7 +98,7 @@ export async function GET(request: NextRequest) {
     }
 
   } catch (error) {
-    console.error('Supabase verification error:', error)
+    logger.error('Supabase verification error:', error)
     return NextResponse.json({
       success: false,
       status: 'error',

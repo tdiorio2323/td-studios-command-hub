@@ -1,8 +1,9 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('🧪 Testing TD Studios HQ database connection...')
+    logger.info('🧪 Testing TD Studios HQ database connection...')
 
     // Check environment variables first
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -44,7 +45,7 @@ export async function GET(request: NextRequest) {
       .limit(1)
 
     if (healthError) {
-      console.error('❌ Database connection failed:', healthError)
+      logger.error('❌ Database connection failed:', healthError)
       return NextResponse.json({
         success: false,
         error: 'Database connection failed',
@@ -76,10 +77,10 @@ export async function GET(request: NextRequest) {
     const expectedTables = ['users', 'subscriptions', 'usage_logs', 'payments']
     const missingTables = expectedTables.filter(table => !tableNames.includes(table))
 
-    console.log('✅ Database connection successful!')
-    console.log(`📊 Tables found: ${tableNames.join(', ')}`)
+    logger.info('✅ Database connection successful!')
+    logger.info(`📊 Tables found: ${tableNames.join(', ')}`)
     if (missingTables.length > 0) {
-      console.log(`⚠️  Missing tables: ${missingTables.join(', ')}`)
+      logger.info(`⚠️  Missing tables: ${missingTables.join(', ')}`)
     }
 
     return NextResponse.json({
@@ -106,7 +107,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('💥 Database test failed:', error)
+    logger.error('💥 Database test failed:', error)
     return NextResponse.json({
       success: false,
       error: 'Database test failed',

@@ -148,7 +148,7 @@ export async function POST(request: NextRequest) {
 
     const sentMessage = await sendResponse.json()
 
-    logger.api.info('POST', '/api/messages/telegram', `Message sent to chat ${chatId}`)
+    logger.api.info(`POST /api/messages/telegram: Message sent to chat ${chatId}`)
 
     return NextResponse.json({
       success: true,
@@ -175,7 +175,7 @@ export async function PUT(request: NextRequest) {
     // Process incoming Telegram webhook
     if (body.message) {
       const message = body.message
-      logger.api.info('PUT', '/api/messages/telegram', `Received message from ${message.from.first_name}`)
+      logger.api.info(`PUT /api/messages/telegram: Received message from ${message.from.first_name}`)
 
       // Here you can process incoming messages, send auto-replies, etc.
       // For now, we'll just log it

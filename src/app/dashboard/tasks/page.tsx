@@ -1,5 +1,7 @@
 'use client'
 
+import { logger } from '@/lib/logger';
+
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAI } from '@/hooks/useAI'
@@ -43,11 +45,11 @@ export default function TasksPage() {
   
   const { prioritizeTasks, loading: aiLoading } = useAI({
     onSuccess: (data) => {
-      console.log('AI prioritization successful:', data)
+      logger.info('AI prioritization successful:', data)
       setAiInsights(data.summary || 'Tasks analyzed successfully')
     },
     onError: (error) => {
-      console.error('AI prioritization failed:', error)
+      logger.error('AI prioritization failed:', error)
       setAiInsights('AI analysis temporarily unavailable')
     }
   })

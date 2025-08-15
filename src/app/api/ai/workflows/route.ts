@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server'
 import { aiEngine } from '@/lib/ai-engine'
 
@@ -150,7 +151,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Workflow API Error:', error)
+    logger.error('Workflow API Error:', error)
     return NextResponse.json(
       { 
         error: 'Failed to execute workflow',

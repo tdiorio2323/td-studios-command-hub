@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -29,7 +30,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Session validation error:', error)
+    logger.error('Session validation error:', error)
     return NextResponse.json({
       success: false,
       authenticated: false,

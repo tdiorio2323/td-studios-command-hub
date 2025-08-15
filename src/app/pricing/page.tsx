@@ -1,5 +1,7 @@
 'use client'
 
+import { logger } from '@/lib/logger';
+
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Check, Zap, Star, Crown, Sparkles } from 'lucide-react'
@@ -44,12 +46,12 @@ export default function PricingPage() {
         const { error } = await stripe!.redirectToCheckout({ sessionId })
         
         if (error) {
-          console.error('Stripe checkout error:', error)
+          logger.error('Stripe checkout error:', error)
           alert('Checkout failed. Please try again.')
         }
       }
     } catch (error) {
-      console.error('Checkout error:', error)
+      logger.error('Checkout error:', error)
       alert('Something went wrong. Please try again.')
     } finally {
       setLoading(null)

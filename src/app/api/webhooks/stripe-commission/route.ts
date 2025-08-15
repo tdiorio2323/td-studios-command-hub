@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { sendCommissionNotification } from '@/lib/email/resend'
 import { supabaseAdmin } from '@/lib/supabase'
 import { headers } from 'next/headers'
@@ -6,31 +7,37 @@ import { NextRequest, NextResponse } from 'next/server'
 // This should be imported from your Stripe configuration
 import Stripe from 'stripe'
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2024-06-20',
+  apiVersion: '2023-10-16',
 })
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.text()
     const signature = headers().get('stripe-signature')
-
+    
     if (!signature) {
       return NextResponse.json(
-        { error: 'Missing stripe signature' },
+        { error: 'Missing stripe-signature header' },
         { status: 400 }
       )
     }
 
+
     // Verify webhook signature
     let event
     try {
+      const webhookSecret = process.env.STRIPE_WEBHOOK_ENDPOINT_SECRET
+      if (!webhookSecret) {
+        throw new Error('STRIPE_WEBHOOK_ENDPOINT_SECRET is not configured')
+      }
+      
       event = stripe.webhooks.constructEvent(
         body,
         signature,
-        process.env.STRIPE_WEBHOOK_ENDPOINT_SECRET
+        webhookSecret
       )
     } catch (err) {
-      console.error('Webhook signature verification failed:', err)
+      logger.error('Webhook signature verification failed:', err)
       return NextResponse.json(
         { error: 'Invalid signature' },
         { status: 400 }
@@ -50,13 +57,13 @@ export async function POST(request: NextRequest) {
         break
 
       default:
-        console.log(`Unhandled event type: ${event.type}`)
+        logger.info(`Unhandled event type: ${event.type}`)
     }
 
     return NextResponse.json({ received: true })
 
   } catch (error) {
-    console.error('Webhook processing error:', error)
+    logger.error('Webhook processing error:', error)
     return NextResponse.json(
       { error: 'Webhook processing failed' },
       { status: 500 }
@@ -71,7 +78,7 @@ async function handlePaymentSuccess(paymentIntent: any, supabase: any) {
     const userId = paymentIntent.metadata?.user_id
 
     if (!userId) {
-      console.log('No user ID in payment metadata, skipping commission tracking')
+      logger.info('No user ID in payment metadata, skipping commission tracking')
       return
     }
 
@@ -92,7 +99,7 @@ async function handlePaymentSuccess(paymentIntent: any, supabase: any) {
       .single()
 
     if (referralError || !referral) {
-      console.log('No referral found for user:', userId)
+      logger.info('No referral found for user:', userId)
       return
     }
 
@@ -113,7 +120,7 @@ async function handlePaymentSuccess(paymentIntent: any, supabase: any) {
       })
 
     if (commissionError) {
-      console.error('Failed to record commission payment:', commissionError)
+      logger.error('Failed to record commission payment:', commissionError)
       return
     }
 
@@ -128,7 +135,7 @@ async function handlePaymentSuccess(paymentIntent: any, supabase: any) {
       .eq('id', referral.id)
 
     if (updateError) {
-      console.error('Failed to update referral totals:', updateError)
+      logger.error('Failed to update referral totals:', updateError)
     }
 
     // Get referred user details for notification
@@ -144,7 +151,7 @@ async function handlePaymentSuccess(paymentIntent: any, supabase: any) {
       .select('commission_amount')
       .eq('affiliate_id', referral.affiliate_id)
 
-    const totalEarnings = totalCommissions?.reduce((sum, payment) => sum + payment.commission_amount, 0) || 0
+    const totalEarnings = totalCommissions?.reduce((sum: number, payment: any) => sum + payment.commission_amount, 0) || 0
 
     // Send commission notification email
     try {
@@ -155,13 +162,13 @@ async function handlePaymentSuccess(paymentIntent: any, supabase: any) {
         totalEarnings: totalEarnings
       })
     } catch (emailError) {
-      console.error('Failed to send commission notification:', emailError)
+      logger.error('Failed to send commission notification:', emailError)
     }
 
-    console.log(`Commission processed: $${commissionAmount} for affiliate ${referral.affiliates.name}`)
+    logger.info(`Commission processed: $${commissionAmount} for affiliate ${referral.affiliates.name}`)
 
   } catch (error) {
-    console.error('Error processing payment success:', error)
+    logger.error('Error processing payment success:', error)
   }
 }
 
@@ -183,7 +190,7 @@ function validateWebhookSignature(payload: string, signature: string): boolean {
     stripe.webhooks.constructEvent(
       payload,
       signature,
-      process.env.STRIPE_WEBHOOK_ENDPOINT_SECRET
+      process.env.STRIPE_WEBHOOK_ENDPOINT_SECRET!
     )
     return true
   } catch (error) {

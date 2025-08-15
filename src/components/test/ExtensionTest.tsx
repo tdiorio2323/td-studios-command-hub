@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
+import { logger } from '@/lib/logger';
+
 
 // This component tests all your extensions
 const ExtensionTest: React.FC = () => {
@@ -9,7 +11,7 @@ const ExtensionTest: React.FC = () => {
 
   const handleClick = () => {
     setCount(prev => prev + 1);
-    console.log('Button clicked'); // ESLint will warn about console.log
+    logger.info('Button clicked'); // ESLint will warn about console.log
   };
 
   return (

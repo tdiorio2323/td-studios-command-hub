@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server'
 import { aiEngine } from '@/lib/ai-engine'
 
@@ -128,7 +129,7 @@ Return: {"recommendations": [{"title": "", "description": "", "impact": "high|me
           additionalInsights = JSON.parse(jsonMatch[0])
         }
       } catch (error) {
-        console.log('Marketing insights failed:', error)
+        logger.info('Marketing insights failed:', error)
       }
     }
 
@@ -156,7 +157,7 @@ Return: {"recommendations": [{"title": "", "description": "", "impact": "high|me
     })
 
   } catch (error) {
-    console.error('Image Analysis API Error:', error)
+    logger.error('Image Analysis API Error:', error)
     
     // Handle specific errors
     if (error instanceof Error) {

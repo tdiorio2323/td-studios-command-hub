@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { ensureUniqueInviteCode, ensureUniqueReferralCode } from '@/lib/affiliate/generateCode'
 import { sendAffiliateInvite } from '@/lib/email/resend'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -13,6 +14,9 @@ export async function POST(request: NextRequest) {
   try {
     // Get current user and verify admin role
     const supabase = supabaseAdmin
+    if (!supabase) {
+      return NextResponse.json({ error: 'Database not configured' }, { status: 500 })
+    }
     const { data: { user }, error: userError } = await supabase.auth.getUser()
 
     if (userError || !user) {
@@ -76,7 +80,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (insertError) {
-      console.error('Database insert error:', insertError)
+      logger.error('Database insert error:', insertError)
       return NextResponse.json(
         { error: 'Failed to create affiliate invite' },
         { status: 500 }
@@ -87,9 +91,9 @@ export async function POST(request: NextRequest) {
     try {
       await sendAffiliateInvite(affiliate)
     } catch (emailError) {
-      console.error('Email sending error:', emailError)
+      logger.error('Email sending error:', emailError)
       // Don't fail the request if email fails - the invite was created
-      console.warn('Affiliate invite created but email failed to send')
+      logger.warn('Affiliate invite created but email failed to send')
     }
 
     // Return success response
@@ -111,7 +115,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Create affiliate invite error:', error)
+    logger.error('Create affiliate invite error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -123,6 +127,9 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const supabase = supabaseAdmin
+    if (!supabase) {
+      return NextResponse.json({ error: 'Database not configured' }, { status: 500 })
+    }
     const { data: { user }, error: userError } = await supabase.auth.getUser()
 
     if (userError || !user) {
@@ -147,7 +154,7 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false })
 
     if (error) {
-      console.error('Fetch affiliates error:', error)
+      logger.error('Fetch affiliates error:', error)
       return NextResponse.json(
         { error: 'Failed to fetch affiliates' },
         { status: 500 }
@@ -157,7 +164,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ affiliates })
 
   } catch (error) {
-    console.error('Get affiliates error:', error)
+    logger.error('Get affiliates error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server'
 
 interface IntegrationTest {
@@ -10,7 +11,7 @@ interface IntegrationTest {
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('🔌 Testing all TD Studios integrations...')
+    logger.info('🔌 Testing all TD Studios integrations...')
 
     const integrations: IntegrationTest[] = []
 
@@ -354,7 +355,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Integration test error:', error)
+    logger.error('Integration test error:', error)
     return NextResponse.json({
       success: false,
       error: 'Failed to test integrations',

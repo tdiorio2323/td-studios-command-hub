@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server'
 import { aiEngine } from '@/lib/ai-engine'
 
@@ -52,7 +53,7 @@ Return only the enhanced prompt, no explanation:`
 
         enhancedPrompt = enhancement.trim().replace(/^"|"$/g, '') // Remove quotes if present
       } catch (error) {
-        console.log('Prompt enhancement failed, using original:', error)
+        logger.info('Prompt enhancement failed, using original:', error)
       }
     }
 
@@ -98,7 +99,7 @@ Return only the enhanced prompt, no explanation:`
           errors.push(`Failed to generate image ${i + 1}`)
         }
       } catch (error) {
-        console.error(`Image generation ${i + 1} failed:`, error)
+        logger.error(`Image generation ${i + 1} failed:`, error)
         errors.push(`Image ${i + 1}: ${error instanceof Error ? error.message : 'Unknown error'}`)
       }
     }
@@ -125,7 +126,7 @@ Return only the enhanced prompt, no explanation:`
         
         altTexts.push(altText.trim().substring(0, 125))
       } catch (error) {
-        console.log('Alt text generation failed:', error)
+        logger.info('Alt text generation failed:', error)
         altTexts.push(`Generated image: ${prompt.substring(0, 100)}`)
       }
     }
@@ -153,7 +154,7 @@ Return only the enhanced prompt, no explanation:`
     })
 
   } catch (error) {
-    console.error('Image Generation API Error:', error)
+    logger.error('Image Generation API Error:', error)
     
     // Handle specific DALL-E errors
     if (error instanceof Error) {

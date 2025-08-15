@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { createHash } from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -83,7 +84,7 @@ export async function POST(request: NextRequest) {
     return response
 
   } catch (error) {
-    console.error('Login error:', error)
+    logger.error('Login error:', error)
     return NextResponse.json({
       success: false,
       error: 'Internal server error',
@@ -105,7 +106,7 @@ export async function DELETE(request: NextRequest) {
     return response
 
   } catch (error) {
-    console.error('Logout error:', error)
+    logger.error('Logout error:', error)
     return NextResponse.json({
       success: false,
       error: 'Internal server error'

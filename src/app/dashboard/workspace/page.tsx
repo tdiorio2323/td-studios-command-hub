@@ -1,5 +1,7 @@
 'use client'
 
+import { logger } from '@/lib/logger';
+
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
@@ -114,17 +116,17 @@ export default function WorkspacePage() {
 
   const toggleStar = async (itemId: string) => {
     // TODO: Implement API call to toggle starred status
-    console.log('Toggle star for item:', itemId)
+    logger.info('Toggle star for item:', itemId)
   }
 
   const shareItem = async (itemId: string) => {
     // TODO: Implement sharing functionality
-    console.log('Share item:', itemId)
+    logger.info('Share item:', itemId)
   }
 
   const deleteItem = async (itemId: string) => {
     // TODO: Implement delete functionality
-    console.log('Delete item:', itemId)
+    logger.info('Delete item:', itemId)
   }
 
   return (

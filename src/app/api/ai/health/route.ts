@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextResponse } from 'next/server'
 import { aiEngine } from '@/lib/ai-engine'
 
@@ -72,7 +73,7 @@ export async function GET() {
     })
 
   } catch (error) {
-    console.error('Health check failed:', error)
+    logger.error('Health check failed:', error)
     
     return NextResponse.json({
       success: false,

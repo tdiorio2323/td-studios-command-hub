@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { sendWelcomeEmail } from '@/lib/email/resend'
@@ -77,9 +78,10 @@ export async function POST(
     }
 
     // Check if user already exists
-    const { data: existingUser } = await supabase.auth.admin.getUserByEmail(invite.email)
+    const { data: existingUser } = await supabase.auth.admin.listUsers()
+    const userExists = existingUser?.users?.find(user => user.email === invite.email)
 
-    if (existingUser?.user) {
+    if (userExists) {
       return NextResponse.json(
         { error: 'An account with this email already exists' },
         { status: 409 }
@@ -100,7 +102,7 @@ export async function POST(
     })
 
     if (authError || !authData.user) {
-      console.error('Auth user creation error:', authError)
+      logger.error('Auth user creation error:', authError)
       return NextResponse.json(
         { error: 'Failed to create user account' },
         { status: 500 }
@@ -120,7 +122,7 @@ export async function POST(
       })
 
     if (profileError) {
-      console.error('Profile creation error:', profileError)
+      logger.error('Profile creation error:', profileError)
       // Try to clean up the auth user if profile creation fails
       await supabase.auth.admin.deleteUser(authData.user.id)
       return NextResponse.json(
@@ -139,7 +141,7 @@ export async function POST(
       .eq('id', invite.id)
 
     if (updateError) {
-      console.error('Affiliate update error:', updateError)
+      logger.error('Affiliate update error:', updateError)
       // Continue - this is not critical for the user experience
     }
 
@@ -154,7 +156,7 @@ export async function POST(
         referral_code: invite.referral_code
       })
     } catch (emailError) {
-      console.error('Welcome email error:', emailError)
+      logger.error('Welcome email error:', emailError)
       // Don't fail the request if email fails
     }
 
@@ -172,7 +174,7 @@ export async function POST(
     })
 
   } catch (error) {
-    console.error('Accept invite error:', error)
+    logger.error('Accept invite error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

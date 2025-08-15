@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server'
 import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
@@ -55,7 +56,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('File upload error:', error)
+    logger.error('File upload error:', error)
     return NextResponse.json({
       success: false,
       error: 'File upload failed',
@@ -93,7 +94,7 @@ export async function GET() {
     })
 
   } catch (error) {
-    console.error('File listing error:', error)
+    logger.error('File listing error:', error)
     return NextResponse.json({
       success: false,
       error: 'Failed to retrieve files'

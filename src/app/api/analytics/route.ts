@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server'
 
 export interface AnalyticsEvent {
@@ -60,7 +61,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Analytics API Error:', error)
+    logger.error('Analytics API Error:', error)
     return NextResponse.json(
       { error: 'Failed to process analytics events' },
       { status: 500 }
@@ -205,7 +206,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Analytics Retrieval Error:', error)
+    logger.error('Analytics Retrieval Error:', error)
     return NextResponse.json(
       { error: 'Failed to retrieve analytics data' },
       { status: 500 }

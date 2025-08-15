@@ -1,8 +1,9 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('📧 Testing TD Studios messaging integrations...')
+    logger.info('📧 Testing TD Studios messaging integrations...')
 
     const integrations = []
 
@@ -90,7 +91,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Message integration test error:', error)
+    logger.error('Message integration test error:', error)
     return NextResponse.json({
       success: false,
       error: 'Failed to test message integrations',

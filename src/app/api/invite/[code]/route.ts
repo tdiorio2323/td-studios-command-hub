@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 
@@ -79,7 +80,7 @@ export async function GET(
     })
 
   } catch (error) {
-    console.error('Validate invite error:', error)
+    logger.error('Validate invite error:', error)
     return NextResponse.json(
       { valid: false, error: 'Internal server error' },
       { status: 500 }

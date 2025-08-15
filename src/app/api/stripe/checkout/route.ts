@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { PRICING_PLANS } from '@/lib/stripe'
@@ -39,7 +40,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ sessionId: session.id, url: session.url })
   } catch (error: any) {
-    console.error('Checkout session error:', error)
+    logger.error('Checkout session error:', error)
     return NextResponse.json(
       { error: error.message },
       { status: 500 }

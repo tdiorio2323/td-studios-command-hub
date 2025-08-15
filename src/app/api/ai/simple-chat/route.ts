@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { Anthropic } from '@anthropic-ai/sdk'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest) {
     const userMessages = messages.filter((m: ChatMessage) => m.role === 'user')
     const lastMessage = userMessages[userMessages.length - 1]?.content || 'Hello'
 
-    console.log('Sending to Claude:', lastMessage)
+    logger.info('Sending to Claude:', lastMessage)
 
     const response = await claude.messages.create({
       model: 'claude-3-5-sonnet-20241022',
@@ -49,7 +50,7 @@ export async function POST(request: NextRequest) {
 
     const aiResponse = response.content[0]?.type === 'text' ? response.content[0].text : 'Sorry, I could not process that request.'
 
-    console.log('Claude response:', aiResponse)
+    logger.info('Claude response:', aiResponse)
 
     return NextResponse.json({
       success: true,
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('AI chat error:', error)
+    logger.error('AI chat error:', error)
     return NextResponse.json({
       success: false,
       error: 'Failed to get AI response',

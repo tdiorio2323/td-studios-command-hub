@@ -1,5 +1,7 @@
 'use client'
 
+import { logger } from '@/lib/logger';
+
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Eye, EyeOff, Shield, Zap, Brain } from 'lucide-react'
@@ -37,7 +39,7 @@ export default function LoginPage() {
         setError(data.error || 'Login failed. Please try again.')
       }
     } catch (error) {
-      console.error('Login error:', error)
+      logger.error('Login error:', error)
       setError('Network error. Please check your connection.')
     }
 

@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server'
 import { aiEngine, ContentGeneration } from '@/lib/ai-engine'
 
@@ -84,7 +85,7 @@ Return as JSON with: titles (array), meta_description (string), keywords (array)
           }
         }
       } catch (error) {
-        console.log('SEO analysis failed:', error)
+        logger.info('SEO analysis failed:', error)
       }
     }
 
@@ -109,7 +110,7 @@ Return as JSON with: language (string), complexity (1-10), functions (array), de
           } as any
         }
       } catch (error) {
-        console.log('Code analysis failed:', error)
+        logger.info('Code analysis failed:', error)
       }
     }
 
@@ -124,7 +125,7 @@ Return as JSON with: language (string), complexity (1-10), functions (array), de
     })
 
   } catch (error) {
-    console.error('Content Generation API Error:', error)
+    logger.error('Content Generation API Error:', error)
     
     return NextResponse.json(
       { 

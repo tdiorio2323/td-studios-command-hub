@@ -444,7 +444,7 @@ Format as JSON:
         ]
       }
 
-      console.log('🧪 Modified message being sent to Claude:', modifiedMessages[0]?.content)
+      logger.info('🧪 Modified message being sent to Claude:', modifiedMessages[0]?.content)
 
       const response = await claude.messages.create({
         model,
@@ -508,7 +508,7 @@ Return format:
 
       throw new Error('Invalid response format')
     } catch (error) {
-      console.error('Task prioritization error:', error)
+      logger.error('Task prioritization error:', error)
       // Fallback: basic prioritization
       return tasks.map((task) => ({
         task,
@@ -557,7 +557,7 @@ Return format:
         }
       }
     } catch (error) {
-      console.error('Content generation error:', error)
+      logger.error('Content generation error:', error)
       throw new Error('Failed to generate content')
     }
   }
@@ -596,7 +596,7 @@ Return format:
       const content = response.content[0]
       return content.type === 'text' ? content.text : 'Unable to analyze image'
     } catch (error) {
-      console.error('Image analysis error:', error)
+      logger.error('Image analysis error:', error)
       throw new Error('Failed to analyze image')
     }
   }
@@ -632,7 +632,7 @@ Return format:
 
       return response.choices[0]?.message?.content || 'Unable to analyze image'
     } catch (error) {
-      console.error('GPT Vision API Error:', error)
+      logger.error('GPT Vision API Error:', error)
       throw new Error('Failed to analyze image with GPT')
     }
   }
@@ -659,7 +659,7 @@ Return format:
 
       return response.choices[0]?.message?.content || 'Unable to generate response'
     } catch (error) {
-      console.error('OpenAI API Error:', error)
+      logger.error('OpenAI API Error:', error)
       throw new Error('Failed to communicate with GPT')
     }
   }
@@ -683,7 +683,7 @@ Return format:
 
       return response.data?.[0]?.url || ''
     } catch (error) {
-      console.error('DALL-E API Error:', error)
+      logger.error('DALL-E API Error:', error)
       throw new Error('Failed to generate image')
     }
   }
@@ -704,7 +704,7 @@ Return format:
 
       return response.text
     } catch (error) {
-      console.error('Whisper API Error:', error)
+      logger.error('Whisper API Error:', error)
       throw new Error('Failed to transcribe audio')
     }
   }
@@ -722,7 +722,7 @@ Return format:
         gpt: gptResponse.status === 'fulfilled' ? gptResponse.value : 'GPT unavailable'
       }
     } catch (error) {
-      console.error('AI comparison error:', error)
+      logger.error('AI comparison error:', error)
       throw new Error('Failed to compare AI responses')
     }
   }
@@ -741,7 +741,7 @@ Return format:
         .filter(r => r.status === 'fulfilled')
         .map(r => (r as PromiseFulfilledResult<string>).value)
     } catch (error) {
-      console.error('Creative content generation error:', error)
+      logger.error('Creative content generation error:', error)
       throw new Error('Failed to generate creative variations')
     }
   }

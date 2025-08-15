@@ -1,25 +1,31 @@
+import { logger } from '@/lib/logger';
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key'
+
+// Check if we're in build time or missing env vars
+const isValidConfig = supabaseUrl !== 'https://placeholder.supabase.co' && 
+                     supabaseAnonKey !== 'placeholder-key' &&
+                     supabaseServiceKey !== 'placeholder-service-key'
 
 // Client for browser/frontend use
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+export const supabase = isValidConfig ? createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true
   }
-})
+}) : null
 
 // Admin client for server-side operations
-export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+export const supabaseAdmin = isValidConfig ? createClient(supabaseUrl, supabaseServiceKey, {
   auth: {
     autoRefreshToken: false,
     persistSession: false
   }
-})
+}) : null
 
 // Database types for TypeScript
 export interface User {
@@ -80,7 +86,7 @@ export const dbHelpers = {
       .single()
 
     if (error) {
-      console.error('Error fetching user:', error)
+      logger.error('Error fetching user:', error)
       return null
     }
     return data
@@ -96,7 +102,7 @@ export const dbHelpers = {
       .single()
 
     if (error) {
-      console.error('Error fetching subscription:', error)
+      logger.error('Error fetching subscription:', error)
       return null
     }
     return data
@@ -123,7 +129,7 @@ export const dbHelpers = {
       })
 
     if (error) {
-      console.error('Error logging usage:', error)
+      logger.error('Error logging usage:', error)
       return false
     }
     return true
@@ -142,7 +148,7 @@ export const dbHelpers = {
       .order('created_at', { ascending: false })
 
     if (error) {
-      console.error('Error fetching usage:', error)
+      logger.error('Error fetching usage:', error)
       return []
     }
     return data || []

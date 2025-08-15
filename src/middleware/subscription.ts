@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { PRICING_PLANS } from '@/lib/stripe'
@@ -107,7 +108,7 @@ export async function checkSubscriptionAccess(
       subscription: subscription,
     }
   } catch (error) {
-    console.error('Subscription check error:', error)
+    logger.error('Subscription check error:', error)
     return {
       hasAccess: false,
       error: 'Failed to verify subscription',

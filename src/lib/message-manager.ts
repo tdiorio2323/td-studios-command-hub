@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 interface UnifiedMessage {
   id: string
   platform: 'gmail' | 'telegram' | 'ai'
@@ -76,7 +77,7 @@ export class MessageManager {
         messages.push(...gmailMessages)
       }
     } catch (error) {
-      console.warn('Failed to fetch Gmail messages:', error)
+      logger.warn('Failed to fetch Gmail messages:', error)
     }
 
     try {
@@ -102,7 +103,7 @@ export class MessageManager {
         messages.push(...telegramMessages)
       }
     } catch (error) {
-      console.warn('Failed to fetch Telegram messages:', error)
+      logger.warn('Failed to fetch Telegram messages:', error)
     }
 
     // Sort by timestamp (newest first)
@@ -185,7 +186,7 @@ export class MessageManager {
         gmailUnread = data.unreadCount || 0
       }
     } catch (error) {
-      console.warn('Failed to get Gmail unread count:', error)
+      logger.warn('Failed to get Gmail unread count:', error)
     }
 
     try {
@@ -200,7 +201,7 @@ export class MessageManager {
         ).length || 0
       }
     } catch (error) {
-      console.warn('Failed to get Telegram message count:', error)
+      logger.warn('Failed to get Telegram message count:', error)
     }
 
     return {

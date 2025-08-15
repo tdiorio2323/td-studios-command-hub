@@ -112,7 +112,7 @@ export async function GET(request: NextRequest) {
           })
         }
       } catch (error) {
-        logger.api.warn('GET', '/api/messages/gmail', `Failed to fetch message ${message.id}`)
+        logger.api.warn(`Failed to fetch message ${message.id}`, error as Error)
       }
     }
 
@@ -185,7 +185,7 @@ export async function POST(request: NextRequest) {
 
     const sentMessage = await sendResponse.json()
 
-    logger.api.info('POST', '/api/messages/gmail', `Email sent to ${to}`)
+    logger.api.info(`Email sent to ${to}`)
 
     return NextResponse.json({
       success: true,

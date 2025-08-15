@@ -1,3 +1,4 @@
+import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
@@ -110,7 +111,7 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Dashboard overview error:', error)
+    logger.error('Dashboard overview error:', error)
     return NextResponse.json({
       success: false,
       error: 'Failed to fetch dashboard overview',

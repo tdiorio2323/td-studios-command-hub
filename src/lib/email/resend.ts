@@ -1,6 +1,9 @@
+import { logger } from '@/lib/logger';
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = process.env.RESEND_API_KEY 
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null
 
 interface Affiliate {
   id: string
@@ -19,6 +22,11 @@ interface CommissionNotification {
 }
 
 export async function sendAffiliateInvite(affiliate: Affiliate) {
+  if (!resend) {
+    console.warn('Resend client not configured')
+    return { success: false, error: 'Email service not configured' }
+  }
+
   const inviteUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/invite/${affiliate.invite_code}`
 
   try {
@@ -97,18 +105,23 @@ export async function sendAffiliateInvite(affiliate: Affiliate) {
     })
 
     if (error) {
-      console.error('Failed to send affiliate invite:', error)
+      logger.error('Failed to send affiliate invite:', error)
       throw error
     }
 
     return { success: true, data }
   } catch (error) {
-    console.error('Email service error:', error)
+    logger.error('Email service error:', error)
     throw error
   }
 }
 
 export async function sendWelcomeEmail(affiliate: Affiliate) {
+  if (!resend) {
+    console.warn('Resend client not configured')
+    return { success: false, error: 'Email service not configured' }
+  }
+
   const dashboardUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard`
   const referralUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/signup?ref=${affiliate.referral_code}`
 
@@ -199,18 +212,23 @@ export async function sendWelcomeEmail(affiliate: Affiliate) {
     })
 
     if (error) {
-      console.error('Failed to send welcome email:', error)
+      logger.error('Failed to send welcome email:', error)
       throw error
     }
 
     return { success: true, data }
   } catch (error) {
-    console.error('Email service error:', error)
+    logger.error('Email service error:', error)
     throw error
   }
 }
 
 export async function sendCommissionNotification(notification: CommissionNotification) {
+  if (!resend) {
+    console.warn('Resend client not configured')
+    return { success: false, error: 'Email service not configured' }
+  }
+
   try {
     const { data, error } = await resend.emails.send({
       from: 'Tyler DiOrio <tyler@tdstudiosny.com>',
@@ -270,13 +288,13 @@ export async function sendCommissionNotification(notification: CommissionNotific
     })
 
     if (error) {
-      console.error('Failed to send commission notification:', error)
+      logger.error('Failed to send commission notification:', error)
       throw error
     }
 
     return { success: true, data }
   } catch (error) {
-    console.error('Email service error:', error)
+    logger.error('Email service error:', error)
     throw error
   }
 }
