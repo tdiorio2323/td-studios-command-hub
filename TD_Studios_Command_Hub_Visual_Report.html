@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TD Studios Command Hub - Visual UI/UX Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 30%, #2a2a3a 60%, #1a1a1a 90%, #000000 100%);
+            color: white;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 25% 25%, #00ff00 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, #0080ff 0%, transparent 50%);
+            opacity: 0.03;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ffffff 0%, #00ff88 50%, #0080ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #888;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        }
+
+        .page-card {
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .page-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #00ff88 0%, #0080ff 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .page-route {
+            font-size: 0.9rem;
+            color: #00ff88;
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 255, 136, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .page-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .page-description {
+            space-y: 1rem;
+        }
+
+        .page-description h3 {
+            color: #00ff88;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .page-description p {
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+
+        .page-description ul {
+            color: #aaa;
+            padding-left: 1.5rem;
+        }
+
+        .page-description li {
+            margin-bottom: 0.5rem;
+        }
+
+        .mockup-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mockup {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+            border-radius: 8px;
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mockup-header {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mockup-body {
+            padding: 1.5rem;
+        }
+
+        .nav-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            border-left: 3px solid #00ff88;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #00ff88 0%, #0080ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00ff88 0%, #0080ff 100%);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .tab-nav {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tab {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab.active {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 255, 136, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-mockup {
+            width: 200px;
+            background: rgba(0, 0, 0, 0.5);
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+        }
+
+        .main-content {
+            margin-left: 200px;
+            padding: 1.5rem;
+        }
+
+        .pricing-tier {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            margin: 0.5rem;
+        }
+
+        .pricing-tier.featured {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .overview-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a3a 100%);
+            padding: 3rem 2rem;
+            margin-bottom: 3rem;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .tech-badge {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin: 0.25rem;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .responsive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .page-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-bg"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🧠 TD Studios Command Hub</h1>
+            <p>Comprehensive Visual UI/UX Report - Production-Ready AI Dashboard Platform</p>
+            <div style="margin-top: 1rem;">
+                <span class="tech-badge">Next.js</span>
+                <span class="tech-badge">TypeScript</span>
+                <span class="tech-badge">Glass Morphism</span>
+                <span class="tech-badge">Claude API</span>
+                <span class="tech-badge">OpenAI</span>
+                <span class="tech-badge">Framer Motion</span>
+            </div>
+        </div>
+
+        <div class="overview-section">
+            <h2>🎯 Project Overview</h2>
+            <p style="max-width: 800px; margin: 1rem auto; color: #ccc;">
+                TD Studios Command Hub is a production-ready AI-powered dashboard featuring glass morphism design, 
+                dark theme with green/blue accents, and comprehensive AI integrations. Revenue target: $2997/month.
+            </p>
+            <p style="color: #00ff88; font-weight: bold;">Domain: tdstudioshq.com | Login: tdstudios2024 / aibeast</p>
+        </div>
+
+        <!-- Homepage -->
+        <div class="glass-card page-card">
+            <div class="page-header">
+                <div class="page-icon">🏠</div>
+                <div>
+                    <div class="page-title">Homepage</div>
+                    <div class="page-route">src/app/page.tsx</div>
+                </div>
+            </div>
+            
+            <div class="page-content">
+                <div class="page-description">
+                    <h3>Design Features</h3>
+                    <p>Glassmorphism email capture landing page with animated backgrounds and premium branding.</p>
+                    <ul>
+                        <li>Matrix-style animated background effects</li>
+                        <li>Rotating gradient orbs with blur effects</li>
+                        <li>Glass morphism card with backdrop blur</li>
+                        <li>Animated brain icon with continuous rotation</li>
+                        <li>Email capture form with gradient submit button</li>
+                        <li>Feature preview icons (AI Studio, Automation, Analytics)</li>
+                    </ul>
+                    <h3>Color Scheme</h3>
+                    <p>Dark gradient background (#000 to #1a1a1a), white glass effects, green/blue gradients</p>
+                </div>
+                
+                <div class="mockup-container">
+                    <div class="mockup">
+                        <div style="position: absolute; top: 20%; left: 50%; transform: translateX(-50%); text-align: center; width: 80%;">
+                            <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #00ff88, #0080ff); border-radius: 12px; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;">🧠</div>
+                            <h2 class="gradient-text" style="font-size: 1.8rem; margin-bottom: 0.5rem;">TD Studios</h2>
+                            <p style="color: #888; font-size: 0.9rem; margin-bottom: 2rem;">AI-Powered Command Hub</p>
+                            
+                            <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.2);">
+                                <h3 style="color: white; margin-bottom: 1rem; font-size: 1.1rem;">✨ Join the Future</h3>
+                                <div class="form-group">
+                                    <input class="form-input" placeholder="Enter your email" style="margin-bottom: 1rem;">
+                                </div>
+                                <button class="btn-primary" style="width: 100%;">⚡ Get Early Access →</button>
+                            </div>
+                            
+                            <div class="features-grid" style="margin-top: 1.5rem;">
+                                <div style="text-align: center;">
+                                    <div class="feature-icon">🧠</div>
+                                    <p style="font-size: 0.7rem; color: #888;">AI Studio</p>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div class="feature-icon">⚡</div>
+                                    <p style="font-size: 0.7rem; color: #888;">Automation</p>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div class="feature-icon">✨</div>
+                                    <p style="font-size: 0.7rem; color: #888;">Analytics</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Page -->
+        <div class="glass-card page-card">
+            <div class="page-header">
+                <div class="page-icon">🔐</div>
+                <div>
+                    <div class="page-title">Login Page</div>
+                    <div class="page-route">src/app/login/page.tsx</div>
+                </div>
+            </div>
+            
+            <div class="page-content">
+                <div class="page-description">
+                    <h3>Design Features</h3>
+                    <p>Secure authentication page with glass morphism design and animated elements.</p>
+                    <ul>
+                        <li>Animated TD Studios logo with rotating brain icon</li>
+                        <li>Glass morphism form with backdrop blur effects</li>
+                        <li>Password visibility toggle with eye icons</li>
+                        <li>Gradient submit button with loading animation</li>
+                        <li>Demo credentials section for easy access</li>
+                        <li>Security shield icon for trust indicators</li>
+                    </ul>
+                    <h3>Authentication</h3>
+                    <p>Admin: tyler@tdstudios.com / tdstudios2024<br>Demo: demo@tdstudios.com / aibeast</p>
+                </div>
+                
+                <div class="mockup-container">
+                    <div class="mockup">
+                        <div style="position: absolute; top: 15%; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px;">
+                            <div style="text-align: center; margin-bottom: 2rem;">
+                                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #00ff88, #0080ff); border-radius: 12px; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center;">🧠</div>
+                                <h2 class="gradient-text" style="font-size: 2rem; margin-bottom: 0.5rem;">TD Studios</h2>
+                                <p style="color: #888;">Command Hub Access</p>
+                            </div>
+                            
+                            <div style="background: rgba(255,255,255,0.05); border-radius: 16px; padding: 2rem; border: 1px solid rgba(255,255,255,0.1);">
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem;">
+                                    <span style="color: #0080ff;">🛡️</span>
+                                    <span style="color: #888; font-size: 0.9rem;">Secure Authentication</span>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label style="color: #ccc; font-size: 0.9rem; margin-bottom: 0.5rem; display: block;">Email</label>
+                                    <input class="form-input" placeholder="tyler@tdstudios.com" style="margin-bottom: 1rem;">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label style="color: #ccc; font-size: 0.9rem; margin-bottom: 0.5rem; display: block;">Password</label>
+                                    <div style="position: relative;">
+                                        <input class="form-input" type="password" placeholder="Password" style="margin-bottom: 1rem;">
+                                        <span style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #888;">👁️</span>
+                                    </div>
+                                </div>
+                                
+                                <button class="btn-primary" style="width: 100%; margin-bottom: 1rem;">⚡ Access Command Hub</button>
+                                
+                                <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem; text-align: center;">
+                                    <p style="color: #888; font-size: 0.8rem; margin-bottom: 0.5rem;">Demo Credentials:</p>
+                                    <div style="font-size: 0.7rem; color: #888;">
+                                        <div style="background: rgba(255,255,255,0.05); padding: 0.5rem; border-radius: 6px; margin-bottom: 0.5rem;">
+                                            <strong style="color: white;">Admin:</strong> tyler@tdstudios.com / tdstudios2024
+                                        </div>
+                                        <div style="background: rgba(255,255,255,0.05); padding: 0.5rem; border-radius: 6px;">
+                                            <strong style="color: white;">Demo:</strong> demo@tdstudios.com / aibeast
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Home -->
+        <div class="glass-card page-card">
+            <div class="page-header">
+                <div class="page-icon">📊</div>
+                <div>
+                    <div class="page-title">Dashboard Home</div>
+                    <div class="page-route">src/app/dashboard/page.tsx</div>
+                </div>
+            </div>
+            
+            <div class="page-content">
+                <div class="page-description">
+                    <h3>Design Features</h3>
+                    <p>Command center overview with stats, quick actions, and activity feed.</p>
+                    <ul>
+                        <li>Sidebar navigation with glass morphism</li>
+                        <li>5-column stats grid with key metrics</li>
+                        <li>Quick action cards with hover effects</li>
+                        <li>Recent activity timeline with status indicators</li>
+                        <li>AI Neural Network status card</li>
+                        <li>Personalized welcome message</li>
+                    </ul>
+                    <h3>Key Metrics</h3>
+                    <p>Active Projects: 8, Completed Tasks: 47, AI Interactions: 235, Storage: 2.40 GB, Uptime: 99.9%</p>
+                </div>
+                
+                <div class="mockup-container">
+                    <div class="mockup">
+                        <div class="sidebar-mockup">
+                            <div style="color: #00ff88; font-weight: bold; margin-bottom: 1rem; font-size: 0.9rem;">TD Studios</div>
+                            <div class="nav-item">📊 Dashboard</div>
+                            <div class="nav-item">🧠 AI Studio</div>
+                            <div class="nav-item">💬 Messages</div>
+                            <div class="nav-item">📁 File Vault</div>
+                            <div class="nav-item">📈 Analytics</div>
+                            <div class="nav-item">✅ Tasks</div>
+                            <div class="nav-item">🏢 Workspace</div>
+                            <div class="nav-item">⚙️ Settings</div>
+                        </div>
+                        
+                        <div class="main-content">
+                            <h2 style="color: white; font-size: 1.5rem; margin-bottom: 0.5rem;">Welcome back, Tyler</h2>
+                            <p style="color: #888; margin-bottom: 1.5rem;">Your digital command center is ready. What would you like to accomplish today?</p>
+                            
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <p style="color: #888; font-size: 0.7rem;">ACTIVE PROJECTS</p>
+                                    <p style="color: white; font-size: 1.5rem; font-weight: bold;">8</p>
+                                </div>
+                                <div class="stat-card">
+                                    <p style="color: #888; font-size: 0.7rem;">COMPLETED TASKS</p>
+                                    <p style="color: white; font-size: 1.5rem; font-weight: bold;">47</p>
+                                </div>
+                                <div class="stat-card">
+                                    <p style="color: #888; font-size: 0.7rem;">AI INTERACTIONS</p>
+                                    <p style="color: white; font-size: 1.5rem; font-weight: bold;">235</p>
+                                </div>
+                                <div class="stat-card">
+                                    <p style="color: #888; font-size: 0.7rem;">STORAGE USED</p>
+                                    <p style="color: white; font-size: 1.5rem; font-weight: bold;">2.40 GB</p>
+                                </div>
+                                <div class="stat-card">
+                                    <p style="color: #888; font-size: 0.7rem;">UPTIME</p>
+                                    <p style="color: white; font-size: 1.5rem; font-weight: bold;">99.9%</p>
+                                </div>
+                            </div>
+                            
+                            <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem; margin-top: 1rem;">
+                                <h3 style="color: white; margin-bottom: 1rem;">Quick Actions</h3>
+                                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                                    <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; text-align: center;">
+                                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🧠</div>
+                                        <p style="color: white; font-size: 0.8rem;">AI Studio</p>
+                                    </div>
+                                    <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; text-align: center;">
+                                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📁</div>
+                                        <p style="color: white; font-size: 0.8rem;">File Vault</p>
+                                    </div>
+                                    <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; text-align: center;">
+                                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">✅</div>
+                                        <p style="color: white; font-size: 0.8rem;">Tasks</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Studio -->
+        <div class="glass-card page-card">
+            <div class="page-header">
+                <div class="page-icon">🧠</div>
+                <div>
+                    <div class="page-title">AI Studio</div>
+                    <div class="page-route">src/app/dashboard/ai-studio/page.tsx</div>
+                </div>
+            </div>
+            
+            <div class="page-content">
+                <div class="page-description">
+                    <h3>Design Features</h3>
+                    <p>AI model training and chat interface with tabbed navigation.</p>
+                    <ul>
+                        <li>Three-tab interface: Chat, Training, Automation</li>
+                        <li>Model selection dropdown (Claude, GPT-4)</li>
+                        <li>Chat interface with message history</li>
+                        <li>Model training parameters</li>
+                        <li>Automation workflow builder</li>
+                        <li>Real-time AI status indicators</li>
+                    </ul>
+                    <h3>AI Integrations</h3>
+                    <p>Claude Sonnet API, OpenAI GPT-4, custom training pipelines</p>
+                </div>
+                
+                <div class="mockup-container">
+                    <div class="mockup">
+                        <div class="sidebar-mockup">
+                            <div style="color: #00ff88; font-weight: bold; margin-bottom: 1rem; font-size: 0.9rem;">TD Studios</div>
+                            <div class="nav-item">📊 Dashboard</div>
+                            <div class="nav-item" style="background: rgba(0, 255, 136, 0.2); border-left-color: #00ff88;">🧠 AI Studio</div>
+                            <div class="nav-item">💬 Messages</div>
+                            <div class="nav-item">📁 File Vault</div>
+                            <div class="nav-item">📈 Analytics</div>
+                        </div>
+                        
+                        <div class="main-content">
+                            <h2 style="color: white; font-size: 1.8rem; margin-bottom: 0.5rem;">AI Studio</h2>
+                            <p style="color: #888; margin-bottom: 1.5rem;">Build, train, and deploy AI models</p>
+                            
+                            <div class="tab-nav">
+                                <div class="tab active">💬 AI Chat</div>
+                                <div class="tab">🧠 Model Training</div>
+                                <div class="tab">⚡ Automation</div>
+                            </div>
+                            
+                            <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 1.5rem; min-height: 300px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                    <h3 style="color: white;">Chat Interface</h3>
+                                    <select style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 0.5rem; color: white;">
+                                        <option>Claude Sonnet</option>
+                                        <option>GPT-4</option>
+                                    </select>
+                                </div>
+                                
+                                <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; height: 200px; overflow-y: auto;">
+                                    <div style="margin-bottom: 1rem;">
+                                        <div style="background: rgba(0, 255, 136, 0.2); border-radius: 12px; padding: 0.75rem; margin-bottom: 0.5rem; max-width: 80%;">
+                                            <p style="color: white; font-size: 0.9rem;">Hello! How can I help you with your project today?</p>
+                                        </div>
+                                        <div style="background: rgba(128, 128, 128, 0.2); border-radius: 12px; padding: 0.75rem; margin-left: auto; max-width: 80%;">
+                                            <p style="color: white; font-size: 0.9rem;">Can you help me analyze this data set?</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <input class="form-input" placeholder="Type your message..." style="flex: 1;">
+                                    <button class="btn-primary">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pricing Page -->
+        <div class="glass-card page-card">
+            <div class="page-header">
+                <div class="page-icon">💰</div>
+                <div>
+                    <div class="page-title">Pricing</div>
+                    <div class="page-route">src/app/pricing/page.tsx</div>
+                </div>
+            </div>
+            
+            <div class="page-content">
+                <div class="page-description">
+                    <h3>Design Features</h3>
+                    <p>Three-tier pricing structure with featured premium plan.</p>
+                    <ul>
+                        <li>Starter ($97/month) - Basic AI features</li>
+                        <li>Professional ($297/month) - Advanced tools</li>
+                        <li>Enterprise ($2997/month) - Full suite</li>
+                        <li>Stripe integration for payments</li>
+                        <li>Feature comparison matrix</li>
+                        <li>Money-back guarantee badges</li>
+                    </ul>
+                    <h3>Revenue Model</h3>
+                    <p>SaaS subscription with $2997/month enterprise target</p>
+                </div>
+                
+                <div class="mockup-container">
+                    <div class="mockup">
+                        <div style="padding: 2rem; text-align: center;">
+                            <h2 style="color: white; font-size: 2rem; margin-bottom: 1rem;">Choose Your Plan</h2>
+                            <p style="color: #888; margin-bottom: 2rem;">Unlock the power of AI automation</p>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                                <div class="pricing-tier">
+                                    <h3 style="color: white; margin-bottom: 1rem;">Starter</h3>
+                                    <div style="font-size: 2rem; color: #00ff88; font-weight: bold; margin-bottom: 1rem;">$97<span style="font-size: 1rem; color: #888;">/mo</span></div>
+                                    <ul style="text-align: left; color: #ccc; margin-bottom: 1.5rem;">
+                                        <li style="margin-bottom: 0.5rem;">✓ Basic AI Chat</li>
+                                        <li style="margin-bottom: 0.5rem;">✓ 5GB Storage</li>
+                                        <li style="margin-bottom: 0.5rem;">✓ Email Support</li>
+                                    </ul>
+                                    <button class="btn-primary" style="width: 100%;">Get Started</button>
+                                </div>
+                                
+                                <div class="pricing-tier featured">
+                                    <div style="background: #00ff88; color: black; padding: 0.25rem; border-radius: 4px; font-size: 0.8rem; margin-bottom: 1rem;">MOST POPULAR</div>
+                                    <h3 style="color: white; margin-bottom: 1rem;">Professional</h3>
+                                    <div style="font-size: 2rem; color: #00ff88; font-weight: bold; margin-bottom: 1rem;">$297<span style="font-size: 1rem; color: #888;">/mo</span></div>
+                                    <ul style="text-align: left; color: #ccc; margin-bottom: 1.5rem;">
+                                        <li style="margin-bottom: 0.5rem;">✓ Advanced AI Models</li>
+                                        <li style="margin-bottom: 0.5rem;">✓ 50GB Storage</li>
+                                        <li style="margin-bottom: 0.5rem;">✓ Priority Support</li>
+                                        <li style="margin-bottom: 0.5rem;">✓ Automation Tools</li>
+                                    </ul>
+                                    <button class="btn-primary" style="width: 100%;">Start Free Trial</button>
+                                </div>
+                                
+                                <div class="pricing-tier">
+                                    <h3 style="color: white; margin-bottom: 1rem;">Enterprise</h3>
+                                    <div style="font-size: 2rem; color: #00ff88; font-weight: bold; margin-bottom: 1rem;">$2997<span style="font-size: 1rem; color: #888;">/mo</span></div>
+                                    <ul style="text-align: left; color: #ccc; margin-bottom: 1.5rem;">
+                                        <li style="margin-bottom: 0.5rem;">✓ Custom AI Training</li>
+                                        <li style="margin-bottom: 0.5rem;">✓ Unlimited Storage</li>
+                                        <li style="margin-bottom: 0.5rem;">✓ 24/7 Support</li>
+                                        <li style="margin-bottom: 0.5rem;">✓ White Label</li>
+                                    </ul>
+                                    <button class="btn-primary" style="width: 100%;">Contact Sales</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Pages Summary -->
+        <div class="responsive-grid">
+            
+            <!-- Messages -->
+            <div class="glass-card page-card">
+                <div class="page-header">
+                    <div class="page-icon">💬</div>
+                    <div>
+                        <div class="page-title">Messages</div>
+                        <div class="page-route">src/app/dashboard/messages/page.tsx</div>
+                    </div>
+                </div>
+                <div class="page-description">
+                    <h3>Features</h3>
+                    <ul>
+                        <li>Gmail integration</li>
+                        <li>Telegram bot connection</li>
+                        <li>Real-time notifications</li>
+                        <li>Message threading</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- File Vault -->
+            <div class="glass-card page-card">
+                <div class="page-header">
+                    <div class="page-icon">📁</div>
+                    <div>
+                        <div class="page-title">File Vault</div>
+                        <div class="page-route">src/app/dashboard/file-vault/page.tsx</div>
+                    </div>
+                </div>
+                <div class="page-description">
+                    <h3>Features</h3>
+                    <ul>
+                        <li>Drag & drop uploads</li>
+                        <li>File categorization</li>
+                        <li>Search functionality</li>
+                        <li>Version control</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Analytics -->
+            <div class="glass-card page-card">
+                <div class="page-header">
+                    <div class="page-icon">📈</div>
+                    <div>
+                        <div class="page-title">Analytics</div>
+                        <div class="page-route">src/app/dashboard/analytics/page.tsx</div>
+                    </div>
+                </div>
+                <div class="page-description">
+                    <h3>Features</h3>
+                    <ul>
+                        <li>Usage statistics</li>
+                        <li>Performance metrics</li>
+                        <li>Custom dashboards</li>
+                        <li>Export capabilities</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Tasks -->
+            <div class="glass-card page-card">
+                <div class="page-header">
+                    <div class="page-icon">✅</div>
+                    <div>
+                        <div class="page-title">Tasks</div>
+                        <div class="page-route">src/app/dashboard/tasks/page.tsx</div>
+                    </div>
+                </div>
+                <div class="page-description">
+                    <h3>Features</h3>
+                    <ul>
+                        <li>AI task prioritization</li>
+                        <li>Kanban boards</li>
+                        <li>Team collaboration</li>
+                        <li>Deadline tracking</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Workspace -->
+            <div class="glass-card page-card">
+                <div class="page-header">
+                    <div class="page-icon">🏢</div>
+                    <div>
+                        <div class="page-title">Workspace</div>
+                        <div class="page-route">src/app/dashboard/workspace/page.tsx</div>
+                    </div>
+                </div>
+                <div class="page-description">
+                    <h3>Features</h3>
+                    <ul>
+                        <li>Project management</li>
+                        <li>Team workspaces</li>
+                        <li>Resource allocation</li>
+                        <li>Workflow automation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Settings -->
+            <div class="glass-card page-card">
+                <div class="page-header">
+                    <div class="page-icon">⚙️</div>
+                    <div>
+                        <div class="page-title">Settings</div>
+                        <div class="page-route">src/app/dashboard/settings/page.tsx</div>
+                    </div>
+                </div>
+                <div class="page-description">
+                    <h3>Features</h3>
+                    <ul>
+                        <li>Account preferences</li>
+                        <li>API key management</li>
+                        <li>Security settings</li>
+                        <li>Billing information</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Affiliates -->
+            <div class="glass-card page-card">
+                <div class="page-header">
+                    <div class="page-icon">🤝</div>
+                    <div>
+                        <div class="page-title">Affiliates</div>
+                        <div class="page-route">src/app/dashboard/affiliates/page.tsx</div>
+                    </div>
+                </div>
+                <div class="page-description">
+                    <h3>Features</h3>
+                    <ul>
+                        <li>Commission tracking</li>
+                        <li>Referral links</li>
+                        <li>Performance metrics</li>
+                        <li>Payout management</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- CMS -->
+            <div class="glass-card page-card">
+                <div class="page-header">
+                    <div class="page-icon">📝</div>
+                    <div>
+                        <div class="page-title">CMS</div>
+                        <div class="page-route">src/app/dashboard/cms/page.tsx</div>
+                    </div>
+                </div>
+                <div class="page-description">
+                    <h3>Features</h3>
+                    <ul>
+                        <li>Content management</li>
+                        <li>Blog publishing</li>
+                        <li>SEO optimization</li>
+                        <li>Media library</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Cabana -->
+            <div class="glass-card page-card">
+                <div class="page-header">
+                    <div class="page-icon">🌴</div>
+                    <div>
+                        <div class="page-title">Cabana</div>
+                        <div class="page-route">src/app/dashboard/cabana/page.tsx</div>
+                    </div>
+                </div>
+                <div class="page-description">
+                    <h3>Features</h3>
+                    <ul>
+                        <li>Creator management</li>
+                        <li>Content monetization</li>
+                        <li>Analytics dashboard</li>
+                        <li>Revenue tracking</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Library -->
+            <div class="glass-card page-card">
+                <div class="page-header">
+                    <div class="page-icon">📚</div>
+                    <div>
+                        <div class="page-title">Library</div>
+                        <div class="page-route">src/app/dashboard/library/page.tsx</div>
+                    </div>
+                </div>
+                <div class="page-description">
+                    <h3>Features</h3>
+                    <ul>
+                        <li>Resource library</li>
+                        <li>Template collection</li>
+                        <li>Knowledge base</li>
+                        <li>Documentation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Email Capture Demo -->
+            <div class="glass-card page-card">
+                <div class="page-header">
+                    <div class="page-icon">📧</div>
+                    <div>
+                        <div class="page-title">Email Capture Demo</div>
+                        <div class="page-route">src/app/email-capture-demo/page.tsx</div>
+                    </div>
+                </div>
+                <div class="page-description">
+                    <h3>Features</h3>
+                    <ul>
+                        <li>Live email collection</li>
+                        <li>Validation system</li>
+                        <li>Integration testing</li>
+                        <li>Analytics tracking</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Technical Summary -->
+        <div class="overview-section">
+            <h2>🛠️ Technical Architecture</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem;">
+                <div>
+                    <h3 style="color: #00ff88; margin-bottom: 1rem;">Frontend Stack</h3>
+                    <ul style="text-align: left; color: #ccc;">
+                        <li>Next.js 14 (App Router)</li>
+                        <li>TypeScript</li>
+                        <li>Tailwind CSS</li>
+                        <li>Framer Motion</li>
+                        <li>Lucide React Icons</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="color: #00ff88; margin-bottom: 1rem;">AI Integration</h3>
+                    <ul style="text-align: left; color: #ccc;">
+                        <li>Claude Sonnet API</li>
+                        <li>OpenAI GPT-4</li>
+                        <li>Custom AI Engine</li>
+                        <li>Rate Limiting</li>
+                        <li>Error Handling</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="color: #00ff88; margin-bottom: 1rem;">Backend Services</h3>
+                    <ul style="text-align: left; color: #ccc;">
+                        <li>Supabase Database</li>
+                        <li>Stripe Payments</li>
+                        <li>Redis Caching</li>
+                        <li>Email Services</li>
+                        <li>File Storage</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="color: #00ff88; margin-bottom: 1rem;">Design System</h3>
+                    <ul style="text-align: left; color: #ccc;">
+                        <li>Glass Morphism</li>
+                        <li>Dark Theme</li>
+                        <li>Green/Blue Gradients</li>
+                        <li>Responsive Layout</li>
+                        <li>Motion Animations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; padding: 2rem 0; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 3rem;">
+            <p style="color: #888;">
+                📊 TD Studios Command Hub - Production Ready AI Dashboard Platform<br>
+                🎯 Revenue Target: $2997/month | 🌐 Domain: tdstudioshq.com<br>
+                🔑 Login: tdstudios2024 / aibeast
+            </p>
+        </div>
+    </div>
+</body>
+</html>
