@@ -56,7 +56,8 @@ body {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg,
+  background: linear-gradient(
+    90deg,
     transparent,
     rgba(255, 255, 255, 0.4),
     transparent
@@ -70,7 +71,8 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     rgba(255, 255, 255, 0.1) 0%,
     rgba(255, 255, 255, 0.05) 50%,
     rgba(255, 255, 255, 0.02) 100%
@@ -93,7 +95,8 @@ body {
 
 /* Enhanced Glass Cards with Color Gradients */
 .glass-card-gradient {
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     rgba(139, 69, 255, 0.15) 0%,
     rgba(59, 130, 246, 0.15) 35%,
     rgba(16, 185, 129, 0.15) 70%,
@@ -102,12 +105,14 @@ body {
   backdrop-filter: blur(25px);
   -webkit-backdrop-filter: blur(25px);
   border: 1px solid;
-  border-image: linear-gradient(135deg,
-    rgba(139, 69, 255, 0.3),
-    rgba(59, 130, 246, 0.3),
-    rgba(16, 185, 129, 0.3),
-    rgba(245, 101, 101, 0.3)
-  ) 1;
+  border-image: linear-gradient(
+      135deg,
+      rgba(139, 69, 255, 0.3),
+      rgba(59, 130, 246, 0.3),
+      rgba(16, 185, 129, 0.3),
+      rgba(245, 101, 101, 0.3)
+    )
+    1;
   border-radius: 20px;
   box-shadow:
     0 10px 35px rgba(0, 0, 0, 0.4),
@@ -124,7 +129,8 @@ body {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg,
+  background: linear-gradient(
+    90deg,
     rgba(139, 69, 255, 0.6),
     rgba(59, 130, 246, 0.6),
     rgba(16, 185, 129, 0.6),
@@ -139,7 +145,8 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     rgba(255, 255, 255, 0.15) 0%,
     rgba(255, 255, 255, 0.08) 50%,
     rgba(255, 255, 255, 0.03) 100%
@@ -161,7 +168,8 @@ body {
 
 /* Chrome Text Effect */
 .chrome-text {
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     #667eea 0%,
     #764ba2 25%,
     #f093fb 50%,
@@ -176,13 +184,19 @@ body {
 }
 
 @keyframes chrome-shine {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 /* Chrome Pulse Effect */
 .chrome-pulse {
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     rgba(102, 126, 234, 0.3) 0%,
     rgba(118, 75, 162, 0.3) 25%,
     rgba(240, 147, 251, 0.3) 50%,
@@ -194,7 +208,8 @@ body {
 }
 
 @keyframes chrome-pulse {
-  0%, 100% {
+  0%,
+  100% {
     background-position: 0% 50%;
     transform: scale(1);
   }
@@ -206,7 +221,11 @@ body {
 
 /* Luxury Typography */
 .font-luxury {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
@@ -226,7 +245,8 @@ body {
 }
 
 .btn-chrome {
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     rgba(102, 126, 234, 0.8) 0%,
     rgba(79, 172, 254, 0.8) 100%
   );
@@ -239,7 +259,8 @@ body {
 }
 
 .btn-chrome:hover {
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     rgba(102, 126, 234, 0.9) 0%,
     rgba(79, 172, 254, 0.9) 100%
   );
@@ -260,14 +281,27 @@ body {
   z-index: -1;
   opacity: 0.1;
   background-image:
-    radial-gradient(circle at 25% 25%, rgba(139, 69, 255, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.2) 0%, transparent 50%);
+    radial-gradient(
+      circle at 25% 25%,
+      rgba(139, 69, 255, 0.3) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 75% 75%,
+      rgba(59, 130, 246, 0.3) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(16, 185, 129, 0.2) 0%,
+      transparent 50%
+    );
   animation: matrix-float 20s ease-in-out infinite;
 }
 
 @keyframes matrix-float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0) scale(1);
     opacity: 0.1;
   }
@@ -287,7 +321,8 @@ body {
 }
 
 @keyframes float-3d {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px) rotateX(0deg);
   }
   50% {
@@ -311,7 +346,8 @@ body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg,
+  background: linear-gradient(
+    90deg,
     transparent,
     rgba(255, 255, 255, 0.1),
     transparent
@@ -321,14 +357,21 @@ body {
 }
 
 @keyframes chrome-sweep {
-  0% { left: -100%; }
-  50% { left: 100%; }
-  100% { left: 100%; }
+  0% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 /* Holographic Glass */
 .holographic-glass {
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     rgba(255, 255, 255, 0.1) 0%,
     rgba(139, 69, 255, 0.05) 25%,
     rgba(59, 130, 246, 0.05) 50%,
@@ -349,7 +392,8 @@ body {
 }
 
 @keyframes glass-morph {
-  0%, 100% {
+  0%,
+  100% {
     background: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.1);
   }
@@ -369,7 +413,8 @@ body {
 
 /* Chrome Gradient */
 .chrome-gradient {
-  background: linear-gradient(135deg,
+  background: linear-gradient(
+    135deg,
     #667eea 0%,
     #764ba2 25%,
     #f093fb 50%,
