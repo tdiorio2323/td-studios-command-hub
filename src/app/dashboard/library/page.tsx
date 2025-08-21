@@ -442,6 +442,71 @@ export default function LibraryPage() {
               </div>
             </div>
 
+            {/* AI-Powered Tools */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Chat Organizer Card */}
+              <div className="glass-card p-6 hover:bg-white/5 transition-all duration-200 cursor-pointer group">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="p-3 rounded-lg bg-orange-500/20">
+                    <MessageSquare className="w-6 h-6 text-orange-400" />
+                  </div>
+                  <span className="text-xs text-gray-400">AI Organizer</span>
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-orange-400 transition-colors">
+                  Chat Organizer
+                </h3>
+                <p className="text-gray-400 text-sm mb-4">
+                  Upload random docs or chat logs and AI will automatically sort and categorize them
+                </p>
+                <div className="mb-4">
+                  <div className="border-2 border-dashed border-orange-500/30 rounded-lg p-4 bg-orange-500/5 hover:border-orange-500/50 transition-colors">
+                    <div className="text-center">
+                      <Upload className="w-8 h-8 text-orange-400 mx-auto mb-2" />
+                      <p className="text-sm text-orange-300 mb-1">Drop files here or click to upload</p>
+                      <p className="text-xs text-gray-400">Supports .txt, .md, .pdf, .log files</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-400">0 files processed</span>
+                  <button className="px-3 py-1 bg-orange-500/20 text-orange-400 rounded-lg hover:bg-orange-500/30 transition-colors text-xs">
+                    Start Sorting
+                  </button>
+                </div>
+              </div>
+
+              {/* Refactoring Generator Card */}
+              <div className="glass-card p-6 hover:bg-white/5 transition-all duration-200 cursor-pointer group">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="p-3 rounded-lg bg-cyan-500/20">
+                    <Code className="w-6 h-6 text-cyan-400" />
+                  </div>
+                  <span className="text-xs text-gray-400">Code Cleanup</span>
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-cyan-400 transition-colors">
+                  Refactoring Generator
+                </h3>
+                <p className="text-gray-400 text-sm mb-4">
+                  Clean up code documentation, improve formatting, and optimize structure
+                </p>
+                <div className="mb-4">
+                  <div className="border-2 border-dashed border-cyan-500/30 rounded-lg p-4 bg-cyan-500/5 hover:border-cyan-500/50 transition-colors">
+                    <div className="text-center">
+                      <FileText className="w-8 h-8 text-cyan-400 mx-auto mb-2" />
+                      <p className="text-sm text-cyan-300 mb-1">Upload code files for cleanup</p>
+                      <p className="text-xs text-gray-400">Supports .js, .ts, .py, .md, .json files</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-400">0 files refactored</span>
+                  <button className="px-3 py-1 bg-cyan-500/20 text-cyan-400 rounded-lg hover:bg-cyan-500/30 transition-colors text-xs">
+                    Clean Code
+                  </button>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
