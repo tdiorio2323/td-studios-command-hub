@@ -150,22 +150,6 @@ export default function LibraryPage() {
   return (
     <div className="min-h-screen">
       <div className="p-8 space-y-8">
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-          <div>
-            <h1 className="text-4xl font-bold text-white mb-2">Library</h1>
-            <p className="text-gray-400 text-lg">
-              Your organized collection of documents, guides, and resources
-            </p>
-          </div>
-          <button
-            onClick={handleUpload}
-            className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-green-600 text-white rounded-xl hover:from-blue-700 hover:to-green-700 transition-all duration-200 font-medium"
-          >
-            <Upload className="w-5 h-5" />
-            <span>Upload Document</span>
-          </button>
-        </div>
 
 
         <div className="flex flex-col lg:flex-row gap-8">
@@ -228,6 +212,13 @@ export default function LibraryPage() {
                     <option value="name">Sort by Name</option>
                     <option value="size">Sort by Size</option>
                   </select>
+                  <button
+                    onClick={handleUpload}
+                    className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-green-600 text-white rounded-lg hover:from-blue-700 hover:to-green-700 transition-all duration-200 font-medium"
+                  >
+                    <Upload className="w-4 h-4" />
+                    <span>Upload</span>
+                  </button>
                 </div>
                 <div className="flex items-center space-x-2">
                   <button
