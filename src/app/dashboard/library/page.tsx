@@ -7,9 +7,6 @@ import {
   Download,
   Upload,
   Search,
-  Filter,
-  Grid,
-  List,
   Star,
   Calendar,
   User,
@@ -32,7 +29,8 @@ import {
   Bot,
   Users,
   Phone,
-  Code
+  Code,
+  Triangle
 } from 'lucide-react';
 
 interface Document {
@@ -335,15 +333,6 @@ export default function LibraryPage() {
                       className="pl-10 pr-4 py-2 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none w-full sm:w-64"
                     />
                   </div>
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value as 'name' | 'date' | 'size')}
-                    className="px-4 py-2 bg-black/20 border border-white/10 rounded-lg text-white focus:border-blue-500 focus:outline-none"
-                  >
-                    <option value="date">Sort by Date</option>
-                    <option value="name">Sort by Name</option>
-                    <option value="size">Sort by Size</option>
-                  </select>
                   <button
                     onClick={handleUpload}
                     className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-green-600 text-white rounded-lg hover:from-blue-700 hover:to-green-700 transition-all duration-200 font-medium"
@@ -353,21 +342,66 @@ export default function LibraryPage() {
                   </button>
                 </div>
                 <div className="flex items-center space-x-2">
+                  {/* Service Icons */}
                   <button
-                    onClick={() => setViewMode('grid')}
-                    className={`p-2 rounded-lg transition-colors ${
-                      viewMode === 'grid' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white'
-                    }`}
+                    className="p-2 rounded-lg bg-green-600/20 text-green-400 hover:bg-green-600/30 transition-colors"
+                    title="ChatGPT"
                   >
-                    <Grid className="w-5 h-5" />
+                    <Bot className="w-5 h-5" />
                   </button>
                   <button
-                    onClick={() => setViewMode('list')}
-                    className={`p-2 rounded-lg transition-colors ${
-                      viewMode === 'list' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white'
-                    }`}
+                    className="p-2 rounded-lg bg-orange-600/20 text-orange-400 hover:bg-orange-600/30 transition-colors"
+                    title="Claude"
                   >
-                    <List className="w-5 h-5" />
+                    <MessageSquare className="w-5 h-5" />
+                  </button>
+                  <button
+                    className="p-2 rounded-lg bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 transition-colors"
+                    title="Notion"
+                  >
+                    <BookOpen className="w-5 h-5" />
+                  </button>
+                  <button
+                    className="p-2 rounded-lg bg-sky-500/20 text-sky-400 hover:bg-sky-500/30 transition-colors"
+                    title="Twitter"
+                  >
+                    <MessageSquare className="w-5 h-5" />
+                  </button>
+                  <button
+                    className="p-2 rounded-lg bg-pink-600/20 text-pink-400 hover:bg-pink-600/30 transition-colors"
+                    title="Instagram"
+                  >
+                    <Image className="w-5 h-5" />
+                  </button>
+                  <button
+                    className="p-2 rounded-lg bg-purple-600/20 text-purple-400 hover:bg-purple-600/30 transition-colors"
+                    title="TD Studios NY"
+                  >
+                    <Star className="w-5 h-5" />
+                  </button>
+                  <button
+                    className="p-2 rounded-lg bg-indigo-600/20 text-indigo-400 hover:bg-indigo-600/30 transition-colors"
+                    title="Figma"
+                  >
+                    <Palette className="w-5 h-5" />
+                  </button>
+                  <button
+                    className="p-2 rounded-lg bg-cyan-600/20 text-cyan-400 hover:bg-cyan-600/30 transition-colors"
+                    title="Freepik"
+                  >
+                    <Image className="w-5 h-5" />
+                  </button>
+                  <button
+                    className="p-2 rounded-lg bg-gray-600/20 text-gray-400 hover:bg-gray-600/30 transition-colors"
+                    title="GitHub"
+                  >
+                    <Code className="w-5 h-5" />
+                  </button>
+                  <button
+                    className="p-2 rounded-lg bg-black/40 border border-white/20 text-white hover:bg-black/60 transition-colors"
+                    title="Vercel"
+                  >
+                    <Triangle className="w-5 h-5" />
                   </button>
                 </div>
               </div>
