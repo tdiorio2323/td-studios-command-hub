@@ -372,10 +372,79 @@ export default function LibraryPage() {
               </div>
             </div>
 
+            {/* Quick Access Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Templates Card */}
+              <div className="glass-card p-6 hover:bg-white/5 transition-all duration-200 cursor-pointer group">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="p-3 rounded-lg bg-blue-500/20">
+                    <FileText className="w-6 h-6 text-blue-400" />
+                  </div>
+                  <span className="text-xs text-gray-400">Templates</span>
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors">
+                  Templates
+                </h3>
+                <p className="text-gray-400 text-sm mb-4">
+                  PRDs, .MD files, documentation templates
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-400">2 templates</span>
+                  <button className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-colors text-xs">
+                    Browse
+                  </button>
+                </div>
+              </div>
+
+              {/* Most Used Card */}
+              <div className="glass-card p-6 hover:bg-white/5 transition-all duration-200 cursor-pointer group">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="p-3 rounded-lg bg-green-500/20">
+                    <Star className="w-6 h-6 text-green-400" />
+                  </div>
+                  <span className="text-xs text-gray-400">Most Used</span>
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-green-400 transition-colors">
+                  Most Used
+                </h3>
+                <p className="text-gray-400 text-sm mb-4">
+                  Documents you frequently access
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-400">3 documents</span>
+                  <button className="px-3 py-1 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors text-xs">
+                    View All
+                  </button>
+                </div>
+              </div>
+
+              {/* Recently Card */}
+              <div className="glass-card p-6 hover:bg-white/5 transition-all duration-200 cursor-pointer group">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="p-3 rounded-lg bg-purple-500/20">
+                    <Calendar className="w-6 h-6 text-purple-400" />
+                  </div>
+                  <span className="text-xs text-gray-400">Recently</span>
+                </div>
+                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-purple-400 transition-colors">
+                  Recently
+                </h3>
+                <p className="text-gray-400 text-sm mb-4">
+                  Recently opened, modified, or created
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-400">5 documents</span>
+                  <button className="px-3 py-1 bg-purple-500/20 text-purple-400 rounded-lg hover:bg-purple-500/30 transition-colors text-xs">
+                    View All
+                  </button>
+                </div>
+              </div>
+            </div>
+
             {/* Documents */}
             <div className="glass-card p-6">
               <h3 className="text-xl font-semibold text-white mb-6">
-                {selectedCategory === 'all' ? 'All Documents' : 
+                {selectedCategory === 'all' ? 'All Documents' :
                  categories.find(cat => cat.id === selectedCategory)?.name || 'Documents'}
                 <span className="text-gray-400 text-base ml-2">({sortedDocuments.length})</span>
               </h3>
