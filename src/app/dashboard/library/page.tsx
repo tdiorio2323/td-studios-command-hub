@@ -1,14 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { 
-  BookOpen, 
-  FileText, 
-  Download, 
-  Upload, 
-  Search, 
-  Filter, 
-  Grid, 
+import {
+  BookOpen,
+  FileText,
+  Download,
+  Upload,
+  Search,
+  Filter,
+  Grid,
   List,
   Star,
   Calendar,
@@ -21,7 +21,13 @@ import {
   FileImage,
   Book,
   Scroll,
-  HardDrive
+  HardDrive,
+  ChevronDown,
+  ChevronRight,
+  Image,
+  Video,
+  Music,
+  Palette
 } from 'lucide-react';
 
 interface Document {
@@ -46,6 +52,13 @@ const categories = [
   { id: 'ebooks', name: 'E-Books', icon: Book },
   { id: 'manuals', name: 'Manuals', icon: HardDrive },
   { id: 'guides', name: 'Guides', icon: FileImage }
+];
+
+const mediaCategories = [
+  { id: 'images', name: 'Images', icon: Image, types: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'] },
+  { id: 'videos', name: 'Videos', icon: Video, types: ['mp4', 'mov', 'avi', 'mkv', 'webm'] },
+  { id: 'audio', name: 'Audio', icon: Music, types: ['mp3', 'wav', 'flac', 'aac', 'm4a'] },
+  { id: 'design', name: 'Design Files', icon: Palette, types: ['psd', 'ai', 'sketch', 'fig', 'xd'] }
 ];
 
 const sampleDocuments: Document[] = [
@@ -95,6 +108,7 @@ export default function LibraryPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'name' | 'date' | 'size'>('date');
+  const [isMediaExpanded, setIsMediaExpanded] = useState(false);
 
   const filteredDocuments = documents.filter(doc => {
     const matchesCategory = selectedCategory === 'all' || doc.category === selectedCategory;
@@ -161,8 +175,8 @@ export default function LibraryPage() {
                 {categories.map(category => {
                   const Icon = category.icon;
                   const isActive = selectedCategory === category.id;
-                  const count = category.id === 'all' 
-                    ? documents.length 
+                  const count = category.id === 'all'
+                    ? documents.length
                     : documents.filter(doc => doc.category === category.id).length;
 
                   return (
@@ -183,6 +197,54 @@ export default function LibraryPage() {
                     </button>
                   );
                 })}
+
+                {/* Media Section */}
+                <div className="border-t border-white/10 pt-4 mt-4">
+                  <button
+                    onClick={() => setIsMediaExpanded(!isMediaExpanded)}
+                    className="w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white hover:bg-white/5"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <FileImage className="w-5 h-5" />
+                      <span className="font-medium">Media</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm">0</span>
+                      {isMediaExpanded ? (
+                        <ChevronDown className="w-4 h-4" />
+                      ) : (
+                        <ChevronRight className="w-4 h-4" />
+                      )}
+                    </div>
+                  </button>
+
+                  {isMediaExpanded && (
+                    <div className="ml-4 mt-2 space-y-1">
+                      {mediaCategories.map(mediaCategory => {
+                        const Icon = mediaCategory.icon;
+                        const isActive = selectedCategory === mediaCategory.id;
+
+                        return (
+                          <button
+                            key={mediaCategory.id}
+                            onClick={() => setSelectedCategory(mediaCategory.id)}
+                            className={`w-full flex items-center justify-between p-2 rounded-lg transition-all duration-200 text-sm ${
+                              isActive
+                                ? 'bg-gradient-to-r from-blue-600/20 to-green-600/20 text-white border border-blue-500/30'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5'
+                            }`}
+                          >
+                            <div className="flex items-center space-x-3">
+                              <Icon className={`w-4 h-4 ${isActive ? 'text-blue-400' : ''}`} />
+                              <span className="font-medium">{mediaCategory.name}</span>
+                            </div>
+                            <span className="text-xs">0</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               </nav>
             </div>
           </div>
