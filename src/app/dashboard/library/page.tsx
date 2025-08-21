@@ -30,7 +30,14 @@ import {
   Users,
   Phone,
   Code,
-  Triangle
+  Triangle,
+  Zap,
+  Brain,
+  Hash,
+  Camera,
+  Layers,
+  Sparkles,
+  GitBranch
 } from 'lucide-react';
 
 interface Document {
@@ -335,25 +342,25 @@ export default function LibraryPage() {
                   </div>
                   <button
                     onClick={handleUpload}
-                    className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-green-600 text-white rounded-lg hover:from-blue-700 hover:to-green-700 transition-all duration-200 font-medium"
+                    className="p-2 bg-gradient-to-r from-blue-600 to-green-600 text-white rounded-lg hover:from-blue-700 hover:to-green-700 transition-all duration-200"
+                    title="Upload"
                   >
-                    <Upload className="w-4 h-4" />
-                    <span>Upload</span>
+                    <Upload className="w-5 h-5" />
                   </button>
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-3">
                   {/* Service Icons */}
                   <button
                     className="p-2 rounded-lg bg-green-600/20 text-green-400 hover:bg-green-600/30 transition-colors"
                     title="ChatGPT"
                   >
-                    <Bot className="w-5 h-5" />
+                    <Zap className="w-5 h-5" />
                   </button>
                   <button
                     className="p-2 rounded-lg bg-orange-600/20 text-orange-400 hover:bg-orange-600/30 transition-colors"
                     title="Claude"
                   >
-                    <MessageSquare className="w-5 h-5" />
+                    <Brain className="w-5 h-5" />
                   </button>
                   <button
                     className="p-2 rounded-lg bg-blue-600/20 text-blue-400 hover:bg-blue-600/30 transition-colors"
@@ -365,13 +372,13 @@ export default function LibraryPage() {
                     className="p-2 rounded-lg bg-sky-500/20 text-sky-400 hover:bg-sky-500/30 transition-colors"
                     title="Twitter"
                   >
-                    <MessageSquare className="w-5 h-5" />
+                    <Hash className="w-5 h-5" />
                   </button>
                   <button
                     className="p-2 rounded-lg bg-pink-600/20 text-pink-400 hover:bg-pink-600/30 transition-colors"
                     title="Instagram"
                   >
-                    <Image className="w-5 h-5" />
+                    <Camera className="w-5 h-5" />
                   </button>
                   <button
                     className="p-2 rounded-lg bg-purple-600/20 text-purple-400 hover:bg-purple-600/30 transition-colors"
@@ -383,19 +390,19 @@ export default function LibraryPage() {
                     className="p-2 rounded-lg bg-indigo-600/20 text-indigo-400 hover:bg-indigo-600/30 transition-colors"
                     title="Figma"
                   >
-                    <Palette className="w-5 h-5" />
+                    <Layers className="w-5 h-5" />
                   </button>
                   <button
                     className="p-2 rounded-lg bg-cyan-600/20 text-cyan-400 hover:bg-cyan-600/30 transition-colors"
                     title="Freepik"
                   >
-                    <Image className="w-5 h-5" />
+                    <Sparkles className="w-5 h-5" />
                   </button>
                   <button
                     className="p-2 rounded-lg bg-gray-600/20 text-gray-400 hover:bg-gray-600/30 transition-colors"
                     title="GitHub"
                   >
-                    <Code className="w-5 h-5" />
+                    <GitBranch className="w-5 h-5" />
                   </button>
                   <button
                     className="p-2 rounded-lg bg-black/40 border border-white/20 text-white hover:bg-black/60 transition-colors"
