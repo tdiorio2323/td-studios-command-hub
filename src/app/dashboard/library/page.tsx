@@ -31,7 +31,8 @@ import {
   MessageSquare,
   Bot,
   Users,
-  Phone
+  Phone,
+  Code
 } from 'lucide-react';
 
 interface Document {
