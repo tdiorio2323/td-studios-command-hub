@@ -190,12 +190,44 @@ export default function LibraryPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="p-8 space-y-8">
+      {/* TD Studios CLI Header */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+        <div className="px-8 py-4">
+          <div className="flex items-center">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-green-500 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">TD</span>
+              </div>
+              <div>
+                <h1 className="text-lg font-bold chrome-text">TD STUDIOS</h1>
+                <p className="text-xs text-gray-400">CLI</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-
+      <div className="pt-20 p-8 space-y-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar Categories */}
           <div className="lg:w-64 space-y-4">
+            {/* Dashboard Logo Button */}
+            <div className="mb-6">
+              <a
+                href="/dashboard"
+                className="block glass-card p-4 hover:bg-white/5 transition-all duration-200 group"
+              >
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-green-500 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <span className="text-white font-bold">TD</span>
+                  </div>
+                  <div>
+                    <h2 className="text-white font-semibold group-hover:text-blue-400 transition-colors">TD Studios</h2>
+                    <p className="text-xs text-gray-400">Dashboard</p>
+                  </div>
+                </div>
+              </a>
+            </div>
             <div className="glass-card p-6">
               <h3 className="text-lg font-semibold text-white mb-4">Categories</h3>
               <nav className="space-y-2">
