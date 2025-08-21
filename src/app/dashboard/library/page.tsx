@@ -173,6 +173,15 @@ export default function LibraryPage() {
     }
   };
 
+  const formatDate = (dateString: string) => {
+    // Use a consistent format that works the same on server and client
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${month}/${day}/${year}`;
+  };
+
   return (
     <div className="min-h-screen">
       <div className="p-8 space-y-8">
@@ -427,7 +436,7 @@ export default function LibraryPage() {
                           
                           <div className="flex items-center justify-between text-sm text-gray-400 mb-4">
                             <span>{doc.size}</span>
-                            <span>{new Date(doc.dateAdded).toLocaleDateString()}</span>
+                            <span suppressHydrationWarning>{formatDate(doc.dateAdded)}</span>
                           </div>
                           
                           <div className="flex items-center space-x-2">
@@ -461,7 +470,7 @@ export default function LibraryPage() {
                             <p className="text-gray-400 text-sm truncate">{doc.description}</p>
                             <div className="flex items-center space-x-4 text-xs text-gray-400 mt-1">
                               <span>{doc.size}</span>
-                              <span>{new Date(doc.dateAdded).toLocaleDateString()}</span>
+                              <span suppressHydrationWarning>{formatDate(doc.dateAdded)}</span>
                               {doc.author && <span>by {doc.author}</span>}
                             </div>
                           </div>
