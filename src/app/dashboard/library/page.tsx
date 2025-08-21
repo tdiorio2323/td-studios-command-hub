@@ -27,7 +27,11 @@ import {
   Image,
   Video,
   Music,
-  Palette
+  Palette,
+  MessageSquare,
+  Bot,
+  Users,
+  Phone
 } from 'lucide-react';
 
 interface Document {
@@ -59,6 +63,13 @@ const mediaCategories = [
   { id: 'videos', name: 'Videos', icon: Video, types: ['mp4', 'mov', 'avi', 'mkv', 'webm'] },
   { id: 'audio', name: 'Audio', icon: Music, types: ['mp3', 'wav', 'flac', 'aac', 'm4a'] },
   { id: 'design', name: 'Design Files', icon: Palette, types: ['psd', 'ai', 'sketch', 'fig', 'xd'] }
+];
+
+const chatLogCategories = [
+  { id: 'ai-chats', name: 'AI Conversations', icon: Bot, types: ['txt', 'md', 'pdf'] },
+  { id: 'team-chats', name: 'Team Chats', icon: Users, types: ['txt', 'md', 'pdf'] },
+  { id: 'support-chats', name: 'Support Logs', icon: Phone, types: ['txt', 'md', 'pdf'] },
+  { id: 'general-chats', name: 'General Chats', icon: MessageSquare, types: ['txt', 'md', 'pdf'] }
 ];
 
 const sampleDocuments: Document[] = [
@@ -109,6 +120,7 @@ export default function LibraryPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'name' | 'date' | 'size'>('date');
   const [isMediaExpanded, setIsMediaExpanded] = useState(false);
+  const [isChatLogsExpanded, setIsChatLogsExpanded] = useState(false);
 
   const filteredDocuments = documents.filter(doc => {
     const matchesCategory = selectedCategory === 'all' || doc.category === selectedCategory;
@@ -237,6 +249,54 @@ export default function LibraryPage() {
                             <div className="flex items-center space-x-3">
                               <Icon className={`w-4 h-4 ${isActive ? 'text-blue-400' : ''}`} />
                               <span className="font-medium">{mediaCategory.name}</span>
+                            </div>
+                            <span className="text-xs">0</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                {/* Chat Logs Section */}
+                <div className="border-t border-white/10 pt-4 mt-4">
+                  <button
+                    onClick={() => setIsChatLogsExpanded(!isChatLogsExpanded)}
+                    className="w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white hover:bg-white/5"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <MessageSquare className="w-5 h-5" />
+                      <span className="font-medium">Chat Logs</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm">0</span>
+                      {isChatLogsExpanded ? (
+                        <ChevronDown className="w-4 h-4" />
+                      ) : (
+                        <ChevronRight className="w-4 h-4" />
+                      )}
+                    </div>
+                  </button>
+
+                  {isChatLogsExpanded && (
+                    <div className="ml-4 mt-2 space-y-1">
+                      {chatLogCategories.map(chatCategory => {
+                        const Icon = chatCategory.icon;
+                        const isActive = selectedCategory === chatCategory.id;
+
+                        return (
+                          <button
+                            key={chatCategory.id}
+                            onClick={() => setSelectedCategory(chatCategory.id)}
+                            className={`w-full flex items-center justify-between p-2 rounded-lg transition-all duration-200 text-sm ${
+                              isActive
+                                ? 'bg-gradient-to-r from-blue-600/20 to-green-600/20 text-white border border-blue-500/30'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5'
+                            }`}
+                          >
+                            <div className="flex items-center space-x-3">
+                              <Icon className={`w-4 h-4 ${isActive ? 'text-blue-400' : ''}`} />
+                              <span className="font-medium">{chatCategory.name}</span>
                             </div>
                             <span className="text-xs">0</span>
                           </button>
