@@ -167,27 +167,6 @@ export default function LibraryPage() {
           </button>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="glass-card p-6 text-center">
-            <p className="text-gray-400 text-sm">TOTAL DOCUMENTS</p>
-            <p className="text-3xl font-bold text-white mt-1">{documents.length}</p>
-          </div>
-          <div className="glass-card p-6 text-center">
-            <p className="text-gray-400 text-sm">CATEGORIES</p>
-            <p className="text-3xl font-bold text-white mt-1">{categories.length - 1}</p>
-          </div>
-          <div className="glass-card p-6 text-center">
-            <p className="text-gray-400 text-sm">FAVORITES</p>
-            <p className="text-3xl font-bold text-white mt-1">
-              {documents.filter(doc => doc.isFavorite).length}
-            </p>
-          </div>
-          <div className="glass-card p-6 text-center">
-            <p className="text-gray-400 text-sm">TOTAL SIZE</p>
-            <p className="text-3xl font-bold text-white mt-1">4.4 MB</p>
-          </div>
-        </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar Categories */}
